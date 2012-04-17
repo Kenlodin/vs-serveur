@@ -1,30 +1,30 @@
-DIR_LIST=src/
+.PHONY: all doc clean distclean check
 
-all: Makefile.rules
-	@echo -e '\e[0;34mStart building\e[0;33m\033[0m'
-	@$(foreach var,$(DIR_LIST), make -C $(var) $@;)
-	@echo -e '\e[0;34mDone\e[0;m'
-	
+all:
+	${MAKE} -C build/
+
+doc:
+	${MAKE} -C doc/
+	${MAKE} -C doc/latex
+
 clean:
-	@echo -e '\e[0;32mStart cleaning\e[0;33m\033[0m'
-	@$(foreach var,$(DIR_LIST), make -C $(var) $@;)
-	rm -rf doc/html doc/man doc/latex
-	@echo -e '\e[0;34mDone\e[0;m'
-	
-check: all
-	cd check;./check.sh
+	find . -type f -name '#*'   -exec rm -f "{}" \;
+	find . -type f -name '*.o'   -exec rm -f "{}" \;
+	find . -type f -name '*~'    -exec rm -f "{}" \;
+	find . -type f -name '*.gch' -exec rm -f "{}" \;
+	find . -type f -name '*.dot' -exec rm -f "{}" \;
+	find . -type f -name '*.bz2' -exec rm -f "{}" \;
+	find . -type f -name '*.gz' -exec rm -f "{}" \;
+	find . -type f -name '*.aux'   -exec rm -f "{}" \;
+	find . -type f -name '*.log'   -exec rm -f "{}" \;
+	find . -type f -name '*.toc'   -exec rm -f "{}" \;
 
-distclean:clean
-	@echo -e '\e[0;32mCleaning\e[0;33m All\e[0;m'
-	@$(foreach var,$(DIR_LIST), make -C $(var) $@;)
-	@rm -f Makefile.rules
-	
-doc: doc/Doxyfile
-	@echo -e '\e[0;36mGenerating: \e[0;33m doc\e[0;m'
-	@doxygen doc/Doxyfile
-	@echo -e '\e[0;32mCompilation done !\033[0m'
+distclean: clean
+	find . -type f -name '*.so'   -exec rm -f "{}" \;
+	find . -type f -name '*.a'   -exec rm -f "{}" \;
+	find . -type f -name 'CMakeCache.txt'   -exec rm -f "{}" \;
+	rm -rf build/ test/build
 
-Makefile.rules:
-	@. ./configure
-	
-.PHONY: doc
+check:
+	@${MAKE} -C test/build
+	@cd test/ && perl main.pl && cd ../

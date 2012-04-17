@@ -1,37 +1,24 @@
-#! /bin/sh
-echo -e "\033[0;36mGenerating: \033[0;33m Makefile.rules\033[0;m"
+#!/bin/sh
 
-CC=g++
-CCFLAGS="-Wall -Wextra -std=c++0x -pedantic -MD" #TODO Add warning
-LDFLAGS="-lsfml-system -lsfml-network"
-if test "$1" = "debug"
-then
-    CCFLAGS=$CCFLAGS -g
+MODE=Release
+
+if test "$1" = "--with-debug" ; then
+    MODE=Debug
 fi
-if test "$1" = "O3"
-then
-    CCFLAGS=$CCFLAGS -O3
+
+if test "$1" = "--help" ; then
+    echo "Usage:
+  --with-debug : Compile with CFLAGS -g
+  --help : Show help"
+else
+    mkdir -p build
+    cd build
+    cmake ../ -G"Unix Makefiles" -DCMAKE_BUILD_TYPE:STRING=${MODE}
+    cd ..
+
+    # Test suite
+    #mkdir -p test/build
+    #cd test/build
+    #cmake ../ -G"Unix Makefiles" -DCMAKE_BUILD_TYPE:STRING=${MODE}
+    #cmake ../ -G"Unix Makefiles" -DCMAKE_BUILD_TYPE:STRING=${MODE}
 fi
-echo "CC=$CC" > Makefile.rules
-echo "CCFLAGS=$CCFLAGS" >> Makefile.rules
-echo "LDFLAGS=$LDFLAGS" >> Makefile.rules
-
-echo -e "\t\033[0;36m CC: \033[0;33m\t\t$CC \033[0;m"
-echo -e "\t\033[0;36m CCFLAGS: \033[0;33m\t$CCFLAGS \033[0;m"
-
-DIR_LIST=`cat Makefile.txt`
-for dir in $DIR_LIST
-do
-cd $dir
-echo -e "\033[0;36mGenerating: \033[0;33m Makefile.rules \
-\033[0;36mfor \033[0;33m$dir\033[0;m"
-echo -n "SRCS=" > Makefile.rules
-(ls *.cc -1) | sed 's/$/ \\/g' \
-| sed 's/^/\t/g' >> Makefile.rules
-(ls */*.cc -1) | sed 's/$/ \\/g' \
-| sed 's/^/\t/g' >> Makefile.rules
-echo "" >> Makefile.rules
-cd $OLDPWD
-done
-
-

@@ -5,14 +5,26 @@
  *      Author: nagriar
  */
 
-# include "Network/Network.hh"
-# include "Tracker/Tracker.hh"
-# include "Diffusion/Diffusion.hh"
+#include <iostream>
 
-int main(int argc, char **argv) {
-	Network* network = new Network(36000, 36001);
-	Diffusion* diffusion = new Diffusion();
-	Tracker* tracker = new Tracker();
-	return 0;
+#include "Network/Network.hh"
+#include "Tracker/Tracker.hh"
+#include "Diffusion/Diffusion.hh"
+
+int
+main ()
+{
+  //	Network* network = new Network(36000, 36001);
+  //	Diffusion* diffusion = new Diffusion();
+  //	Tracker* tracker = new Tracker();
+  //	return 0;
+  sf::Clock Clock;
+  while (Clock.GetElapsedTime () < 5.f)
+  {
+    std::cout << Clock.GetElapsedTime () << std::endl;
+    sf::Sleep (0.5f);
+  }
+
+  return 0;
 }
 
