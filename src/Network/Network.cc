@@ -9,18 +9,23 @@
 # include "../Diffusion/Diffusion.hh"
 # include "../Tracker/Tracker.hh"
 
-Network::Network(int control_port, int data_port) {
+Network::Network(int control_port, int data_port)
+: route_ (
+	{
+			&Network::clientTracker,
+			&Network::trackerClient,
+			&Network::clientDiffusion,
+			&Network::diffusionClient,
+			&Network::diffusionDiffusion
+	})
+{
 	control_port_ = control_port;
 	data_port_ = data_port;
 	control_socket_ = new sf::SocketTCP();
 	data_socket_ = new sf::SocketTCP();
 	control_socket_->Listen(control_port_);
 	data_socket_->Listen(data_port_);
-	handler =
-	{
-			tracker_.routing,
-			diffusion_.routing
-	};
+
 }
 
 Network::~Network() {
@@ -44,12 +49,37 @@ static int thread_listener (sf::SocketTCP sock) {
 }
 
 int Network::start() {
-	pthread_create(control_thread, NULL, static_cast<void*(*)(void*)>(thread_listener)
+	/*pthread_create(control_thread, NULL, static_cast<void*(*)(void*)>(thread_listener)
 			, static_cast<void*>(&control_socket_));
 	pthread_create(data_thread, NULL, static_cast<void*(*)(void*)>(thread_listener)
-				, static_cast<void*>(&data_socket_));
+				, static_cast<void*>(&data_socket_));*/
 	return 1;
 }
+
+inline int routing(sf::Packet* packet) {
+	return FALSE;
+}
+
+int Network::clientTracker(unsigned int route, sf::Packet* packet) {
+	return FALSE;
+}
+
+int Network::trackerClient(unsigned int route, sf::Packet* packet) {
+	return FALSE;
+}
+
+int Network::clientDiffusion(unsigned int route, sf::Packet* packet) {
+	return FALSE;
+}
+
+int Network::diffusionClient(unsigned int route, sf::Packet* packet) {
+	return FALSE;
+}
+
+int Network::diffusionDiffusion(unsigned int route, sf::Packet* packet) {
+	return FALSE;
+}
+
 
 
 

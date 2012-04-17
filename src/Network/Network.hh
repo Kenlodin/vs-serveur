@@ -22,8 +22,14 @@ public:
 	int start();
 	int routing(sf::Packet* packet);
 private:
-	typedef void (PacketHandler::*handler)(unsigned int route, sf::Packet* packet);
-	const handler route[ConnexionType::LENGTH];
+	typedef int (Network::*handler)(unsigned int route, sf::Packet* packet);
+	const handler route_[ConnexionType::LENGTH];
+private:
+	int clientTracker (unsigned int route, sf::Packet* packet);
+	int trackerClient (unsigned int route, sf::Packet* packet);
+	int clientDiffusion (unsigned int route, sf::Packet* packet);
+	int diffusionClient (unsigned int route, sf::Packet* packet);
+	int diffusionDiffusion (unsigned int route, sf::Packet* packet);
 private:
 	sf::SocketTCP* control_socket_;
 	unsigned short control_port_;
