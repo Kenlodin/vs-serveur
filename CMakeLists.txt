@@ -2,9 +2,11 @@ cmake_minimum_required(VERSION 2.6)
 
 # List of libraries
 set(LIBRARIES)
-set(EXTERN_LIBRARIES sfml-system sfml-network)
+set(EXTERN_LIBRARIES sfml-system sfml-network boost_filesystem boost_system)
 set(EXTERN_LINK_DIRECTORIES /usr/lib64/)
-set(EXTERN_INCLUDE_DIRECTORIES /usr/include/SFML)
+set(EXTERN_INCLUDE_DIRECTORIES /usr/include/SFML /usr/include/boost)
+
+
 
 
 # DO NOT TOUCH
@@ -29,7 +31,7 @@ endforeach(f)
 
 # Compilation of the program
 file(GLOB_RECURSE FILES src/*)
-foreach(f ${LIBRARIES} variables)
+foreach(f ${LIBRARIES})
     include_directories(${PROJECT_SOURCE_DIR}/${f})
 endforeach(f)
 
