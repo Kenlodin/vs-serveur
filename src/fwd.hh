@@ -1,0 +1,80 @@
+/*
+ * fwd.hh
+ *
+ *  Created on: 17 avr. 2012
+ *      Author: nagriar
+ */
+
+#ifndef FWD_HH_
+# define FWD_HH_
+
+# define EXTRACT_TYPE(OPCODE) OPCODE >> 12
+# define EXTRACT_CODE(OPCODE) OPCODE % (1 << 12)
+# define MERGE_OPCODE(TYPE, CODE) ((TYPE << 12) + CODE)
+# define TRUE 1
+# define FALSE 0
+
+namespace ConnexionType
+{
+	enum ConnexionType
+	{
+		CLIENT_TRACKER,
+		TRACKER_CLIENT,
+		CLIENT_DIFFUSION,
+		TRANSFERT_VIDEO,
+		LENGTH
+	};
+}
+namespace CT
+{
+	enum CT
+	{
+		CONN_MASTER,
+		CONN_SLAVE,
+		ASK_LIST,
+		ASK_FLUX,
+		ASK_CHECK,
+		ASK_PACKET,
+		ASK_RPACKET,
+		ASK_MOVE,
+		ASK_DEFICIENT,
+		ASK_REM,
+		ASK_STOP,
+		DEC,
+		LENGTH
+	};
+}
+
+namespace TC
+{
+	enum TC
+	{
+		TOKEN,
+		LIST,
+		LIST_DIFF,
+		LIST_NDIFF,
+		MSG,
+		LENGTH
+	};
+}
+
+namespace DC
+{
+	enum DC
+	{
+		DATA,
+		LENGTH
+	};
+}
+
+namespace DD
+{
+	enum DD
+	{
+		VIDEO_DEMAND,
+		PING_PONG,
+		LENGTH
+	};
+}
+
+#endif /* FWD_HH_ */

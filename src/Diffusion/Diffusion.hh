@@ -8,10 +8,13 @@
 #ifndef DIFFUSION_HH_
 #define DIFFUSION_HH_
 
-class Diffusion {
+# include "../PacketHandler.hh"
+
+class Diffusion : public PacketHandler {
 public:
 	Diffusion();
 	virtual ~Diffusion();
+	int routing(unsigned int code, sf::Packet* packet);
 };
 
 #endif /* DIFFUSION_HH_ */

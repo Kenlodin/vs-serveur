@@ -6,6 +6,8 @@
  */
 
 #include "Network.hh"
+# include "../Diffusion/Diffusion.hh"
+# include "../Tracker/Tracker.hh"
 
 Network::Network(int control_port, int data_port) {
 	control_port_ = control_port;
@@ -14,6 +16,11 @@ Network::Network(int control_port, int data_port) {
 	data_socket_ = new sf::SocketTCP();
 	control_socket_->Listen(control_port_);
 	data_socket_->Listen(data_port_);
+	handler =
+	{
+			tracker_.routing,
+			diffusion_.routing
+	};
 }
 
 Network::~Network() {
@@ -43,3 +50,8 @@ int Network::start() {
 				, static_cast<void*>(&data_socket_));
 	return 1;
 }
+
+
+
+
+
