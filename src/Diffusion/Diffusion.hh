@@ -9,6 +9,7 @@
 #define DIFFUSION_HH_
 
 # include "../PacketHandler.hh"
+# include "../fwd.hh"
 
 class Diffusion : public PacketHandler {
 public:

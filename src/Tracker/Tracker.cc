@@ -9,18 +9,18 @@
 
 Tracker::Tracker()
 	: route_ ({
-		ctConnMaster,
-		ctConnSlave,
-		ctAskList,
-		ctAskFlux,
-		ctAskCheck,
-		ctAskPacket,
-		ctAskRpacket,
-		ctAskMove,
-		ctAskDeficient,
-		ctAskRem,
-		ctAskStop,
-		ctDec,
+		&Tracker::ctConnMaster,
+		&Tracker::ctConnSlave,
+		&Tracker::ctAskList,
+		&Tracker::ctAskFlux,
+		&Tracker::ctAskCheck,
+		&Tracker::ctAskPacket,
+		&Tracker::ctAskRpacket,
+		&Tracker::ctAskMove,
+		&Tracker::ctAskDeficient,
+		&Tracker::ctAskRem,
+		&Tracker::ctAskStop,
+		&Tracker::ctDec,
 })
 {
 	// TODO Auto-generated constructor stub

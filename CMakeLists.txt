@@ -2,7 +2,7 @@ cmake_minimum_required(VERSION 2.6)
 
 # List of libraries
 set(LIBRARIES)
-set(EXTERN_LIBRARIES lsfml-system lsfml-network)
+set(EXTERN_LIBRARIES sfml-system sfml-network)
 set(EXTERN_LINK_DIRECTORIES /usr/lib64/)
 set(EXTERN_INCLUDE_DIRECTORIES /usr/include/SFML)
 

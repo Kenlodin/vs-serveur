@@ -16,3 +16,8 @@ Diffusion::~Diffusion() {
 	// TODO Auto-generated destructor stub
 }
 
+int Diffusion::routing(unsigned int code, sf::Packet* packet) {
+	return FALSE;
+}
+
+
