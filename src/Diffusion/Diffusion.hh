@@ -16,6 +16,14 @@ public:
 	Diffusion();
 	virtual ~Diffusion();
 	int routing(unsigned int code, sf::Packet* packet);
+	int routing_internal(unsigned int code, sf::Packet* packet);
+private:
+	typedef int (Diffusion::*handler)(sf::Packet* packet);
+	const handler route_[CD::LENGTH];
+	const handler route_internal[DD::LENGTH];
+private:
+	int ddVideoDemand(sf::Packet* packet);
+	int ddPingPong(sf::Packet* packet);
 };
 
 #endif /* DIFFUSION_HH_ */

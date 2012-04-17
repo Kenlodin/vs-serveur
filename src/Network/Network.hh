@@ -17,7 +17,8 @@
 
 class Network {
 public:
-	Network(int control_port, int data_port);
+	Network(int control_port, int data_port
+			, Tracker* tracker, Diffusion* diffusion);
 	virtual ~Network();
 	int start();
 	int routing(sf::Packet* packet);

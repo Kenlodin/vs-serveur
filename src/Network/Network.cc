@@ -9,7 +9,8 @@
 # include "../Diffusion/Diffusion.hh"
 # include "../Tracker/Tracker.hh"
 
-Network::Network(int control_port, int data_port)
+Network::Network(int control_port, int data_port
+		, Tracker* tracker, Diffusion* diffusion)
 : route_ (
 	{
 			&Network::clientTracker,
@@ -25,7 +26,8 @@ Network::Network(int control_port, int data_port)
 	data_socket_ = new sf::SocketTCP();
 	control_socket_->Listen(control_port_);
 	data_socket_->Listen(data_port_);
-
+	tracker_ = tracker;
+	diffusion_ = diffusion;
 }
 
 Network::~Network() {
@@ -36,48 +38,42 @@ Network::~Network() {
 	// TODO Auto-generated destructor stub
 }
 
-static int thread_listener (sf::SocketTCP sock) {
-	sf::SocketTCP new_client;
-	sf::IPAddress ip;
-
-	while (sock.IsValid())
-	{
-		sock.Accept(new_client, &ip);
-		//TODO Keep_client;
-	}
-	return 1;
-}
-
 int Network::start() {
-	/*pthread_create(control_thread, NULL, static_cast<void*(*)(void*)>(thread_listener)
-			, static_cast<void*>(&control_socket_));
-	pthread_create(data_thread, NULL, static_cast<void*(*)(void*)>(thread_listener)
-				, static_cast<void*>(&data_socket_));*/
 	return 1;
 }
 
-inline int routing(sf::Packet* packet) {
-	return FALSE;
+int Network::routing(sf::Packet* packet) {
+	sf::Int16 opcode;
+	int type;
+	int code;
+
+	*packet >> opcode;
+	code = EXTRACT_CODE(opcode);
+	type = EXTRACT_TYPE(opcode);
+	if (code < CD::LENGTH)
+		return (this->*route_[type]) (code, packet);
+	else
+		return TRUE;
 }
 
 int Network::clientTracker(unsigned int route, sf::Packet* packet) {
-	return FALSE;
+	return tracker_->routing(route, packet);
 }
 
 int Network::trackerClient(unsigned int route, sf::Packet* packet) {
-	return FALSE;
+	return TRUE;
 }
 
 int Network::clientDiffusion(unsigned int route, sf::Packet* packet) {
-	return FALSE;
+	return diffusion_->routing(route, packet);
 }
 
 int Network::diffusionClient(unsigned int route, sf::Packet* packet) {
-	return FALSE;
+	return TRUE;
 }
 
 int Network::diffusionDiffusion(unsigned int route, sf::Packet* packet) {
-	return FALSE;
+	return diffusion_->routing_internal(route, packet);
 }
 
 

@@ -59,6 +59,14 @@ namespace TC
 	};
 }
 
+namespace CD
+{
+	enum CD
+	{
+		LENGTH
+	};
+}
+
 namespace DC
 {
 	enum DC
