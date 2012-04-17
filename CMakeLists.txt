@@ -2,11 +2,7 @@ cmake_minimum_required(VERSION 2.6)
 
 # List of libraries
 set(LIBRARIES)
-<<<<<<< HEAD
-set(EXTERN_LIBRARIES lsfml-system lsfml-network boost_filesystem boost_system)
-=======
-set(EXTERN_LIBRARIES sfml-system sfml-network)
->>>>>>> 7f6ce07c4133ab0b6b2cff38fe86633a9bcee831
+set(EXTERN_LIBRARIES sfml-system sfml-network boost_filesystem boost_system)
 set(EXTERN_LINK_DIRECTORIES /usr/lib64/)
 set(EXTERN_INCLUDE_DIRECTORIES /usr/include/SFML /usr/include/boost)
 
