@@ -15,7 +15,6 @@ Diffusion::Diffusion()
 })
 {
 	// TODO Auto-generated constructor stub
-
 }
 
 Diffusion::~Diffusion() {
