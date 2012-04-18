@@ -7,7 +7,7 @@
 
 #include "Client.hh"
 
-Client::Client(sf::SocketTCP& control, sf::SocketUDP& data, int videoId)
+Client::Client(sf::SocketTCP& control, sf::SocketTCP& data, int videoId)
 : controlSocket_ (control)
 , dataSocket_ (data)
 , videoId_ (videoId)
@@ -29,7 +29,7 @@ sf::SocketTCP& Client::getControlSocket() const
   return controlSocket_;
 }
 
-sf::SocketUDP& Client::getDataSocket() const
+sf::SocketTCP& Client::getDataSocket() const
 {
   return dataSocket_;
 }
@@ -54,6 +54,18 @@ void Client::setVideoId(int videoId)
   videoId_ = videoId;
 }
 
+int Client::sendControl(sf::Packet& packet)
+{
+  if (controlSocket_.Send(packet) != sf::Socket::Status::Done)
+    return TRUE;
+  return FALSE;
+}
 
+int Client::sendData(sf::Packet& packet)
+{
+  if (dataSocket_.Send(packet) != sf::Socket::Status::Done)
+    return TRUE;
+  return FALSE;
+}
 
 

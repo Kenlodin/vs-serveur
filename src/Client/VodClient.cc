@@ -7,7 +7,7 @@
 
 #include "VodClient.hh"
 
-VodClient::VodClient(sf::SocketTCP& control, sf::SocketUDP& data, int videoId)
+VodClient::VodClient(sf::SocketTCP& control, sf::SocketTCP& data, int videoId)
 : Client(control, data, videoId)
 {
   // TODO Auto-generated constructor stub

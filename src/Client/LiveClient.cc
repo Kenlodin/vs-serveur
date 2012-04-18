@@ -8,7 +8,7 @@
 #include "LiveClient.hh"
 #include "../FileManager/LiveHandler.hh"
 
-LiveClient::LiveClient(sf::SocketTCP& control, sf::SocketUDP& data, int videoId)
+LiveClient::LiveClient(sf::SocketTCP& control, sf::SocketTCP& data, int videoId)
  : Client(control, data, videoId)
 {
   // TODO Auto-generated constructor stub
