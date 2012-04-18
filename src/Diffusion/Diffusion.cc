@@ -41,11 +41,21 @@ int Diffusion::routing_internal(unsigned int code, sf::Packet* packet)
 }
 
 int Diffusion::ddVideoDemand(sf::Packet* packet) {
+	sf::Int32 videoId;
+	sf::Int32 serverId;
+
+	// Extract content of packet
+	packet >> videoId;
+	packet >> serverId;
 	return FALSE;
 }
 
 
 int Diffusion::ddPingPong(sf::Packet* packet) {
+	std::string message;
+
+	// Extract content of packet
+	packet >> message;
 	return FALSE;
 }
 
