@@ -24,6 +24,8 @@ private:
 private:
 	int ddVideoDemand(sf::Packet* packet);
 	int ddPingPong(sf::Packet* packet);
+private:
+	int dcData (sf::Int8 data, int length);
 };
 
 #endif /* DIFFUSION_HH_ */
