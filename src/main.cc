@@ -11,7 +11,6 @@
 #include "Tracker/Tracker.hh"
 #include "Diffusion/Diffusion.hh"
 #include "Thread/Thread.hh"
-#include "Thread/test.h"
 
 int
 main ()
