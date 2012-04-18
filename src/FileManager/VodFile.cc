@@ -16,10 +16,11 @@ VodFile::VodFile()
 
 }
 
-VodFile::VodFile(std::string name)
+VodFile::VodFile(int videoId)
 {
+  videoId_ = videoId;
   fd_ = -1;
-  name_ = name;
+  name_ = "";
   nbpacket_ = 0;
 }
 
@@ -54,7 +55,7 @@ Chuck* VodFile::getPacket(int number)
     moveUp(number);
   else if (number < nbpacket_)
     moveDown(number);
-  return currentPacket;
+  return currentPacket_;
 }
 
 void VodFile::moveUp(int number)
