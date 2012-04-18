@@ -7,14 +7,20 @@
 
 #include "SqlManager.hh"
 
-SqlManager::SqlManager()
+SqlManager* SqlManager::getInstance ()
 {
-  // TODO Auto-generated constructor stub
-
+  static SqlManager* instance = nullptr;
+  if (instance == nullptr)
+    instance = new SqlManager ();
+  return instance;
 }
 
-SqlManager::~SqlManager()
+void SqlManager::connect ()
 {
-  // TODO Auto-generated destructor stub
+  connection = new pqxx::connection("");
+  connection->activate ();
+  if (connection->is_open ())
+    std::cout << "topmoutout" << std::endl;
+  else
+    std::cout << "NOOOOO" << std::endl;
 }
-
