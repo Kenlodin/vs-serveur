@@ -59,5 +59,19 @@ int Diffusion::ddPingPong(sf::Packet* packet) {
 	return FALSE;
 }
 
+int Diffusion::dcData(sf::Int8 data, int length)
+{
+  sf::Packet packet;
+  sf::Int16 opcode = MERGE_OPCODE(ConnexionType::DIFFUSION_CLIENT, DC::DATA);
+
+  packet << opcode;
+  for (int i = 0; i < length; i++)
+  {
+    packet << data[i];
+  }
+  return FALSE;
+}
+
+
 
 

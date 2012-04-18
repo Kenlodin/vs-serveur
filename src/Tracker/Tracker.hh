@@ -19,7 +19,7 @@ public:
 private:
 	typedef int (Tracker::*handler)(sf::Packet* packet);
 	const handler route_[CT::LENGTH];
-private:
+private: // Receiver handling
 	int ctConnMaster (sf::Packet* packet);
 	int ctConnSlave (sf::Packet* packet);
 	int ctAskList (sf::Packet* packet);
@@ -32,6 +32,21 @@ private:
 	int ctAskRem (sf::Packet* packet);
 	int ctAskStop (sf::Packet* packet);
 	int ctDec (sf::Packet* packet);
+private: // Sender handling
+	int tcToken (std::string token);
+	int tcList (std::string name[], sf::Int32 id[], sf::Int32 number);
+	int tcListDiff (std::string ip[], sf::Int16 port[], sf::Int8 number);
+	int tcListDiff (std::string ip1, sf::Int16 port1
+	          , std::string ip2, sf::Int16 port2
+	          , std::string ip3, sf::Int16 port3);
+	int tcListNDiff (std::string ip[], sf::Int16 port[], sf::Int8 number);
+	int tcListNDiff (std::string ip, sf::Int16 port);
+	int tcListNDiff (std::string ip1, sf::Int16 port1
+	              , std::string ip2, sf::Int16 port2);
+  int tcListNDiff (std::string ip1, sf::Int16 port1
+                , std::string ip2, sf::Int16 port2
+                , std::string ip3, sf::Int16 port3);
+	int tcMsg (sf::Int32 numMsg, std::string msg);
 };
 
 #endif /* TRACKER_HH_ */

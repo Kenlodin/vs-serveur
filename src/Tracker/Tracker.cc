@@ -169,3 +169,144 @@ int Tracker::ctDec(sf::Packet* packet)
   packet >> token;
   return FALSE;
 }
+
+int Tracker::tcToken(std::string token)
+{
+  sf::Packet packet;
+  sf::Int16 opcode = MERGE_OPCODE(ConnexionType::TRACKER_CLIENT, TC::TOKEN);
+
+  // Create packet
+  packet << opcode;
+  packet << token;
+  return FALSE;
+}
+
+int Tracker::tcList(std::string name[], sf::Int32 id[], sf::Int32 number)
+{
+  sf::Packet packet;
+  sf::Int16 opcode = MERGE_OPCODE(ConnexionType::TRACKER_CLIENT, TC::LIST);
+
+  // Create packet
+  packet << opcode;
+  packet << number;
+  for (int i = 0; i < number; i++)
+  {
+    packet << name[i];
+    packet << id[i];
+  }
+  return FALSE;
+}
+
+int Tracker::tcListDiff(std::string ip[], sf::Int16 port[], sf::Int8 number)
+{
+  sf::Packet packet;
+  sf::Int16 opcode = MERGE_OPCODE(ConnexionType::TRACKER_CLIENT, TC::LIST_DIFF);
+
+  // Create packet
+  packet << opcode;
+  packet << number;
+  for (int i = 0; i < number; i++)
+  {
+    packet << ip[i];
+    packet << port[i];
+  }
+  return FALSE;
+}
+
+int Tracker::tcListDiff(std::string ip1, sf::Int16 port1, std::string ip2,
+    sf::Int16 port2, std::string ip3, sf::Int16 port3)
+{
+  sf::Packet packet;
+  sf::Int16 opcode = MERGE_OPCODE(ConnexionType::TRACKER_CLIENT, TC::LIST_DIFF);
+  sf::Int8 number = 3;
+
+  // Create packet
+  packet << opcode;
+  packet << number;
+  packet << ip1;
+  packet << port1;
+  packet << ip2;
+  packet << port2;
+  packet << ip3;
+  packet << port3;
+  return FALSE;
+}
+
+int Tracker::tcListNDiff(std::string ip[], sf::Int16 port[], sf::Int8 number)
+{
+  sf::Packet packet;
+  sf::Int16 opcode = MERGE_OPCODE(ConnexionType::TRACKER_CLIENT, TC::LIST_NDIFF);
+
+  // Create packet
+  packet << opcode;
+  packet << number;
+  for (int i = 0; i < sf::Int8; i++)
+  {
+    packet << ip[i];
+    packet << port[i];
+  }
+  return FALSE;
+}
+
+int Tracker::tcListNDiff(std::string ip, sf::Int16 port)
+{
+  sf::Packet packet;
+  sf::Int16 opcode = MERGE_OPCODE(ConnexionType::TRACKER_CLIENT, TC::LIST_NDIFF);
+  sf::Int8 number = 1;
+
+  // Create packet
+  packet << opcode;
+  packet << number;
+  packet << ip;
+  packet << port;
+  return FALSE;
+}
+
+int Tracker::tcListNDiff(std::string ip1, sf::Int16 port1, std::string ip2,
+    sf::Int16 port2)
+{
+  sf::Packet packet;
+  sf::Int16 opcode = MERGE_OPCODE(ConnexionType::TRACKER_CLIENT, TC::LIST_NDIFF);
+  sf::Int8 number = 2;
+
+  // Create packet
+  packet << opcode;
+  packet << number;
+  packet << ip1;
+  packet << port1;
+  packet << ip2;
+  packet << port2;
+  return FALSE;
+}
+
+int Tracker::tcListNDiff(std::string ip1, sf::Int16 port1, std::string ip2,
+    sf::Int16 port2, std::string ip3, sf::Int16 port3)
+{
+  sf::Packet packet;
+  sf::Int16 opcode = MERGE_OPCODE(ConnexionType::TRACKER_CLIENT, TC::LIST_NDIFF);
+  sf::Int8 number = 3;
+
+  // Create packet
+  packet << opcode;
+  packet << number;
+  packet << ip1;
+  packet << port1;
+  packet << ip2;
+  packet << port2;
+  packet << ip3;
+  packet << port3;
+  return FALSE;
+}
+
+int Tracker::tcMsg(sf::Int32 numMsg, std::string msg)
+{
+  sf::Packet packet;
+  sf::Int16 opcode = MERGE_OPCODE(ConnexionType::TRACKER_CLIENT, TC::MSG);
+
+  // Create packet
+  packet << opcode;
+  packet << numMsg;
+  packet << msg;
+  return FALSE;
+}
+
