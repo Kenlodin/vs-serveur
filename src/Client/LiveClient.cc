@@ -6,22 +6,24 @@
  */
 
 #include "LiveClient.hh"
+#include "../FileManager/LiveHandler.hh"
 
-LiveClient::LiveClient(sf::SocketTCP& control, sf::SocketUDP& data)
- : Client(control, data)
+LiveClient::LiveClient(sf::SocketTCP& control, sf::SocketTCP& data, int videoId)
+ : Client(control, data, videoId)
 {
   // TODO Auto-generated constructor stub
-
+  setFileVideo(LiveHandler::getInstance().getLive(videoId));
 }
 
 LiveClient::~LiveClient()
 {
   // TODO Auto-generated destructor stub
+  LiveHandler::getInstance().leaveLive(getVideoId());
 }
 
 Chuck* LiveClient::getElement(int number)
 {
-  return nullptr;
+  return getFileVideo()->getPacket(number);
 }
 
 

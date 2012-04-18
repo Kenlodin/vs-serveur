@@ -15,11 +15,9 @@
 class VodClient : public Client
 {
   public:
-    VodClient(sf::SocketTCP& control, sf::SocketUDP& data);
+    VodClient(sf::SocketTCP& control, sf::SocketTCP& data, int videoId);
     virtual ~VodClient();
     virtual Chuck* getElement(int number);
-  private:
-    VodFile* currentVideo;
 };
 
 #endif /* VODCLIENT_HH_ */

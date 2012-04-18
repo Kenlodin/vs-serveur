@@ -15,7 +15,7 @@ class VodFile : public FileVideo
 {
   public:
     VodFile();
-    VodFile(std::string name);
+    VodFile(int videoId);
     virtual ~VodFile();
     int getFd() const;
     void setFd(int fd);
@@ -33,9 +33,10 @@ class VodFile : public FileVideo
   private:
     int fd_;
     int nbpacket_;
+    int videoId_;
     std::string name_;
-    Chuck* currentPacket;
-    std::fstream file;
+    Chuck* currentPacket_;
+    std::fstream file_;
 };
 
 #endif /* FILE_HH_ */

@@ -13,7 +13,7 @@
 class LiveClient : public Client
 {
   public:
-    LiveClient(sf::SocketTCP& control, sf::SocketUDP& data);
+    LiveClient(sf::SocketTCP& control, sf::SocketTCP& data, int videoId);
     virtual ~LiveClient();
     virtual Chuck* getElement(int number);
   private:

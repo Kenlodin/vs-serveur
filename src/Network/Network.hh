@@ -14,6 +14,7 @@
 # include "../fwd.hh"
 # include "../Diffusion/Diffusion.hh"
 # include "../Tracker/Tracker.hh"
+# include "../Network/NetworkListener.hh"
 
 class Network
 {
@@ -24,8 +25,7 @@ class Network
   public:
     int start();
     int routing(sf::Packet* packet);
-    int sendControl(sf::Packet& packet);
-    int sendData(sf::Packet& packet);
+
   private:
     typedef int (Network::*handler)(unsigned int route, sf::Packet* packet);
     const handler route_[ConnexionType::LENGTH];
@@ -38,13 +38,13 @@ class Network
   private:
     sf::SocketTCP* controlSocket_;
     unsigned short controlPort_;
-    pthread_t* control_thread;
-    std::map<std::string, sf::SocketTCP> controlClient;
+    NetworkListener* control_thread;
+
 
     sf::SocketTCP* dataSocket_;
     unsigned short dataPort_;
-    pthread_t* data_thread;
-    std::map<std::string, sf::SocketTCP> dataClient;
+    NetworkListener* data_thread;
+
 
     Diffusion* diffusion_;
     Tracker* tracker_;

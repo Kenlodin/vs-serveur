@@ -5,9 +5,10 @@
  *      Author: nagriar
  */
 
-#include "Network.hh"
+# include "Network.hh"
 # include "../Diffusion/Diffusion.hh"
 # include "../Tracker/Tracker.hh"
+# include "ClientBiding.hh"
 
 Network::Network(int control_port, int data_port, Tracker* tracker,
     Diffusion* diffusion)
@@ -37,8 +38,22 @@ Network::~Network()
   // TODO Auto-generated destructor stub
 }
 
+static void addData (sf::SocketTCP& socket, sf::IPAddress& ip)
+{
+  ClientBiding::getInstance().addDataSocket(socket, ip);
+}
+
+static void addControl (sf::SocketTCP& socket, sf::IPAddress& ip)
+{
+  ClientBiding::getInstance().addControlSocket(socket, ip);
+}
+
 int Network::start()
 {
+  control_thread = new NetworkListener(*controlSocket_, addControl);
+  control_thread->start();
+  data_thread = new NetworkListener(*dataSocket_, addData);
+  data_thread->start();
   return 1;
 }
 
@@ -82,16 +97,4 @@ int Network::diffusionDiffusion(unsigned int route, sf::Packet* packet)
   return diffusion_->routing_internal(route, packet);
 }
 
-int Network::sendControl(sf::Packet& packet)
-{
-  if (controlSocket_->Send(packet) != sf::Socket::Status::Done)
-    return TRUE;
-  return FALSE;
-}
 
-int Network::sendData(sf::Packet& packet)
-{
-  if (dataSocket_->Send(packet) != sf::Socket::Status::Done)
-    return TRUE;
-  return FALSE;
-}
