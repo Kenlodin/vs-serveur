@@ -10,6 +10,8 @@
 #include "Network/Network.hh"
 #include "Tracker/Tracker.hh"
 #include "Diffusion/Diffusion.hh"
+#include "Thread/Thread.hh"
+#include "Thread/test.h"
 
 int
 main ()
@@ -18,13 +20,9 @@ main ()
   //	Diffusion* diffusion = new Diffusion();
   //	Tracker* tracker = new Tracker();
   //	return 0;
-  sf::Clock Clock;
-  while (Clock.GetElapsedTime () < 5.f)
-  {
-    std::cout << Clock.GetElapsedTime () << std::endl;
-    sf::Sleep (0.5f);
-  }
-
+  
+//  tools::Thread t();
+//  t.run ();
   return 0;
 }
 

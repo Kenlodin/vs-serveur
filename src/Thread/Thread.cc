@@ -16,10 +16,6 @@ namespace tools
   {
   }
 
-  Thread::Thread (const Thread& orig)
-  {
-  }
-
   Thread::~Thread ()
   {
   }
@@ -28,8 +24,18 @@ namespace tools
   ///
   ///
   
-  Thread::start ()
+  void Thread::start ()
   {
-    t (run);
+    t_ = boost::thread(&Thread::run, this);
+  }
+  
+  void Thread::run ()
+  {
+    std::cout << "Coucou !" << std::endl;
+  }
+  
+  void Thread::join ()
+  {
+    t_.join ();
   }
 }

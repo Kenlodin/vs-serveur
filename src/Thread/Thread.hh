@@ -21,7 +21,6 @@ namespace tools
     /// Constructor & Destructor
     ///
     Thread ();
-    Thread (const Thread& orig);
     virtual ~Thread ();
     
    public:
@@ -30,9 +29,12 @@ namespace tools
     ///
     void start ();
     virtual void run ();
+    void join ();
+    
     
    private:
-    boost::thread t;
+    //std::shared_ptr<boost::thread> t_;
+    boost::thread t_;
     
 
   } ;
