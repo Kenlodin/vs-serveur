@@ -45,8 +45,8 @@ int Diffusion::ddVideoDemand(sf::Packet* packet) {
 	sf::Int32 serverId;
 
 	// Extract content of packet
-	packet >> videoId;
-	packet >> serverId;
+	*packet >> videoId;
+	*packet >> serverId;
 	return FALSE;
 }
 
@@ -55,11 +55,11 @@ int Diffusion::ddPingPong(sf::Packet* packet) {
 	std::string message;
 
 	// Extract content of packet
-	packet >> message;
+	*packet >> message;
 	return FALSE;
 }
 
-int Diffusion::dcData(sf::Int8 data, int length)
+int Diffusion::dcData(sf::Int8 data[], int length)
 {
   sf::Packet packet;
   sf::Int16 opcode = MERGE_OPCODE(ConnexionType::DIFFUSION_CLIENT, DC::DATA);
