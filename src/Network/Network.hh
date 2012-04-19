@@ -10,40 +10,43 @@
 
 # include <SFML/System.hpp>
 # include <SFML/Network.hpp>
-# include <pthread.h>
+# include "../Thread/Thread.hh"
 # include "../fwd.hh"
 # include "../Diffusion/Diffusion.hh"
 # include "../Tracker/Tracker.hh"
-# include "../Network/NetworkListener.hh"
 
-class Network
+class Network : public tools::Thread
 {
   public:
     Network(int control_port, int data_port, Tracker* tracker,
         Diffusion* diffusion);
     virtual ~Network();
   public:
-    int start();
-    int routing(sf::Packet* packet);
+    void run ();
+    int routing(sf::Packet& packet, sf::SocketTCP& sock);
 
   private:
-    typedef int (Network::*handler)(unsigned int route, sf::Packet* packet);
+    typedef int (Network::*handler)(unsigned int route, sf::Packet& packet
+        , sf::SocketTCP& sock);
     const handler route_[ConnexionType::LENGTH];
   private:
-    int clientTracker(unsigned int route, sf::Packet* packet);
-    int trackerClient(unsigned int route, sf::Packet* packet);
-    int clientDiffusion(unsigned int route, sf::Packet* packet);
-    int diffusionClient(unsigned int route, sf::Packet* packet);
-    int diffusionDiffusion(unsigned int route, sf::Packet* packet);
+    int clientTracker(unsigned int route, sf::Packet& packet
+        , sf::SocketTCP& sock);
+    int trackerClient(unsigned int route, sf::Packet& packet
+        , sf::SocketTCP& sock);
+    int clientDiffusion(unsigned int route, sf::Packet& packet
+        , sf::SocketTCP& sock);
+    int diffusionClient(unsigned int route, sf::Packet& packet
+        , sf::SocketTCP& sock);
+    int diffusionDiffusion(unsigned int route, sf::Packet& packet
+        , sf::SocketTCP& sock);
   private:
     sf::SocketTCP* controlSocket_;
     unsigned short controlPort_;
-    NetworkListener* control_thread;
 
 
     sf::SocketTCP* dataSocket_;
     unsigned short dataPort_;
-    NetworkListener* data_thread;
 
 
     Diffusion* diffusion_;

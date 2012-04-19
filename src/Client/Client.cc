@@ -37,15 +37,15 @@ sf::SocketTCP* Client::getDataSocket() const
 int Client::sendControl(sf::Packet& packet)
 {
   if (controlSocket_->Send(packet) != sf::Socket::Status::Done)
-    return TRUE;
-  return FALSE;
+    return RETURN_VALUE_ERROR;
+  return RETURN_VALUE_GOOD;
 }
 
 int Client::sendData(sf::Packet& packet)
 {
   if (dataSocket_->Send(packet) != sf::Socket::Status::Done)
-    return TRUE;
-  return FALSE;
+    return RETURN_VALUE_ERROR;
+  return RETURN_VALUE_GOOD;
 }
 
 void Client::setDataSocket(sf::SocketTCP* dataSocket)

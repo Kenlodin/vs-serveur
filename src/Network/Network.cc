@@ -8,7 +8,6 @@
 # include "Network.hh"
 # include "../Diffusion/Diffusion.hh"
 # include "../Tracker/Tracker.hh"
-# include "ClientBiding.hh"
 
 Network::Network(int control_port, int data_port, Tracker* tracker,
     Diffusion* diffusion)
@@ -38,63 +37,69 @@ Network::~Network()
   // TODO Auto-generated destructor stub
 }
 
-static void addData (sf::SocketTCP& socket, sf::IPAddress& ip)
-{
-  ClientBiding::getInstance().addDataSocket(socket, ip);
-}
-
-static void addControl (sf::SocketTCP& socket, sf::IPAddress& ip)
-{
-  ClientBiding::getInstance().addControlSocket(socket, ip);
-}
-
-int Network::start()
-{
-  control_thread = new NetworkListener(*controlSocket_, addControl);
-  control_thread->start();
-  data_thread = new NetworkListener(*dataSocket_, addData);
-  data_thread->start();
-  return 1;
-}
-
-int Network::routing(sf::Packet* packet)
+int Network::routing(sf::Packet& packet, sf::SocketTCP& sock)
 {
   sf::Int16 opcode;
   int type;
   int code;
 
-  *packet >> opcode;
+  packet >> opcode;
   code = EXTRACT_CODE(opcode);
   type = EXTRACT_TYPE(opcode);
   if (code < CD::LENGTH)
-    return (this->*route_[type])(code, packet);
+    return (this->*route_[type])(code, packet, sock);
   else
-    return TRUE;
+    return RETURN_VALUE_ERROR;
 }
 
-int Network::clientTracker(unsigned int route, sf::Packet* packet)
+int Network::clientTracker(unsigned int route, sf::Packet& packet, sf::SocketTCP& sock)
 {
-  return tracker_->routing(route, packet);
+  return tracker_->routing(route, packet, sock);
 }
 
-int Network::trackerClient(unsigned int route, sf::Packet* packet)
+int Network::trackerClient(unsigned int route, sf::Packet& packet, sf::SocketTCP& sock)
 {
-  return TRUE;
+  return RETURN_VALUE_ERROR;
 }
 
-int Network::clientDiffusion(unsigned int route, sf::Packet* packet)
+int Network::clientDiffusion(unsigned int route, sf::Packet& packet, sf::SocketTCP& sock)
 {
-  return diffusion_->routing(route, packet);
+  return diffusion_->routing(route, packet, sock);
 }
 
-int Network::diffusionClient(unsigned int route, sf::Packet* packet)
+int Network::diffusionClient(unsigned int route, sf::Packet& packet, sf::SocketTCP& sock)
 {
-  return TRUE;
+  return RETURN_VALUE_ERROR;
 }
 
-int Network::diffusionDiffusion(unsigned int route, sf::Packet* packet)
+int Network::diffusionDiffusion(unsigned int route, sf::Packet& packet, sf::SocketTCP& sock)
 {
-  return diffusion_->routing_internal(route, packet);
+  return diffusion_->routing_internal(route, packet, sock);
 }
 
-
+void Network::run ()
+{
+  sf::SelectorTCP selector;
+  selector.Add(*dataSocket_);
+  selector.Add(*controlSocket_);
+  while (true)
+  {
+    unsigned int nb = selector.Wait();
+    for (unsigned int i = 0; i < nb; i++)
+    {
+      sf::SocketTCP sock = selector.GetSocketReady(i);
+      if (sock == *controlSocket_ || sock == *dataSocket_)
+      {
+        sf::SocketTCP client;
+        sock.Accept(client, nullptr);
+        selector.Add(client);
+      }
+      else
+      {
+        sf::Packet packet;
+        sock.Receive(packet);
+        int returnValue = routing(packet, sock);
+      }
+    }
+  }
+}

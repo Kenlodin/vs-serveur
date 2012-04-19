@@ -21,41 +21,43 @@ Diffusion::~Diffusion() {
 	// TODO Auto-generated destructor stub
 }
 
-int Diffusion::routing(unsigned int code, sf::Packet* packet)
+int Diffusion::routing(unsigned int code, sf::Packet& packet
+    , sf::SocketTCP& sock)
 {
-	if (FALSE)//code < CD::LENGTH)
-		(this->*route_[code]) (packet);
+	if (RETURN_VALUE_GOOD)//code < CD::LENGTH)
+		(this->*route_[code]) (packet, sock);
 	else
-		return TRUE;
-	return FALSE;
+		return RETURN_VALUE_ERROR;
+	return RETURN_VALUE_GOOD;
 }
 
-int Diffusion::routing_internal(unsigned int code, sf::Packet* packet)
+int Diffusion::routing_internal(unsigned int code, sf::Packet& packet
+    , sf::SocketTCP& sock)
 {
 	if (code < DD::LENGTH)
-		(this->*route_[code]) (packet);
+		(this->*route_[code]) (packet, sock);
 	else
-		return TRUE;
-	return FALSE;
+		return RETURN_VALUE_ERROR;
+	return RETURN_VALUE_GOOD;
 }
 
-int Diffusion::ddVideoDemand(sf::Packet* packet) {
+int Diffusion::ddVideoDemand(sf::Packet& packet, sf::SocketTCP& sock) {
 	sf::Int32 videoId;
 	sf::Int32 serverId;
 
 	// Extract content of packet
-	*packet >> videoId;
-	*packet >> serverId;
-	return FALSE;
+	packet >> videoId;
+	packet >> serverId;
+	return RETURN_VALUE_GOOD;
 }
 
 
-int Diffusion::ddPingPong(sf::Packet* packet) {
+int Diffusion::ddPingPong(sf::Packet& packet, sf::SocketTCP& sock) {
 	std::string message;
 
 	// Extract content of packet
-	*packet >> message;
-	return FALSE;
+	packet >> message;
+	return RETURN_VALUE_GOOD;
 }
 
 int Diffusion::dcData(sf::Int8 data[], int length)
@@ -68,7 +70,7 @@ int Diffusion::dcData(sf::Int8 data[], int length)
   {
     packet << data[i];
   }
-  return FALSE;
+  return RETURN_VALUE_GOOD;
 }
 
 

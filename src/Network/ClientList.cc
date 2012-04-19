@@ -18,12 +18,19 @@ ClientList::~ClientList()
   // TODO Auto-generated destructor stub
 }
 
-std::map<std::string, Client*> ClientList::getClientList() const
+std::map<sf::SocketTCP*, Client*> ClientList::getClientList() const
 {
   return clientList_;
 }
 
-void ClientList::setClientList(std::map<std::string, Client*> clientList)
+void ClientList::link(sf::SocketTCP* data, Client* client)
+{
+  generalMutex_.lock();
+  clientList_[data] = client;
+  generalMutex_.unlock();
+}
+
+void ClientList::setClientList(std::map<sf::SocketTCP*, Client*> clientList)
 {
   clientList_ = clientList;
 }
@@ -35,29 +42,28 @@ ClientList& ClientList::getInstance()
   return instance_;
 }
 
-void ClientList::addClient(sf::SocketTCP* control, sf::SocketTCP* data,
-    std::string ip)
+void ClientList::addClient(sf::SocketTCP* control, sf::SocketTCP* data)
 {
   //Wait token and add in list
   generalMutex_.lock();
-  tempList_[ip] = new Client(control, data);
+  clientList_[control] = new Client(control, data);
   generalMutex_.unlock();
 }
 
-void ClientList::removeClient(std::string token)
+void ClientList::removeClient(sf::SocketTCP* sock)
 {
   generalMutex_.lock();
-  Client* c = clientList_[token];
-  clientList_[token] = nullptr;
+  Client* c = clientList_[sock];
+  clientList_[sock] = nullptr;
   generalMutex_.unlock();
   delete c;
 
 }
 
-Client* ClientList::getClient(std::string token)
+Client* ClientList::getClient(sf::SocketTCP* sock)
 {
   generalMutex_.lock();
-  Client* c = clientList_[token];
+  Client* c = clientList_[sock];
   generalMutex_.unlock();
   return c;
 }
