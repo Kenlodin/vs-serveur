@@ -11,10 +11,22 @@
 #include <pqxx/pqxx>
 #include <iostream>
 
+/**
+ * Cette classe permet de discuter avec la base de données. Elle utilise la 
+ * bibliothèque libpqxx.
+ */
 class SqlManager
 {
  public:
+  /**
+   * Permet de se connecter à la base de données.
+   */
   void connect ();
+  
+  /**
+   * Permet d'exécuter une requête SQL
+   * @param query La requête SQL
+   */
   void execute (std::string query);
  public:
   static SqlManager* getInstance ();

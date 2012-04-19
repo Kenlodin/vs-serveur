@@ -17,15 +17,34 @@
 
 /**
  * La classe log permet de mettre en place un systeme de log. C'est un singleton
- * qui ne nécessite pas d'être thread-safe.
+ * qui ne nécessite pas d'être thread-safe puisqu'il doit être appellé pour être
+ * initialisé
  * 
  * @param file
  */
 class Log
 {
  public:
+  /**
+   * Indique le fichier dans lequel les logs doivent être enregistrées. C'est
+   * cette fonction qui ouvre le fichier.
+   * @param file Le fichier
+   */
   void setFile (std::string file);
+  
+  /**
+   * Permet d'écrire le log. Le log est enregistré dans la forme suivante :
+   * [$tag] $msg
+   * Un retours à la ligne est automatiquement ajouté en fin de ligne.
+   * @param tag Le tag associé au message
+   * @param msg Le message
+   */
   void write (std::string tag, std::string msg);
+  
+  /**
+   * Permet de savoir si le système de log est actif.
+   * @return bool 
+   */
   bool getIsActive ();
 
  private:

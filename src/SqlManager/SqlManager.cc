@@ -6,7 +6,6 @@
  */
 
 #include <stdlib.h>
-
 #include "SqlManager.hh"
 
 SqlManager* SqlManager::getInstance ()

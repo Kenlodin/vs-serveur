@@ -21,6 +21,8 @@ Log::getInstance ()
 void
 Log::setFile (std::string file)
 {
+  if (file_.is_open ())
+    file_.close ();
   file_.open (file, std::ios_base::app);
   if (file_.is_open ())
     isActive_ = true;
