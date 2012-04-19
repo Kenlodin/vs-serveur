@@ -15,7 +15,7 @@ class SqlManager
 {
  public:
   void connect ();
-
+  void execute (std::string query);
  public:
   static SqlManager* getInstance ();
 
@@ -23,7 +23,7 @@ class SqlManager
   SqlManager () {};
   
  private:
-  pqxx::connection* connection;
+  pqxx::connection* connection_;
 } ;
 
 #endif /* SQLMANAGER_HH_ */

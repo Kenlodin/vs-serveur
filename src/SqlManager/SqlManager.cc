@@ -5,6 +5,8 @@
  *      Author: nagriar
  */
 
+#include <stdlib.h>
+
 #include "SqlManager.hh"
 
 SqlManager* SqlManager::getInstance ()
@@ -17,10 +19,22 @@ SqlManager* SqlManager::getInstance ()
 
 void SqlManager::connect ()
 {
-  connection = new pqxx::connection("");
-  connection->activate ();
-  if (connection->is_open ())
+  connection_ = new pqxx::connection("user=aymeric password=test35 host=91.121.55.208 dbname=aymeric");
+  connection_->activate ();
+  if (connection_->is_open ())
     std::cout << "topmoutout" << std::endl;
   else
-    std::cout << "NOOOOO" << std::endl;
+  {
+    std::cerr << "Impossible de se connecter à la base de données.";
+    std::exit (1);
+  }
+}
+
+void SqlManager::execute (std::string query)
+{
+  query = query;
+  connection_->prepare ("top", "select * from mytable");
+  pqxx::work w (*connection_);
+  pqxx::result r = w.prepared ("top").exec ();
+  std::cout << r.size () << std::endl;
 }
