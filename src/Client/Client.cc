@@ -7,10 +7,9 @@
 
 #include "Client.hh"
 
-Client::Client(sf::SocketTCP& control, sf::SocketTCP& data, int videoId)
+Client::Client(sf::SocketTCP*& control, sf::SocketTCP*& data)
 : controlSocket_ (control)
 , dataSocket_ (data)
-, videoId_ (videoId)
 {
   // TODO Auto-generated constructor stub
 
@@ -19,53 +18,39 @@ Client::Client(sf::SocketTCP& control, sf::SocketTCP& data, int videoId)
 Client::~Client()
 {
   // TODO Auto-generated destructor stub
-  controlSocket_.Close();
-  dataSocket_.Close();
-  delete fileVideo_;
+  controlSocket_->Close();
+  dataSocket_->Close();
+  delete controlSocket_;
+  delete dataSocket_;
 }
 
-sf::SocketTCP& Client::getControlSocket() const
+sf::SocketTCP* Client::getControlSocket() const
 {
   return controlSocket_;
 }
 
-sf::SocketTCP& Client::getDataSocket() const
+sf::SocketTCP* Client::getDataSocket() const
 {
   return dataSocket_;
 }
 
-FileVideo* Client::getFileVideo() const
-{
-  return fileVideo_;
-}
-
-void Client::setFileVideo(FileVideo* fileVideo)
-{
-  this->fileVideo_ = fileVideo;
-}
-
-int Client::getVideoId() const
-{
-  return videoId_;
-}
-
-void Client::setVideoId(int videoId)
-{
-  videoId_ = videoId;
-}
-
 int Client::sendControl(sf::Packet& packet)
 {
-  if (controlSocket_.Send(packet) != sf::Socket::Status::Done)
+  if (controlSocket_->Send(packet) != sf::Socket::Status::Done)
     return TRUE;
   return FALSE;
 }
 
 int Client::sendData(sf::Packet& packet)
 {
-  if (dataSocket_.Send(packet) != sf::Socket::Status::Done)
+  if (dataSocket_->Send(packet) != sf::Socket::Status::Done)
     return TRUE;
   return FALSE;
+}
+
+void Client::setDataSocket(sf::SocketTCP* dataSocket)
+{
+  dataSocket_ = dataSocket;
 }
 
 

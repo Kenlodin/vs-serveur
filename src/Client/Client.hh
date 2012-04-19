@@ -8,30 +8,25 @@
 #ifndef CLIENT_H_
 #define CLIENT_H_
 
-# include "../FileManager/Chuck.hh"
-# include "../FileManager/FileVideo.hh"
 # include <SFML/Network.hpp>
 # include "../fwd.hh"
+# include "TypeClient.hh"
 
 class Client
 {
   public:
-    Client(sf::SocketTCP& control, sf::SocketTCP& data, int videoId);
+    Client(sf::SocketTCP*& control, sf::SocketTCP*& data);
     virtual ~Client();
-    virtual Chuck* getElement(int number) = 0;
-    sf::SocketTCP& getControlSocket() const;
-    sf::SocketTCP& getDataSocket() const;
-    FileVideo* getFileVideo() const;
-    void setFileVideo(FileVideo* fileVideo);
-    int getVideoId() const;
-    void setVideoId(int videoId);
+
+    sf::SocketTCP* getControlSocket() const;
+    sf::SocketTCP* getDataSocket() const;
     int sendControl(sf::Packet& packet);
     int sendData(sf::Packet& packet);
+    void setDataSocket(sf::SocketTCP* dataSocket);
 private:
-    sf::SocketTCP& controlSocket_;
-    sf::SocketTCP& dataSocket_;
-    FileVideo* fileVideo_;
-    int videoId_;
+    sf::SocketTCP* controlSocket_;
+    sf::SocketTCP* dataSocket_;
+    TypeClient* typeClient;
 };
 
 #endif /* CLIENT_H_ */

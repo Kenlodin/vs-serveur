@@ -18,7 +18,7 @@ class ClientList
     ClientList();
     virtual ~ClientList();
     static ClientList& getInstance();
-    void addClient(sf::SocketTCP* control, sf::SocketTCP* data);
+    void addClient(sf::SocketTCP* control, sf::SocketTCP* data, std::string ip);
     void removeClient(std::string token);
     Client* getClient(std::string token);
     std::map<std::string, Client*> getClientList() const;
@@ -26,6 +26,7 @@ class ClientList
   private:
     boost::mutex generalMutex_;
     std::map<std::string, Client*> clientList_;
+    std::map<std::string, Client*> tempList_;
 };
 
 #endif /* CLIENTLIST_HH_ */

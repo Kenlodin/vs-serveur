@@ -23,7 +23,6 @@ std::map<std::string, Client*> ClientList::getClientList() const
   return clientList_;
 }
 
-
 void ClientList::setClientList(std::map<std::string, Client*> clientList)
 {
   clientList_ = clientList;
@@ -36,11 +35,12 @@ ClientList& ClientList::getInstance()
   return instance_;
 }
 
-void ClientList::addClient(sf::SocketTCP* control, sf::SocketTCP* data)
+void ClientList::addClient(sf::SocketTCP* control, sf::SocketTCP* data,
+    std::string ip)
 {
   //Wait token and add in list
   generalMutex_.lock();
-
+  tempList_[ip] = new Client(control, data);
   generalMutex_.unlock();
 }
 

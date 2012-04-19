@@ -8,14 +8,14 @@
 #ifndef VODCLIENT_HH_
 #define VODCLIENT_HH_
 
-# include "Client.hh"
+# include "TypeClient.hh"
 # include "../FileManager/VodFile.hh"
 # include "../FileManager/Chuck.hh"
 
-class VodClient : public Client
+class VodClient : public TypeClient
 {
   public:
-    VodClient(sf::SocketTCP& control, sf::SocketTCP& data, int videoId);
+    VodClient(int videoId);
     virtual ~VodClient();
     virtual Chuck* getElement(int number);
 };

@@ -35,7 +35,7 @@ void ClientBiding::addDataSocket(sf::SocketTCP& newConnexion, sf::IPAddress ip)
     dataClient_[ip.ToString()] = saveConnexion;
   else
   {
-    ClientList::getInstance().addClient(controlSocket, saveConnexion);
+    ClientList::getInstance().getClient(ip.ToString())->setDataSocket(saveConnexion);
     controlClient_[ip.ToString()] = nullptr;
   }
   generalMutex_.unlock();
@@ -47,13 +47,9 @@ void ClientBiding::addControlSocket(sf::SocketTCP& newConnexion,
   sf::SocketTCP* saveConnexion = new sf::SocketTCP(newConnexion);
   generalMutex_.lock();
   sf::SocketTCP* dataSocket = dataClient_[ip.ToString()];
-  if (dataSocket == nullptr)
-    controlClient_[ip.ToString()] = saveConnexion;
-  else
-  {
-    ClientList::getInstance().addClient(saveConnexion, dataSocket);
-    dataClient_[ip.ToString()] = nullptr;
-  }
+  ClientList::getInstance().addClient(saveConnexion, dataSocket, ip.ToString());
+  dataClient_[ip.ToString()] = nullptr;
+  controlClient_[ip.ToString()] = saveConnexion;
   generalMutex_.unlock();
 }
 

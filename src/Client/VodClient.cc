@@ -7,8 +7,8 @@
 
 #include "VodClient.hh"
 
-VodClient::VodClient(sf::SocketTCP& control, sf::SocketTCP& data, int videoId)
-: Client(control, data, videoId)
+VodClient::VodClient(int videoId)
+: TypeClient(videoId)
 {
   // TODO Auto-generated constructor stub
   setFileVideo(new VodFile(videoId));
