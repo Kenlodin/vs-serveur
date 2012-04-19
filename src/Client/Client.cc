@@ -7,9 +7,8 @@
 
 #include "Client.hh"
 
-Client::Client(sf::SocketTCP*& control, sf::SocketTCP*& data)
-: controlSocket_ (control)
-, dataSocket_ (data)
+Client::Client(sf::SocketTCP*& control, sf::SocketTCP*& data, std::string token)
+    : controlSocket_(control), dataSocket_(data), token_(token)
 {
   // TODO Auto-generated constructor stub
 
@@ -51,6 +50,26 @@ int Client::sendData(sf::Packet& packet)
 void Client::setDataSocket(sf::SocketTCP* dataSocket)
 {
   dataSocket_ = dataSocket;
+}
+
+std::string Client::getToken() const
+{
+  return token_;
+}
+
+void Client::setToken(std::string token)
+{
+  token_ = token;
+}
+
+TypeClient* Client::getTypeClient() const
+{
+  return typeClient_;
+}
+
+void Client::setTypeClient(TypeClient* typeClient)
+{
+  typeClient_ = typeClient;
 }
 
 

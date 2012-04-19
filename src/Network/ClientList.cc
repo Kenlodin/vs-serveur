@@ -23,11 +23,18 @@ std::map<sf::SocketTCP*, Client*> ClientList::getClientList() const
   return clientList_;
 }
 
-void ClientList::link(sf::SocketTCP* data, Client* client)
+int ClientList::link(sf::SocketTCP* data, std::string token)
 {
   generalMutex_.lock();
-  clientList_[data] = client;
+  Client* c = clientLink_[token];
+  if (c == nullptr)
+  {
+    generalMutex_.unlock();
+    return RETURN_VALUE_ERROR;
+  }
+  clientList_[data] = c;
   generalMutex_.unlock();
+  return RETURN_VALUE_GOOD;
 }
 
 void ClientList::setClientList(std::map<sf::SocketTCP*, Client*> clientList)
@@ -42,11 +49,14 @@ ClientList& ClientList::getInstance()
   return instance_;
 }
 
-void ClientList::addClient(sf::SocketTCP* control, sf::SocketTCP* data)
+void ClientList::addClient(sf::SocketTCP* control, sf::SocketTCP* data,
+    std::string token)
 {
   //Wait token and add in list
   generalMutex_.lock();
-  clientList_[control] = new Client(control, data);
+  Client* c = new Client(control, data, token);
+  clientList_[control] = c;
+  clientLink_[token] = c;
   generalMutex_.unlock();
 }
 
@@ -54,7 +64,11 @@ void ClientList::removeClient(sf::SocketTCP* sock)
 {
   generalMutex_.lock();
   Client* c = clientList_[sock];
-  clientList_[sock] = nullptr;
+  if (c != nullptr)
+  {
+    clientList_[sock] = nullptr;
+    clientLink_[c->getToken()] = nullptr;
+  }
   generalMutex_.unlock();
   delete c;
 

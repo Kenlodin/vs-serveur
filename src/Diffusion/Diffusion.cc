@@ -6,58 +6,76 @@
  */
 
 #include "Diffusion.hh"
+#include "../Network/ClientList.hh"
 
 Diffusion::Diffusion()
- : route_ ()
- , route_internal ({
-	&Diffusion::ddVideoDemand,
-	&Diffusion::ddPingPong
-})
+    : route_(
+    { &Diffusion::cdToken })
+
+    , route_internal(
+    { &Diffusion::ddVideoDemand, &Diffusion::ddPingPong })
 {
-	// TODO Auto-generated constructor stub
+  // TODO Auto-generated constructor stub
 }
 
-Diffusion::~Diffusion() {
-	// TODO Auto-generated destructor stub
-}
-
-int Diffusion::routing(unsigned int code, sf::Packet& packet
-    , sf::SocketTCP& sock)
+Diffusion::~Diffusion()
 {
-	if (RETURN_VALUE_GOOD)//code < CD::LENGTH)
-		(this->*route_[code]) (packet, sock);
-	else
-		return RETURN_VALUE_ERROR;
-	return RETURN_VALUE_GOOD;
+  // TODO Auto-generated destructor stub
 }
 
-int Diffusion::routing_internal(unsigned int code, sf::Packet& packet
-    , sf::SocketTCP& sock)
+int Diffusion::routing(unsigned int code, sf::Packet& packet,
+    sf::SocketTCP& sock)
 {
-	if (code < DD::LENGTH)
-		(this->*route_[code]) (packet, sock);
-	else
-		return RETURN_VALUE_ERROR;
-	return RETURN_VALUE_GOOD;
+  if (RETURN_VALUE_GOOD) //code < CD::LENGTH)
+    (this->*route_[code])(packet, sock);
+  else
+    return RETURN_VALUE_ERROR;
+  return RETURN_VALUE_GOOD;
 }
 
-int Diffusion::ddVideoDemand(sf::Packet& packet, sf::SocketTCP& sock) {
-	sf::Int32 videoId;
-	sf::Int32 serverId;
-
-	// Extract content of packet
-	packet >> videoId;
-	packet >> serverId;
-	return RETURN_VALUE_GOOD;
+int Diffusion::routing_internal(unsigned int code, sf::Packet& packet,
+    sf::SocketTCP& sock)
+{
+  if (code < DD::LENGTH)
+    (this->*route_[code])(packet, sock);
+  else
+    return RETURN_VALUE_ERROR;
+  return RETURN_VALUE_GOOD;
 }
 
+int Diffusion::ddVideoDemand(sf::Packet& packet, sf::SocketTCP& sock)
+{
+  sf::Int32 videoId;
+  sf::Int32 serverId;
 
-int Diffusion::ddPingPong(sf::Packet& packet, sf::SocketTCP& sock) {
-	std::string message;
+  // Extract content of packet
+  packet >> videoId;
+  packet >> serverId;
+  return RETURN_VALUE_GOOD;
+}
 
-	// Extract content of packet
-	packet >> message;
-	return RETURN_VALUE_GOOD;
+int Diffusion::ddPingPong(sf::Packet& packet, sf::SocketTCP& sock)
+{
+  std::string message;
+
+  // Extract content of packet
+  packet >> message;
+  return RETURN_VALUE_GOOD;
+}
+
+int Diffusion::cdToken(sf::Packet& packet, sf::SocketTCP& sock)
+{
+  std::string token;
+
+  // Extract content of packet
+  packet >> token;
+  sf::SocketTCP* newSocket = new sf::SocketTCP(sock);
+  if (ClientList::getInstance().link(newSocket, token) == RETURN_VALUE_ERROR)
+  {
+    delete newSocket;
+    return RETURN_VALUE_ERROR;
+  }
+  return RETURN_VALUE_SUPPRESS;
 }
 
 int Diffusion::dcData(sf::Int8 data[], int length)
@@ -72,7 +90,4 @@ int Diffusion::dcData(sf::Int8 data[], int length)
   }
   return RETURN_VALUE_GOOD;
 }
-
-
-
 

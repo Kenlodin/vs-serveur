@@ -6,6 +6,7 @@
  */
 
 #include "Tracker.hh"
+#include "../Network/ClientList.hh"
 
 Tracker::Tracker()
     : route_(
@@ -44,7 +45,7 @@ int Tracker::ctConnMaster(sf::Packet& packet, sf::SocketTCP& sock)
   packet >> password;
   packet >> privateIp;
   packet >> bandwidth;
-  return RETURN_VALUE_GOOD;
+  return RETURN_VALUE_SUPPRESS;
 }
 
 int Tracker::ctConnSlave(sf::Packet& packet, sf::SocketTCP& sock)
@@ -53,7 +54,9 @@ int Tracker::ctConnSlave(sf::Packet& packet, sf::SocketTCP& sock)
 
   // Extract content of packet
   packet >> token;
-  return RETURN_VALUE_GOOD;
+  sf::SocketTCP* newSocket = new sf::SocketTCP(sock);
+  ClientList::getInstance().addClient(newSocket, nullptr, token);
+  return RETURN_VALUE_SUPPRESS;
 }
 
 int Tracker::ctAskList(sf::Packet& packet, sf::SocketTCP& sock)
