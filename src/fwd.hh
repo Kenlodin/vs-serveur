@@ -86,6 +86,7 @@ namespace DD
 	{
 		VIDEO_DEMAND,
 		PING_PONG,
+		LIVE_LINK,
 		LENGTH
 	};
 }

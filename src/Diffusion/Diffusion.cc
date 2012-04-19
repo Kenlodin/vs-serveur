@@ -78,6 +78,17 @@ int Diffusion::cdToken(sf::Packet& packet, sf::SocketTCP& sock)
   return RETURN_VALUE_SUPPRESS;
 }
 
+int Diffusion::ddLiveLink(sf::Packet& packet, sf::SocketTCP& sock)
+{
+  sf::Int32 videoId;
+  sf::Int32 serverId;
+
+  // Extract content of packet
+  packet >> videoId;
+  packet >> serverId;
+  return RETURN_VALUE_GOOD;
+}
+
 int Diffusion::dcData(sf::Int8 data[], int length)
 {
   sf::Packet packet;
