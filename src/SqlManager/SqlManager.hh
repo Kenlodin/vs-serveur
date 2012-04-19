@@ -11,12 +11,17 @@
 #include <pqxx/pqxx>
 #include <iostream>
 
+
+typedef std::vector<std::map<std::string, std::string> > sql_result;
+
 /**
  * Cette classe permet de discuter avec la base de données. Elle utilise la 
  * bibliothèque libpqxx.
  */
 class SqlManager
 {
+  typedef std::map<std::string, std::string> map;
+  typedef std::pair<std::string, std::string> pair;
  public:
   /**
    * Permet de se connecter à la base de données.
@@ -27,9 +32,12 @@ class SqlManager
    * Permet d'exécuter une requête SQL
    * @param query La requête SQL
    */
-  void execute (std::string query);
+  pqxx::result execute (std::string query);
+  
  public:
-  static SqlManager* getInstance ();
+  sql_result getThreeServers ();
+ public:
+  static SqlManager& getInstance ();
 
  private:
   SqlManager () {};
