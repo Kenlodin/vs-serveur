@@ -23,16 +23,16 @@ Tracker::~Tracker()
   // TODO Auto-generated destructor stub
 }
 
-int Tracker::routing(unsigned int code, sf::Packet* packet)
+int Tracker::routing(unsigned int code, sf::Packet& packet, sf::SocketTCP& sock)
 {
   if (code < CT::LENGTH)
-    (this->*route_[code])(packet);
+    (this->*route_[code])(packet, sock);
   else
-    return TRUE;
-  return FALSE;
+    return RETURN_VALUE_ERROR;
+  return RETURN_VALUE_GOOD;
 }
 
-int Tracker::ctConnMaster(sf::Packet* packet)
+int Tracker::ctConnMaster(sf::Packet& packet, sf::SocketTCP& sock)
 {
   std::string login;
   std::string password;
@@ -40,134 +40,134 @@ int Tracker::ctConnMaster(sf::Packet* packet)
   sf::Int16 bandwidth;
 
   // Extract content of packet
-  *packet >> login;
-  *packet >> password;
-  *packet >> privateIp;
-  *packet >> bandwidth;
-  return FALSE;
+  packet >> login;
+  packet >> password;
+  packet >> privateIp;
+  packet >> bandwidth;
+  return RETURN_VALUE_GOOD;
 }
 
-int Tracker::ctConnSlave(sf::Packet* packet)
+int Tracker::ctConnSlave(sf::Packet& packet, sf::SocketTCP& sock)
 {
   std::string token;
 
   // Extract content of packet
-  *packet >> token;
-  return FALSE;
+  packet >> token;
+  return RETURN_VALUE_GOOD;
 }
 
-int Tracker::ctAskList(sf::Packet* packet)
+int Tracker::ctAskList(sf::Packet& packet, sf::SocketTCP& sock)
 {
   std::string token;
   sf::Int8 filter;
   std::string regexFilter;
 
   // Extract content of packet
-  *packet >> token;
-  *packet >> filter;
-  *packet >> regexFilter;
-  return FALSE;
+  packet >> token;
+  packet >> filter;
+  packet >> regexFilter;
+  return RETURN_VALUE_GOOD;
 }
 
-int Tracker::ctAskFlux(sf::Packet* packet)
+int Tracker::ctAskFlux(sf::Packet& packet, sf::SocketTCP& sock)
 {
   std::string token;
   sf::Int32 videoId;
 
   // Extract content of packet
-  *packet >> token;
-  *packet >> videoId;
-  return FALSE;
+  packet >> token;
+  packet >> videoId;
+  return RETURN_VALUE_GOOD;
 }
 
-int Tracker::ctAskCheck(sf::Packet* packet)
+int Tracker::ctAskCheck(sf::Packet& packet, sf::SocketTCP& sock)
 {
   std::string token;
 
   // Extract content of packet
-  *packet >> token;
-  return FALSE;
+  packet >> token;
+  return RETURN_VALUE_GOOD;
 }
 
-int Tracker::ctAskPacket(sf::Packet* packet)
+int Tracker::ctAskPacket(sf::Packet& packet, sf::SocketTCP& sock)
 {
   std::string token;
   sf::Int32 nbFrame;
   sf::Int32* frameNumber;
 
   // Extract content of packet
-  *packet >> token;
-  *packet >> nbFrame;
+  packet >> token;
+  packet >> nbFrame;
   frameNumber = new sf::Int32[nbFrame];
   for (int i = 0; i < nbFrame; i++)
   {
-    *packet >> frameNumber[i];
+    packet >> frameNumber[i];
   }
-  return FALSE;
+  return RETURN_VALUE_GOOD;
 }
 
-int Tracker::ctAskRpacket(sf::Packet* packet)
+int Tracker::ctAskRpacket(sf::Packet& packet, sf::SocketTCP& sock)
 {
   std::string token;
   sf::Int32 firstFrame;
   sf::Int32 lastFrame;
 
   // Extract content of packet
-  *packet >> token;
-  *packet >> firstFrame;
-  *packet >> lastFrame;
-  return FALSE;
+  packet >> token;
+  packet >> firstFrame;
+  packet >> lastFrame;
+  return RETURN_VALUE_GOOD;
 }
 
-int Tracker::ctAskMove(sf::Packet* packet)
+int Tracker::ctAskMove(sf::Packet& packet, sf::SocketTCP& sock)
 {
   std::string token;
   sf::Int32 nPosition;
 
   // Extract content of packet
-  *packet >> token;
-  *packet >> nPosition;
-  return FALSE;
+  packet >> token;
+  packet >> nPosition;
+  return RETURN_VALUE_GOOD;
 }
 
-int Tracker::ctAskDeficient(sf::Packet* packet)
+int Tracker::ctAskDeficient(sf::Packet& packet, sf::SocketTCP& sock)
 {
   std::string token;
 
   // Extract content of packet
-  *packet >> token;
-  return FALSE;
+  packet >> token;
+  return RETURN_VALUE_GOOD;
 }
 
-int Tracker::ctAskRem(sf::Packet* packet)
+int Tracker::ctAskRem(sf::Packet& packet, sf::SocketTCP& sock)
 {
   std::string token;
   sf::Int32 startFrame;
   sf::Int8 endFrame;
 
   // Extract content of packet
-  *packet >> token;
-  *packet >> startFrame;
-  *packet >> endFrame;
-  return FALSE;
+  packet >> token;
+  packet >> startFrame;
+  packet >> endFrame;
+  return RETURN_VALUE_GOOD;
 }
 
-int Tracker::ctAskStop(sf::Packet* packet)
+int Tracker::ctAskStop(sf::Packet& packet, sf::SocketTCP& sock)
 {
   std::string token;
 
   // Extract content of packet
-  *packet >> token;
-  return FALSE;
+  packet >> token;
+  return RETURN_VALUE_GOOD;
 }
 
-int Tracker::ctDec(sf::Packet* packet)
+int Tracker::ctDec(sf::Packet& packet, sf::SocketTCP& sock)
 {
   std::string token;
 
   // Extract content of packet
-  *packet >> token;
-  return FALSE;
+  packet >> token;
+  return RETURN_VALUE_GOOD;
 }
 
 int Tracker::tcToken(std::string token)
@@ -178,7 +178,7 @@ int Tracker::tcToken(std::string token)
   // Create packet
   packet << opcode;
   packet << token;
-  return FALSE;
+  return RETURN_VALUE_GOOD;
 }
 
 int Tracker::tcList(std::string name[], sf::Int32 id[], sf::Int32 number)
@@ -194,7 +194,7 @@ int Tracker::tcList(std::string name[], sf::Int32 id[], sf::Int32 number)
     packet << name[i];
     packet << id[i];
   }
-  return FALSE;
+  return RETURN_VALUE_GOOD;
 }
 
 int Tracker::tcListDiff(std::string ip[], sf::Int16 port[], sf::Int8 number)
@@ -210,7 +210,7 @@ int Tracker::tcListDiff(std::string ip[], sf::Int16 port[], sf::Int8 number)
     packet << ip[i];
     packet << port[i];
   }
-  return FALSE;
+  return RETURN_VALUE_GOOD;
 }
 
 int Tracker::tcListDiff(std::string ip1, sf::Int16 port1, std::string ip2,
@@ -229,7 +229,7 @@ int Tracker::tcListDiff(std::string ip1, sf::Int16 port1, std::string ip2,
   packet << port2;
   packet << ip3;
   packet << port3;
-  return FALSE;
+  return RETURN_VALUE_GOOD;
 }
 
 int Tracker::tcListNDiff(std::string ip[], sf::Int16 port[], sf::Int8 number)
@@ -245,7 +245,7 @@ int Tracker::tcListNDiff(std::string ip[], sf::Int16 port[], sf::Int8 number)
     packet << ip[i];
     packet << port[i];
   }
-  return FALSE;
+  return RETURN_VALUE_GOOD;
 }
 
 int Tracker::tcListNDiff(std::string ip, sf::Int16 port)
@@ -259,7 +259,7 @@ int Tracker::tcListNDiff(std::string ip, sf::Int16 port)
   packet << number;
   packet << ip;
   packet << port;
-  return FALSE;
+  return RETURN_VALUE_GOOD;
 }
 
 int Tracker::tcListNDiff(std::string ip1, sf::Int16 port1, std::string ip2,
@@ -276,7 +276,7 @@ int Tracker::tcListNDiff(std::string ip1, sf::Int16 port1, std::string ip2,
   packet << port1;
   packet << ip2;
   packet << port2;
-  return FALSE;
+  return RETURN_VALUE_GOOD;
 }
 
 int Tracker::tcListNDiff(std::string ip1, sf::Int16 port1, std::string ip2,
@@ -295,7 +295,7 @@ int Tracker::tcListNDiff(std::string ip1, sf::Int16 port1, std::string ip2,
   packet << port2;
   packet << ip3;
   packet << port3;
-  return FALSE;
+  return RETURN_VALUE_GOOD;
 }
 
 int Tracker::tcMsg(sf::Int32 numMsg, std::string msg)
@@ -307,6 +307,6 @@ int Tracker::tcMsg(sf::Int32 numMsg, std::string msg)
   packet << opcode;
   packet << numMsg;
   packet << msg;
-  return FALSE;
+  return RETURN_VALUE_GOOD;
 }
 

@@ -8,8 +8,8 @@
 #include "LiveClient.hh"
 #include "../FileManager/LiveHandler.hh"
 
-LiveClient::LiveClient(sf::SocketTCP& control, sf::SocketTCP& data, int videoId)
- : Client(control, data, videoId)
+LiveClient::LiveClient(int videoId)
+ : TypeClient(videoId)
 {
   // TODO Auto-generated constructor stub
   setFileVideo(LiveHandler::getInstance().getLive(videoId));

@@ -8,12 +8,12 @@
 #ifndef LIVECLIENT_HH_
 #define LIVECLIENT_HH_
 
-# include "Client.hh"
+# include "TypeClient.hh"
 
-class LiveClient : public Client
+class LiveClient : public TypeClient
 {
   public:
-    LiveClient(sf::SocketTCP& control, sf::SocketTCP& data, int videoId);
+    LiveClient(int videoId);
     virtual ~LiveClient();
     virtual Chuck* getElement(int number);
   private:

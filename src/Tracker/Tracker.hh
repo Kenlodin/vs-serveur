@@ -15,23 +15,23 @@ class Tracker : public PacketHandler {
 public:
 	Tracker();
 	virtual ~Tracker();
-	int routing(unsigned int code, sf::Packet* packet);
+	int routing(unsigned int code, sf::Packet& packet, sf::SocketTCP& sock);
 private:
-	typedef int (Tracker::*handler)(sf::Packet* packet);
+	typedef int (Tracker::*handler)(sf::Packet& packet, sf::SocketTCP& sock);
 	const handler route_[CT::LENGTH];
 private: // Receiver handling
-	int ctConnMaster (sf::Packet* packet);
-	int ctConnSlave (sf::Packet* packet);
-	int ctAskList (sf::Packet* packet);
-	int ctAskFlux (sf::Packet* packet);
-	int ctAskCheck (sf::Packet* packet);
-	int ctAskPacket (sf::Packet* packet);
-	int ctAskRpacket (sf::Packet* packet);
-	int ctAskMove (sf::Packet* packet);
-	int ctAskDeficient (sf::Packet* packet);
-	int ctAskRem (sf::Packet* packet);
-	int ctAskStop (sf::Packet* packet);
-	int ctDec (sf::Packet* packet);
+	int ctConnMaster (sf::Packet& packet, sf::SocketTCP& sock);
+	int ctConnSlave (sf::Packet& packet, sf::SocketTCP& sock);
+	int ctAskList (sf::Packet& packet, sf::SocketTCP& sock);
+	int ctAskFlux (sf::Packet& packet, sf::SocketTCP& sock);
+	int ctAskCheck (sf::Packet& packet, sf::SocketTCP& sock);
+	int ctAskPacket (sf::Packet& packet, sf::SocketTCP& sock);
+	int ctAskRpacket (sf::Packet& packet, sf::SocketTCP& sock);
+	int ctAskMove (sf::Packet& packet, sf::SocketTCP& sock);
+	int ctAskDeficient (sf::Packet& packet, sf::SocketTCP& sock);
+	int ctAskRem (sf::Packet& packet, sf::SocketTCP& sock);
+	int ctAskStop (sf::Packet& packet, sf::SocketTCP& sock);
+	int ctDec (sf::Packet& packet, sf::SocketTCP& sock);
 private: // Sender handling
 	int tcToken (std::string token);
 	int tcList (std::string name[], sf::Int32 id[], sf::Int32 number);
