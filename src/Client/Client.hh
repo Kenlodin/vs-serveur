@@ -15,10 +15,10 @@
 class Client
 {
   public:
-    Client(sf::SocketTCP*& control, sf::SocketTCP*& data, std::string token);
+    Client(sf::SocketTCP& control, sf::SocketTCP*& data, std::string token);
     virtual ~Client();
 
-    sf::SocketTCP* getControlSocket() const;
+    sf::SocketTCP& getControlSocket() const;
     sf::SocketTCP* getDataSocket() const;
     int sendControl(sf::Packet& packet);
     int sendData(sf::Packet& packet);
@@ -28,7 +28,7 @@ class Client
     TypeClient* getTypeClient() const;
     void setTypeClient(TypeClient* typeClient);
 private:
-    sf::SocketTCP* controlSocket_;
+    sf::SocketTCP& controlSocket_;
     sf::SocketTCP* dataSocket_;
     TypeClient* typeClient_;
     std::string token_;

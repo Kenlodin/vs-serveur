@@ -18,7 +18,7 @@ ClientList::~ClientList()
   // TODO Auto-generated destructor stub
 }
 
-std::map<sf::SocketTCP*, Client*> ClientList::getClientList() const
+std::map<sf::SocketTCP, Client*> ClientList::getClientList() const
 {
   return clientList_;
 }
@@ -32,14 +32,10 @@ int ClientList::link(sf::SocketTCP* data, std::string token)
     generalMutex_.unlock();
     return RETURN_VALUE_ERROR;
   }
-  clientList_[data] = c;
+  clientList_[*data] = c;
+  c->setDataSocket(data);
   generalMutex_.unlock();
   return RETURN_VALUE_GOOD;
-}
-
-void ClientList::setClientList(std::map<sf::SocketTCP*, Client*> clientList)
-{
-  clientList_ = clientList;
 }
 
 ClientList& ClientList::getInstance()
@@ -49,7 +45,7 @@ ClientList& ClientList::getInstance()
   return instance_;
 }
 
-void ClientList::addClient(sf::SocketTCP* control, sf::SocketTCP* data,
+void ClientList::addClient(sf::SocketTCP& control, sf::SocketTCP* data,
     std::string token)
 {
   //Wait token and add in list
@@ -60,13 +56,15 @@ void ClientList::addClient(sf::SocketTCP* control, sf::SocketTCP* data,
   generalMutex_.unlock();
 }
 
-void ClientList::removeClient(sf::SocketTCP* sock)
+void ClientList::removeClient(sf::SocketTCP& sock)
 {
   generalMutex_.lock();
-  Client* c = clientList_[sock];
+  Client* c = clientList_[sock]; //This socket is controlSocket
   if (c != nullptr)
   {
-    clientList_[sock] = nullptr;
+    clientList_[c->getControlSocket()] = nullptr;
+    if (c->getDataSocket() != nullptr) //On master serveur dataSocket is null
+    clientList_[*(c->getDataSocket())] = nullptr;
     clientLink_[c->getToken()] = nullptr;
   }
   generalMutex_.unlock();
@@ -75,6 +73,14 @@ void ClientList::removeClient(sf::SocketTCP* sock)
 }
 
 Client* ClientList::getClient(sf::SocketTCP* sock)
+{
+  generalMutex_.lock();
+  Client* c = clientList_[*sock];
+  generalMutex_.unlock();
+  return c;
+}
+
+Client* ClientList::getClient(sf::SocketTCP& sock)
 {
   generalMutex_.lock();
   Client* c = clientList_[sock];

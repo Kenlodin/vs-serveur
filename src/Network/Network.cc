@@ -100,12 +100,14 @@ void Network::run ()
         sf::Packet packet;
         sock.Receive(packet);
         int returnValue = routing(packet, sock);
-        if (returnValue != RETURN_VALUE_GOOD)
+        if (returnValue != RETURN_VALUE_GOOD) // Suppress data socket
           selector.Remove(sock);
-        if (returnValue == RETURN_VALUE_ERROR)
+        if (returnValue == RETURN_VALUE_ERROR) //Data socket already suppress
         {
-          ClientList::getInstance().removeClient(&sock); //TODO
+          //Suppress client referenced by this controlSocket
+          ClientList::getInstance().removeClient(sock);
           sock.Close();
+
         }
       }
     }

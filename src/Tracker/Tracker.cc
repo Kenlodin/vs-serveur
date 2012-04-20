@@ -45,7 +45,9 @@ int Tracker::ctConnMaster(sf::Packet& packet, sf::SocketTCP& sock)
   packet >> password;
   packet >> privateIp;
   packet >> bandwidth;
-  return RETURN_VALUE_SUPPRESS;
+  sf::SocketTCP newSocket = sock; //TODO Check copy
+    ClientList::getInstance().addClient(newSocket, nullptr, "");
+  return RETURN_VALUE_GOOD;
 }
 
 int Tracker::ctConnSlave(sf::Packet& packet, sf::SocketTCP& sock)
@@ -54,9 +56,9 @@ int Tracker::ctConnSlave(sf::Packet& packet, sf::SocketTCP& sock)
 
   // Extract content of packet
   packet >> token;
-  sf::SocketTCP* newSocket = new sf::SocketTCP(sock);
+  sf::SocketTCP newSocket = sock; //TODO Check copy
   ClientList::getInstance().addClient(newSocket, nullptr, token);
-  return RETURN_VALUE_SUPPRESS;
+  return RETURN_VALUE_GOOD; // We keep control socket in selector
 }
 
 int Tracker::ctAskList(sf::Packet& packet, sf::SocketTCP& sock)
