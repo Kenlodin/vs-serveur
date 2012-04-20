@@ -10,9 +10,11 @@
 
 #include <pqxx/pqxx>
 #include <iostream>
+#include "../Tools/Tools.hh"
 
 
-typedef std::vector<std::map<std::string, std::string> > sql_result;
+typedef pqxx::result sql_result;
+typedef pqxx::result::tuple sql_tuple;
 
 /**
  * Cette classe permet de discuter avec la base de données. Elle utilise la 
@@ -20,28 +22,33 @@ typedef std::vector<std::map<std::string, std::string> > sql_result;
  */
 class SqlManager
 {
-  typedef std::map<std::string, std::string> map;
-  typedef std::pair<std::string, std::string> pair;
  public:
   /**
    * Permet de se connecter à la base de données.
    */
   void connect ();
-  
+
   /**
    * Permet d'exécuter une requête SQL
    * @param query La requête SQL
    */
   pqxx::result execute (std::string query);
+
+ public:
+  sql_result addServer (std::string ip, int port);
+  sql_result saveClientServerConnection (int client_id, int server_id);
   
  public:
-  std::vector <std::string> getThreeServers ();
+  sql_result getThreeServers ();
+  sql_result getAllFlux ();
+  sql_result getFile (int id);
  public:
   static SqlManager& getInstance ();
 
  private:
-  SqlManager () {};
-  
+
+  SqlManager () { };
+
  private:
   pqxx::connection* connection_;
 } ;

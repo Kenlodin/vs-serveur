@@ -11,6 +11,7 @@
 #include "Tracker/Tracker.hh"
 #include "Diffusion/Diffusion.hh"
 #include "Thread/Thread.hh"
+#include "SqlManager/SqlManager.hh"
 
 int
 main ()
@@ -19,9 +20,15 @@ main ()
   //	Diffusion* diffusion = new Diffusion();
   //	Tracker* tracker = new Tracker();
   //	return 0;
-  
-//  tools::Thread t();
-//  t.run ();
+
+  //  tools::Thread t();
+  //  t.run ();
+
+//  SqlManager::getInstance ().connect ();
+//  SqlManager::getInstance ().getThreeServers ();
+//  SqlManager::getInstance ().addServer ("55.22.33.44", 1234);
+//  SqlManager::getInstance ().getThreeServers ();
+
   return 0;
 }
 

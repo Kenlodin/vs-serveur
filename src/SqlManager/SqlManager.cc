@@ -30,27 +30,57 @@ pqxx::result
 SqlManager::execute (std::string query)
 {
   query = query;
-  std::cout << connection_ << std::endl;
   //if (connection_->is_open ())
   //{
-  connection_->prepare ("top", query);
   pqxx::work w (*connection_);
-  pqxx::result r = w.prepared ("top").exec ();
+  pqxx::result r = w.exec (query);
+  w.commit ();
   return r;
   //}
 }
 
-std::vector <std::string>
+sql_result
+SqlManager::addServer (std::string ip, int port)
+{
+  std::string req;
+  req = "INSERT INTO servers (ip, port) VALUES ('" + ip + "'," + tools::toString (port) + ")";
+  return execute (req);
+}
+
+sql_result
+SqlManager::saveClientServerConnection (int client_id, int server_id)
+{
+  std::string req = "INSERT INTO client_server (client_id, server_id, created) VALUES (";
+  req += tools::toString (client_id);
+  req += ", ";
+  req += tools::toString (server_id);
+  req += ", 0)";
+  return execute (req);
+}
+
+sql_result
 SqlManager::getThreeServers ()
 {
   pqxx::result r = execute ("SELECT * FROM \"servers\" ORDER BY \"nb_client\" LIMIT 3");
-  std::vector <std::string> result;
+  std::cout << r.size () << std::endl;
   for (unsigned long i = 0; i < r.size (); i++)
   {
     pqxx::result::tuple t = r.at (i);
-    result.push_back (std::string (t["ip"].c_str ()));
-    result.push_back (std::string (t["ip"].c_str ()));
+    std::cout << "toto : " << t["ip"] << std::endl;
   }
-  return result;
+  //return execute ("SELECT * FROM \"servers\" ORDER BY \"nb_client\" LIMIT 3");
+  return r;
 }
 
+sql_result
+SqlManager::getAllFlux ()
+{
+  return execute ("SELECT * FROM \"files\"");
+}
+
+sql_result
+SqlManager::getFile (int id)
+{
+  //return execute ("SELECT * FROM \"files\" WHERE id=\"" + std::string(id) + "\"");
+  return execute ("SELECT * FROM \"files\"");
+}
