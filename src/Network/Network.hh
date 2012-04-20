@@ -23,22 +23,22 @@ class Network : public tools::Thread
     virtual ~Network();
   public:
     void run ();
-    int routing(sf::Packet& packet, sf::SocketTCP& sock);
+    void routing(sf::Packet& packet, sf::SocketTCP& sock);
 
   private:
-    typedef int (Network::*handler)(unsigned int route, sf::Packet& packet
+    typedef void (Network::*handler)(unsigned int route, sf::Packet& packet
         , sf::SocketTCP& sock);
     const handler route_[ConnexionType::LENGTH];
   private:
-    int clientTracker(unsigned int route, sf::Packet& packet
+    void clientTracker(unsigned int route, sf::Packet& packet
         , sf::SocketTCP& sock);
-    int trackerClient(unsigned int route, sf::Packet& packet
+    void trackerClient(unsigned int route, sf::Packet& packet
         , sf::SocketTCP& sock);
-    int clientDiffusion(unsigned int route, sf::Packet& packet
+    void clientDiffusion(unsigned int route, sf::Packet& packet
         , sf::SocketTCP& sock);
-    int diffusionClient(unsigned int route, sf::Packet& packet
+    void diffusionClient(unsigned int route, sf::Packet& packet
         , sf::SocketTCP& sock);
-    int diffusionDiffusion(unsigned int route, sf::Packet& packet
+    void diffusionDiffusion(unsigned int route, sf::Packet& packet
         , sf::SocketTCP& sock);
   private:
     sf::SocketTCP* controlSocket_;

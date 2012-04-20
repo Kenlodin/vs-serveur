@@ -11,6 +11,7 @@
 #include "Tracker/Tracker.hh"
 #include "Diffusion/Diffusion.hh"
 #include "Thread/Thread.hh"
+#include "Thread/ThreadPool.hh"
 #include "SqlManager/SqlManager.hh"
 
 int
@@ -23,7 +24,8 @@ main ()
 
   //  tools::Thread t();
   //  t.run ();
-
+    ThreadPool<Diffusion> t (5);
+    ThreadPool<Tracker> t2 (5);
 //  SqlManager::getInstance ().connect ();
 //  SqlManager::getInstance ().getThreeServers ();
 //  SqlManager::getInstance ().addServer ("55.22.33.44", 1234);

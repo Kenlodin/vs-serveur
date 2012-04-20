@@ -10,7 +10,7 @@
 
 # include "Thread.hh"
 
-
+template <class T>
 class ThreadPool
 {
   public:
@@ -29,5 +29,7 @@ class ThreadPool
     tools::Thread *threadPool_;
     int number_;
 };
+
+# include "ThreadPool.hxx"
 
 #endif /* THREADPOOL_HH_ */
