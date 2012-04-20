@@ -24,8 +24,10 @@ private:
 	const handler route_[CD::LENGTH];
 	const handler route_internal[DD::LENGTH];
 private:
+	int cdToken(sf::Packet& packet, sf::SocketTCP& sock);
 	int ddVideoDemand(sf::Packet& packet, sf::SocketTCP& sock);
 	int ddPingPong(sf::Packet& packet, sf::SocketTCP& sock);
+	int ddLiveLink(sf::Packet& packet, sf::SocketTCP& sock);
 private:
 	int dcData (sf::Int8 data[], int length);
 };

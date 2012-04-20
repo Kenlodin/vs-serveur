@@ -8,6 +8,7 @@
 # include "Network.hh"
 # include "../Diffusion/Diffusion.hh"
 # include "../Tracker/Tracker.hh"
+# include "ClientList.hh"
 
 Network::Network(int control_port, int data_port, Tracker* tracker,
     Diffusion* diffusion)
@@ -99,6 +100,15 @@ void Network::run ()
         sf::Packet packet;
         sock.Receive(packet);
         int returnValue = routing(packet, sock);
+        if (returnValue != RETURN_VALUE_GOOD) // Suppress data socket
+          selector.Remove(sock);
+        if (returnValue == RETURN_VALUE_ERROR) //Data socket already suppress
+        {
+          //Suppress client referenced by this controlSocket
+          ClientList::getInstance().removeClient(sock);
+          sock.Close();
+
+        }
       }
     }
   }
