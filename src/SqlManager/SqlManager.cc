@@ -59,7 +59,7 @@ SqlManager::addClient (std::string login, std::string password,
   sql_result r = execute (req);
   if (r.size () == 0)
     return "";
-  
+
   // Ajout du client 
   std::string user_id = r.at (0)["id"].c_str ();
   std::string token = tools::token (private_ip, public_ip);
@@ -71,10 +71,10 @@ SqlManager::addClient (std::string login, std::string password,
 }
 
 sql_result
-SqlManager::saveClientServerConnection (int client_id, int server_id)
+SqlManager::saveClientServerConnection (std::string client_token, int server_id)
 {
   std::string req = "INSERT INTO client_server (client_id, server_id, created) VALUES (";
-  req += tools::toString (client_id);
+  req += client_token;
   req += ", ";
   req += tools::toString (server_id);
   req += ", 0)";
@@ -106,4 +106,12 @@ SqlManager::getFile (int id)
 {
   //return execute ("SELECT * FROM \"files\" WHERE id=\"" + std::string(id) + "\"");
   return execute ("SELECT * FROM \"files\"");
+}
+
+sql_result
+SqlManager::getNextsHandlings (int server_id)
+{
+  std::string req;
+  req = "SELECT * FROM client_server LEFT JOIN client_handlings ON (client_server.client_id = client_handlings.client_id)";
+  req += "WHERE client_server.server_id='" + tools::toString (server_id) + "'";
 }
