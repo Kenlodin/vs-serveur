@@ -8,20 +8,24 @@
 #include "ThreadPool.hh"
 #include "WorkList.hh"
 
-ThreadPool::Worker::Worker()
+template<class T>
+ThreadPool<T>::Worker::Worker()
 {
 
 }
 
-void ThreadPool::Worker::run()
+template<class T>
+void ThreadPool<T>::Worker::run()
 {
   try
   {
-    std::string work;
+    typename WorkList<T>::OneWork work;
     while (true)
     {
-       work = WorkList::getInstance().getOneWork();
-       std::cout << work << std::endl;
+      work = WorkList<T>::getInstance().getOneWork();
+      (T::getInstance().*(work.worker))
+          (work.args.first, work.args.second.first,
+              work.args.second.second);
     }
   }
   catch (std::exception& e)
@@ -30,21 +34,22 @@ void ThreadPool::Worker::run()
   }
 }
 
-ThreadPool::ThreadPool(int number)
+template<class T>
+ThreadPool<T>::ThreadPool(int number)
 {
 // TODO Auto-generated constructor stub
   number_ = number;
   threadPool_ = new ThreadPool::Worker[number];
 }
 
-ThreadPool::~ThreadPool()
+template<class T>
+ThreadPool<T>::~ThreadPool()
 {
 // TODO Auto-generated destructor stub
 }
 
-
-
-void ThreadPool::start()
+template<class T>
+void ThreadPool<T>::start()
 {
   for (int i = 0; i < number_; i++)
   {
@@ -52,7 +57,8 @@ void ThreadPool::start()
   }
 }
 
-void ThreadPool::join ()
+template<class T>
+void ThreadPool<T>::join()
 {
   for (int i = 0; i < number_; i++)
   {

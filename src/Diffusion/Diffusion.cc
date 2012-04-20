@@ -89,7 +89,14 @@ int Diffusion::ddLiveLink(sf::Packet& packet, sf::SocketTCP& sock)
   return RETURN_VALUE_GOOD;
 }
 
-int Diffusion::dcData(sf::Int8 data[], int length)
+Diffusion& Diffusion::getInstance()
+{
+  static Diffusion instance_;
+
+  return instance_;
+}
+
+int Diffusion::dcData(sf::SocketTCP& sender, sf::Int8 data[], int length)
 {
   sf::Packet packet;
   sf::Int16 opcode = MERGE_OPCODE(ConnexionType::DIFFUSION_CLIENT, DC::DATA);
@@ -102,3 +109,9 @@ int Diffusion::dcData(sf::Int8 data[], int length)
   return RETURN_VALUE_GOOD;
 }
 
+int Diffusion::send(sf::SocketTCP& sender, sf::Packet& packet)
+{
+  if (sender.Send(packet) == sf::Socket::Done)
+    return RETURN_VALUE_GOOD;
+  return RETURN_VALUE_ERROR;
+}

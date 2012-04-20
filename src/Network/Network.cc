@@ -8,13 +8,17 @@
 # include "Network.hh"
 # include "../Diffusion/Diffusion.hh"
 # include "../Tracker/Tracker.hh"
+# include "../Thread/WorkList.hh"
 # include "ClientList.hh"
 
 Network::Network(int control_port, int data_port, Tracker* tracker,
     Diffusion* diffusion)
     : route_(
-    { &Network::clientTracker, &Network::trackerClient,
-        &Network::clientDiffusion, &Network::diffusionClient,
+    {
+        &Network::clientTracker,
+        &Network::trackerClient,
+        &Network::clientDiffusion,
+        &Network::diffusionClient,
         &Network::diffusionDiffusion })
 {
   controlPort_ = control_port;
@@ -38,7 +42,7 @@ Network::~Network()
   // TODO Auto-generated destructor stub
 }
 
-int Network::routing(sf::Packet& packet, sf::SocketTCP& sock)
+void Network::routing(sf::Packet& packet, sf::SocketTCP& sock)
 {
   sf::Int16 opcode;
   int type;
@@ -48,37 +52,45 @@ int Network::routing(sf::Packet& packet, sf::SocketTCP& sock)
   code = EXTRACT_CODE(opcode);
   type = EXTRACT_TYPE(opcode);
   if (code < CD::LENGTH)
-    return (this->*route_[type])(code, packet, sock);
+    (this->*route_[type])(code, packet, sock);
   else
-    return RETURN_VALUE_ERROR;
+    RETURN_VALUE_ERROR;
 }
 
-int Network::clientTracker(unsigned int route, sf::Packet& packet, sf::SocketTCP& sock)
+void Network::clientTracker(unsigned int route, sf::Packet& packet,
+    sf::SocketTCP& sock)
 {
-  return tracker_->routing(route, packet, sock);
+  WorkList<Tracker>::getInstance().putWorks(&Tracker::routing, route, packet,
+      sock);
 }
 
-int Network::trackerClient(unsigned int route, sf::Packet& packet, sf::SocketTCP& sock)
+void Network::trackerClient(unsigned int route, sf::Packet& packet,
+    sf::SocketTCP& sock)
 {
-  return RETURN_VALUE_ERROR;
+  //return RETURN_VALUE_ERROR;
 }
 
-int Network::clientDiffusion(unsigned int route, sf::Packet& packet, sf::SocketTCP& sock)
+void Network::clientDiffusion(unsigned int route, sf::Packet& packet,
+    sf::SocketTCP& sock)
 {
-  return diffusion_->routing(route, packet, sock);
+  WorkList<Diffusion>::getInstance().putWorks(&Diffusion::routing, route,
+      packet, sock);
 }
 
-int Network::diffusionClient(unsigned int route, sf::Packet& packet, sf::SocketTCP& sock)
+void Network::diffusionClient(unsigned int route, sf::Packet& packet,
+    sf::SocketTCP& sock)
 {
-  return RETURN_VALUE_ERROR;
+  //return RETURN_VALUE_ERROR;
 }
 
-int Network::diffusionDiffusion(unsigned int route, sf::Packet& packet, sf::SocketTCP& sock)
+void Network::diffusionDiffusion(unsigned int route, sf::Packet& packet,
+    sf::SocketTCP& sock)
 {
-  return diffusion_->routing_internal(route, packet, sock);
+  WorkList<Diffusion>::getInstance().putWorks(&Diffusion::routing_internal,
+      route, packet, sock);
 }
 
-void Network::run ()
+void Network::run()
 {
   sf::SelectorTCP selector;
   selector.Add(*dataSocket_);
@@ -99,7 +111,8 @@ void Network::run ()
       {
         sf::Packet packet;
         sock.Receive(packet);
-        int returnValue = routing(packet, sock);
+        routing(packet, sock);
+        /*
         if (returnValue != RETURN_VALUE_GOOD) // Suppress data socket
           selector.Remove(sock);
         if (returnValue == RETURN_VALUE_ERROR) //Data socket already suppress
@@ -108,7 +121,7 @@ void Network::run ()
           ClientList::getInstance().removeClient(sock);
           sock.Close();
 
-        }
+        }*/
       }
     }
   }

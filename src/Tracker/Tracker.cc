@@ -10,10 +10,19 @@
 
 Tracker::Tracker()
     : route_(
-    { &Tracker::ctConnMaster, &Tracker::ctConnSlave, &Tracker::ctAskList,
-        &Tracker::ctAskFlux, &Tracker::ctAskCheck, &Tracker::ctAskPacket,
-        &Tracker::ctAskRpacket, &Tracker::ctAskMove, &Tracker::ctAskDeficient,
-        &Tracker::ctAskRem, &Tracker::ctAskStop, &Tracker::ctDec, })
+    {
+        &Tracker::ctConnMaster,
+        &Tracker::ctConnSlave,
+        &Tracker::ctAskList,
+        &Tracker::ctAskFlux,
+        &Tracker::ctAskCheck,
+        &Tracker::ctAskPacket,
+        &Tracker::ctAskRpacket,
+        &Tracker::ctAskMove,
+        &Tracker::ctAskDeficient,
+        &Tracker::ctAskRem,
+        &Tracker::ctAskStop,
+        &Tracker::ctDec, })
 {
   // TODO Auto-generated constructor stub
 
@@ -46,7 +55,7 @@ int Tracker::ctConnMaster(sf::Packet& packet, sf::SocketTCP& sock)
   packet >> privateIp;
   packet >> bandwidth;
   sf::SocketTCP newSocket = sock; //TODO Check copy
-    ClientList::getInstance().addClient(newSocket, nullptr, "");
+  ClientList::getInstance().addClient(newSocket, nullptr, "");
   return RETURN_VALUE_GOOD;
 }
 
@@ -175,7 +184,7 @@ int Tracker::ctDec(sf::Packet& packet, sf::SocketTCP& sock)
   return RETURN_VALUE_GOOD;
 }
 
-int Tracker::tcToken(std::string token)
+int Tracker::tcToken(sf::SocketTCP& sender, std::string token)
 {
   sf::Packet packet;
   sf::Int16 opcode = MERGE_OPCODE(ConnexionType::TRACKER_CLIENT, TC::TOKEN);
@@ -183,10 +192,11 @@ int Tracker::tcToken(std::string token)
   // Create packet
   packet << opcode;
   packet << token;
-  return RETURN_VALUE_GOOD;
+  return send(sender, packet);
 }
 
-int Tracker::tcList(std::string name[], sf::Int32 id[], sf::Int32 number)
+int Tracker::tcList(sf::SocketTCP& sender, std::string name[], sf::Int32 id[],
+    sf::Int32 number)
 {
   sf::Packet packet;
   sf::Int16 opcode = MERGE_OPCODE(ConnexionType::TRACKER_CLIENT, TC::LIST);
@@ -199,10 +209,11 @@ int Tracker::tcList(std::string name[], sf::Int32 id[], sf::Int32 number)
     packet << name[i];
     packet << id[i];
   }
-  return RETURN_VALUE_GOOD;
+  return send(sender, packet);
 }
 
-int Tracker::tcListDiff(std::string ip[], sf::Int16 port[], sf::Int8 number)
+int Tracker::tcListDiff(sf::SocketTCP& sender, std::string ip[],
+    sf::Int16 port[], sf::Int8 number)
 {
   sf::Packet packet;
   sf::Int16 opcode = MERGE_OPCODE(ConnexionType::TRACKER_CLIENT, TC::LIST_DIFF);
@@ -215,11 +226,11 @@ int Tracker::tcListDiff(std::string ip[], sf::Int16 port[], sf::Int8 number)
     packet << ip[i];
     packet << port[i];
   }
-  return RETURN_VALUE_GOOD;
+  return send(sender, packet);
 }
 
-int Tracker::tcListDiff(std::string ip1, sf::Int16 port1, std::string ip2,
-    sf::Int16 port2, std::string ip3, sf::Int16 port3)
+int Tracker::tcListDiff(sf::SocketTCP& sender, std::string ip1, sf::Int16 port1,
+    std::string ip2, sf::Int16 port2, std::string ip3, sf::Int16 port3)
 {
   sf::Packet packet;
   sf::Int16 opcode = MERGE_OPCODE(ConnexionType::TRACKER_CLIENT, TC::LIST_DIFF);
@@ -234,10 +245,11 @@ int Tracker::tcListDiff(std::string ip1, sf::Int16 port1, std::string ip2,
   packet << port2;
   packet << ip3;
   packet << port3;
-  return RETURN_VALUE_GOOD;
+  return send(sender, packet);
 }
 
-int Tracker::tcListNDiff(std::string ip[], sf::Int16 port[], sf::Int8 number)
+int Tracker::tcListNDiff(sf::SocketTCP& sender, std::string ip[],
+    sf::Int16 port[], sf::Int8 number)
 {
   sf::Packet packet;
   sf::Int16 opcode = MERGE_OPCODE(ConnexionType::TRACKER_CLIENT, TC::LIST_NDIFF);
@@ -250,10 +262,10 @@ int Tracker::tcListNDiff(std::string ip[], sf::Int16 port[], sf::Int8 number)
     packet << ip[i];
     packet << port[i];
   }
-  return RETURN_VALUE_GOOD;
+  return send(sender, packet);
 }
 
-int Tracker::tcListNDiff(std::string ip, sf::Int16 port)
+int Tracker::tcListNDiff(sf::SocketTCP& sender, std::string ip, sf::Int16 port)
 {
   sf::Packet packet;
   sf::Int16 opcode = MERGE_OPCODE(ConnexionType::TRACKER_CLIENT, TC::LIST_NDIFF);
@@ -264,11 +276,11 @@ int Tracker::tcListNDiff(std::string ip, sf::Int16 port)
   packet << number;
   packet << ip;
   packet << port;
-  return RETURN_VALUE_GOOD;
+  return send(sender, packet);
 }
 
-int Tracker::tcListNDiff(std::string ip1, sf::Int16 port1, std::string ip2,
-    sf::Int16 port2)
+int Tracker::tcListNDiff(sf::SocketTCP& sender, std::string ip1,
+    sf::Int16 port1, std::string ip2, sf::Int16 port2)
 {
   sf::Packet packet;
   sf::Int16 opcode = MERGE_OPCODE(ConnexionType::TRACKER_CLIENT, TC::LIST_NDIFF);
@@ -281,11 +293,12 @@ int Tracker::tcListNDiff(std::string ip1, sf::Int16 port1, std::string ip2,
   packet << port1;
   packet << ip2;
   packet << port2;
-  return RETURN_VALUE_GOOD;
+  return send(sender, packet);
 }
 
-int Tracker::tcListNDiff(std::string ip1, sf::Int16 port1, std::string ip2,
-    sf::Int16 port2, std::string ip3, sf::Int16 port3)
+int Tracker::tcListNDiff(sf::SocketTCP& sender, std::string ip1,
+    sf::Int16 port1, std::string ip2, sf::Int16 port2, std::string ip3,
+    sf::Int16 port3)
 {
   sf::Packet packet;
   sf::Int16 opcode = MERGE_OPCODE(ConnexionType::TRACKER_CLIENT, TC::LIST_NDIFF);
@@ -300,10 +313,17 @@ int Tracker::tcListNDiff(std::string ip1, sf::Int16 port1, std::string ip2,
   packet << port2;
   packet << ip3;
   packet << port3;
-  return RETURN_VALUE_GOOD;
+  return send(sender, packet);
 }
 
-int Tracker::tcMsg(sf::Int32 numMsg, std::string msg)
+Tracker& Tracker::getInstance()
+{
+  static Tracker instance_;
+
+  return instance_;
+}
+
+int Tracker::tcMsg(sf::SocketTCP& sender, sf::Int32 numMsg, std::string msg)
 {
   sf::Packet packet;
   sf::Int16 opcode = MERGE_OPCODE(ConnexionType::TRACKER_CLIENT, TC::MSG);
@@ -312,6 +332,12 @@ int Tracker::tcMsg(sf::Int32 numMsg, std::string msg)
   packet << opcode;
   packet << numMsg;
   packet << msg;
-  return RETURN_VALUE_GOOD;
+  return send(sender, packet);
 }
 
+int Tracker::send(sf::SocketTCP& sender, sf::Packet& packet)
+{
+  if (sender.Send(packet) == sf::Socket::Done)
+    return RETURN_VALUE_GOOD;
+  return RETURN_VALUE_ERROR;
+}

@@ -16,7 +16,7 @@ public:
 public:
 	virtual int routing(unsigned int code, sf::Packet& packet
 	    , sf::SocketTCP& sock) = 0;
-	virtual int routing_internal(unsigned int code, sf::Packet* packet) = 0;
+	virtual int routing_internal(unsigned int code, sf::Packet* packet);
 };
 
 #endif /* PACKETHANDLER_HH_ */

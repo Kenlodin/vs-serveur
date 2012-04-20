@@ -6,8 +6,15 @@
  */
 
 #include "PacketHandler.hh"
+#include "fwd.hh"
 
 PacketHandler::~PacketHandler() {
 	// TODO Auto-generated destructor stub
 }
+
+int PacketHandler::routing_internal(unsigned int code, sf::Packet* packet)
+{
+  return RETURN_VALUE_ERROR;
+}
+
 
