@@ -10,6 +10,7 @@
 
 # include "../fwd.hh"
 # include "../PacketHandler.hh"
+# include "../SqlManager/SqlManager.hh"
 
 class Tracker: public PacketHandler
 {
@@ -40,19 +41,9 @@ class Tracker: public PacketHandler
     int send(sf::SocketTCP& sender, sf::Packet& packet);
     // Sender handling
     int tcToken(sf::SocketTCP& sender, std::string token);
-    int tcList(sf::SocketTCP& sender, std::string name[], sf::Int32 id[],
-        sf::Int32 number);
-    int tcListDiff(sf::SocketTCP& sender, std::string ip[], sf::Int16 port[],
-        sf::Int8 number);
-    int tcListDiff(sf::SocketTCP& sender, std::string ip1, sf::Int16 port1,
-        std::string ip2, sf::Int16 port2, std::string ip3, sf::Int16 port3);
-    int tcListNDiff(sf::SocketTCP& sender, std::string ip[], sf::Int16 port[],
-        sf::Int8 number);
-    int tcListNDiff(sf::SocketTCP& sender, std::string ip, sf::Int16 port);
-    int tcListNDiff(sf::SocketTCP& sender, std::string ip1, sf::Int16 port1,
-        std::string ip2, sf::Int16 port2);
-    int tcListNDiff(sf::SocketTCP& sender, std::string ip1, sf::Int16 port1,
-        std::string ip2, sf::Int16 port2, std::string ip3, sf::Int16 port3);
+    int tcList(sf::SocketTCP& sender, sql_result sqlResult);
+    int tcListDiff(sf::SocketTCP& sender, sql_result sqlResult);
+    int tcListNDiff(sf::SocketTCP& sender, sql_result sqlResult);
     int tcMsg(sf::SocketTCP& sender, sf::Int32 numMsg, std::string msg);
 };
 

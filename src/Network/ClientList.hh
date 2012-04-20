@@ -24,11 +24,15 @@ class ClientList
     void removeClient(sf::SocketTCP& sock);
     Client* getClient(sf::SocketTCP& sock);
     Client* getClient(sf::SocketTCP* sock);
+    std::string getPrivateIp(sf::SocketTCP sock);
+    void setPrivateIp(sf::SocketTCP sock, std::string ip);
     std::map<sf::SocketTCP, Client*> getClientList() const;
   private:
     boost::mutex generalMutex_;
+    boost::mutex weakMutex_;
     std::map<sf::SocketTCP, Client*> clientList_;
     std::map<std::string, Client*> clientLink_;
+    std::map<sf::SocketTCP, std::string> privateIpList_;
 };
 
 #endif /* CLIENTLIST_HH_ */

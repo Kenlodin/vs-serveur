@@ -18,6 +18,22 @@ ClientList::~ClientList()
   // TODO Auto-generated destructor stub
 }
 
+std::string ClientList::getPrivateIp(sf::SocketTCP sock)
+{
+  weakMutex_.lock();
+  std::string res = privateIpList_[sock];
+  privateIpList_.erase(sock);
+  weakMutex_.unlock();
+  return res;
+}
+
+void ClientList::setPrivateIp(sf::SocketTCP sock, std::string ip)
+{
+  weakMutex_.lock();
+  privateIpList_[sock] = ip;
+  weakMutex_.unlock();
+}
+
 std::map<sf::SocketTCP, Client*> ClientList::getClientList() const
 {
   return clientList_;

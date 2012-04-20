@@ -8,6 +8,7 @@
 #include "Tracker.hh"
 #include "../Network/ClientList.hh"
 
+
 Tracker::Tracker()
     : route_(
     {
@@ -55,7 +56,11 @@ int Tracker::ctConnMaster(sf::Packet& packet, sf::SocketTCP& sock)
   packet >> privateIp;
   packet >> bandwidth;
   sf::SocketTCP newSocket = sock; //TODO Check copy
-  ClientList::getInstance().addClient(newSocket, nullptr, "");
+  std::string publicIp = ClientList::getInstance().getPrivateIp(sock);
+  std::string token = SqlManager::getInstance().addClient(login, password,
+      privateIp, publicIp, bandwidth);
+  tcToken(sock, token);
+  ClientList::getInstance().addClient(newSocket, nullptr, token);
   return RETURN_VALUE_GOOD;
 }
 
@@ -66,6 +71,8 @@ int Tracker::ctConnSlave(sf::Packet& packet, sf::SocketTCP& sock)
   // Extract content of packet
   packet >> token;
   sf::SocketTCP newSocket = sock; //TODO Check copy
+  //TODO serverId and return value.
+  SqlManager::getInstance().saveClientServerConnection(token, 0);
   ClientList::getInstance().addClient(newSocket, nullptr, token);
   return RETURN_VALUE_GOOD; // We keep control socket in selector
 }
@@ -80,6 +87,8 @@ int Tracker::ctAskList(sf::Packet& packet, sf::SocketTCP& sock)
   packet >> token;
   packet >> filter;
   packet >> regexFilter;
+  sql_result res = SqlManager::getInstance().getAllFlux();
+  tcList(sock, res);
   return RETURN_VALUE_GOOD;
 }
 
@@ -91,6 +100,8 @@ int Tracker::ctAskFlux(sf::Packet& packet, sf::SocketTCP& sock)
   // Extract content of packet
   packet >> token;
   packet >> videoId;
+  SqlManager::getInstance().getFlux(videoId);
+  //TODO add handling
   return RETURN_VALUE_GOOD;
 }
 
@@ -195,124 +206,60 @@ int Tracker::tcToken(sf::SocketTCP& sender, std::string token)
   return send(sender, packet);
 }
 
-int Tracker::tcList(sf::SocketTCP& sender, std::string name[], sf::Int32 id[],
-    sf::Int32 number)
+int Tracker::tcList(sf::SocketTCP& sender, sql_result sqlResult)
 {
   sf::Packet packet;
   sf::Int16 opcode = MERGE_OPCODE(ConnexionType::TRACKER_CLIENT, TC::LIST);
+  sf::Int32 length;
 
   // Create packet
   packet << opcode;
-  packet << number;
-  for (int i = 0; i < number; i++)
+  length = sqlResult.size();
+  packet << length;
+  for (unsigned int i = 0; i < sqlResult.size(); i++)
   {
-    packet << name[i];
-    packet << id[i];
+    pqxx::result::tuple t = sqlResult.at(i);
+    packet << t["name"].c_str();
+    packet << t["id"].c_str();
   }
   return send(sender, packet);
 }
 
-int Tracker::tcListDiff(sf::SocketTCP& sender, std::string ip[],
-    sf::Int16 port[], sf::Int8 number)
+int Tracker::tcListDiff(sf::SocketTCP& sender, sql_result sqlResult)
 {
   sf::Packet packet;
   sf::Int16 opcode = MERGE_OPCODE(ConnexionType::TRACKER_CLIENT, TC::LIST_DIFF);
+  sf::Int8 length;
 
   // Create packet
   packet << opcode;
-  packet << number;
-  for (int i = 0; i < number; i++)
+  length = sqlResult.size();
+  packet << length;
+  for (unsigned int i = 0; i < sqlResult.size(); i++)
   {
-    packet << ip[i];
-    packet << port[i];
+    pqxx::result::tuple t = sqlResult.at(i);
+    packet << t["ip"].c_str();
+    packet << t["port"].c_str();
   }
   return send(sender, packet);
 }
 
-int Tracker::tcListDiff(sf::SocketTCP& sender, std::string ip1, sf::Int16 port1,
-    std::string ip2, sf::Int16 port2, std::string ip3, sf::Int16 port3)
-{
-  sf::Packet packet;
-  sf::Int16 opcode = MERGE_OPCODE(ConnexionType::TRACKER_CLIENT, TC::LIST_DIFF);
-  sf::Int8 number = 3;
-
-  // Create packet
-  packet << opcode;
-  packet << number;
-  packet << ip1;
-  packet << port1;
-  packet << ip2;
-  packet << port2;
-  packet << ip3;
-  packet << port3;
-  return send(sender, packet);
-}
-
-int Tracker::tcListNDiff(sf::SocketTCP& sender, std::string ip[],
-    sf::Int16 port[], sf::Int8 number)
+int Tracker::tcListNDiff(sf::SocketTCP& sender, sql_result sqlResult)
 {
   sf::Packet packet;
   sf::Int16 opcode = MERGE_OPCODE(ConnexionType::TRACKER_CLIENT, TC::LIST_NDIFF);
+  sf::Int8 length;
 
   // Create packet
   packet << opcode;
-  packet << number;
-  for (int i = 0; i < number; i++)
+  length = sqlResult.size();
+  packet << length;
+  for (unsigned int i = 0; i < sqlResult.size(); i++)
   {
-    packet << ip[i];
-    packet << port[i];
+    pqxx::result::tuple t = sqlResult.at(i);
+    packet << t["ip"].c_str();
+    packet << t["port"].c_str();
   }
-  return send(sender, packet);
-}
-
-int Tracker::tcListNDiff(sf::SocketTCP& sender, std::string ip, sf::Int16 port)
-{
-  sf::Packet packet;
-  sf::Int16 opcode = MERGE_OPCODE(ConnexionType::TRACKER_CLIENT, TC::LIST_NDIFF);
-  sf::Int8 number = 1;
-
-  // Create packet
-  packet << opcode;
-  packet << number;
-  packet << ip;
-  packet << port;
-  return send(sender, packet);
-}
-
-int Tracker::tcListNDiff(sf::SocketTCP& sender, std::string ip1,
-    sf::Int16 port1, std::string ip2, sf::Int16 port2)
-{
-  sf::Packet packet;
-  sf::Int16 opcode = MERGE_OPCODE(ConnexionType::TRACKER_CLIENT, TC::LIST_NDIFF);
-  sf::Int8 number = 2;
-
-  // Create packet
-  packet << opcode;
-  packet << number;
-  packet << ip1;
-  packet << port1;
-  packet << ip2;
-  packet << port2;
-  return send(sender, packet);
-}
-
-int Tracker::tcListNDiff(sf::SocketTCP& sender, std::string ip1,
-    sf::Int16 port1, std::string ip2, sf::Int16 port2, std::string ip3,
-    sf::Int16 port3)
-{
-  sf::Packet packet;
-  sf::Int16 opcode = MERGE_OPCODE(ConnexionType::TRACKER_CLIENT, TC::LIST_NDIFF);
-  sf::Int8 number = 3;
-
-  // Create packet
-  packet << opcode;
-  packet << number;
-  packet << ip1;
-  packet << port1;
-  packet << ip2;
-  packet << port2;
-  packet << ip3;
-  packet << port3;
   return send(sender, packet);
 }
 

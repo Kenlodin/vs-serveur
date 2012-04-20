@@ -104,7 +104,9 @@ void Network::run()
       if (sock == *controlSocket_ || sock == *dataSocket_)
       {
         sf::SocketTCP client;
-        sock.Accept(client, nullptr);
+        sf::IPAddress ip;
+        sock.Accept(client, &ip);
+        ClientList::getInstance().setPrivateIp(client, ip.ToString());
         selector.Add(client);
       }
       else
@@ -113,15 +115,15 @@ void Network::run()
         sock.Receive(packet);
         routing(packet, sock);
         /*
-        if (returnValue != RETURN_VALUE_GOOD) // Suppress data socket
-          selector.Remove(sock);
-        if (returnValue == RETURN_VALUE_ERROR) //Data socket already suppress
-        {
-          //Suppress client referenced by this controlSocket
-          ClientList::getInstance().removeClient(sock);
-          sock.Close();
+         if (returnValue != RETURN_VALUE_GOOD) // Suppress data socket
+         selector.Remove(sock);
+         if (returnValue == RETURN_VALUE_ERROR) //Data socket already suppress
+         {
+         //Suppress client referenced by this controlSocket
+         ClientList::getInstance().removeClient(sock);
+         sock.Close();
 
-        }*/
+         }*/
       }
     }
   }
