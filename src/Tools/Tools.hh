@@ -10,10 +10,17 @@
 
 #include <iostream>
 #include <sstream>
+#include <ctime>
+#include <cstdlib>
 
 namespace tools
 {
-  std::string toString (int x);
+  std::string toString (int value);
+  
+  bool fromString (const std::string str, int& dest);
+
+
+  std::string token (std::string private_ip, std::string public_ip);
 }
 
 #endif	/* TOOLS_HH */

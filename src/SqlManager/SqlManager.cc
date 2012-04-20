@@ -47,16 +47,27 @@ SqlManager::addServer (std::string ip, int port)
   return execute (req);
 }
 
-sql_result
-SqlManager::addClient (int user_id, std::string public_ip,
-                       std::string private_ip, int bandwith,
-                       std::string token)
+std::string
+SqlManager::addClient (std::string login, std::string password,
+                       std::string public_ip, std::string private_ip,
+                       int bandwith)
 {
   std::string req;
+
+  // Vérification de l'existance de l'utilisateur
+  req = "SELECT id FROM users WHERE username='" + login + "' AND password='" + password + "'";
+  sql_result r = execute (req);
+  if (r.size () == 0)
+    return "";
+  
+  // Ajout du client 
+  std::string user_id = r.at (0)["id"].c_str ();
+  std::string token = tools::token (private_ip, public_ip);
   req = "INSERT INTO clients (user_id, public_ip, private_ip, bandwith, token) VALUES ";
-  req += "(" + tools::toString (user_id) + ", '" + public_ip + "', '" + private_ip + "', ";
+  req += "(" + user_id + ", '" + public_ip + "', '" + private_ip + "', ";
   req += tools::toString (bandwith) + ", '" + token + "')";
-  return execute (req);
+  execute (req);
+  return token;
 }
 
 sql_result
