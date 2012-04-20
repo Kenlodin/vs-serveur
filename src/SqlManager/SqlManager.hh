@@ -36,6 +36,7 @@ class SqlManager
 
  public:
   sql_result addServer (std::string ip, int port);
+  sql_result addClient (int user_id, std::string public_ip, std::string private_ip, int bandwith, std::string token);
   sql_result saveClientServerConnection (int client_id, int server_id);
   
  public:

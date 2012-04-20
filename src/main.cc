@@ -24,11 +24,11 @@ main ()
   //  tools::Thread t();
   //  t.run ();
 
-//  SqlManager::getInstance ().connect ();
-//  SqlManager::getInstance ().getThreeServers ();
-//  SqlManager::getInstance ().addServer ("55.22.33.44", 1234);
-//  SqlManager::getInstance ().getThreeServers ();
-
+  SqlManager::getInstance ().connect ();
+  //  SqlManager::getInstance ().getThreeServers ();
+  //  SqlManager::getInstance ().addServer ("55.22.33.44", 1234);
+  //  SqlManager::getInstance ().getThreeServers ();
+  //  SqlManager::getInstance ().addClient (5, "88.88.8.88", "127.0.0.1", 150, "azasa5z51dsq1");
   return 0;
 }
 

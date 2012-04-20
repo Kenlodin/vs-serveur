@@ -48,6 +48,18 @@ SqlManager::addServer (std::string ip, int port)
 }
 
 sql_result
+SqlManager::addClient (int user_id, std::string public_ip,
+                       std::string private_ip, int bandwith,
+                       std::string token)
+{
+  std::string req;
+  req = "INSERT INTO clients (user_id, public_ip, private_ip, bandwith, token) VALUES ";
+  req += "(" + tools::toString (user_id) + ", '" + public_ip + "', '" + private_ip + "', ";
+  req += tools::toString (bandwith) + ", '" + token + "')";
+  return execute (req);
+}
+
+sql_result
 SqlManager::saveClientServerConnection (int client_id, int server_id)
 {
   std::string req = "INSERT INTO client_server (client_id, server_id, created) VALUES (";
