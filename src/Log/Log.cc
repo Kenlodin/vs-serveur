@@ -9,12 +9,11 @@
 
 #include "Log.hh"
 
-Log*
+Log&
 Log::getInstance ()
 {
-  static Log* instance = nullptr;
-  if (instance == nullptr)
-    instance = new Log ();
+  static Log instance;
+  
   return instance;
 }
 

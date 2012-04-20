@@ -52,7 +52,7 @@ class Log
   bool isActive_;
 
  public:
-  static Log* getInstance ();
+  static Log& getInstance ();
   
  private:
   Log () { }
