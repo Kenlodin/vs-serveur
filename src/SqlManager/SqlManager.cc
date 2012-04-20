@@ -33,25 +33,24 @@ SqlManager::execute (std::string query)
   std::cout << connection_ << std::endl;
   //if (connection_->is_open ())
   //{
-    connection_->prepare ("top", query);
-    pqxx::work w (*connection_);
-    pqxx::result r = w.prepared ("top").exec ();
-    return r;
+  connection_->prepare ("top", query);
+  pqxx::work w (*connection_);
+  pqxx::result r = w.prepared ("top").exec ();
+  return r;
   //}
 }
 
-sql_result
+std::vector <std::string>
 SqlManager::getThreeServers ()
 {
   pqxx::result r = execute ("SELECT * FROM \"servers\" ORDER BY \"nb_client\" LIMIT 3");
-  sql_result result;
+  std::vector <std::string> result;
   for (unsigned long i = 0; i < r.size (); i++)
   {
     pqxx::result::tuple t = r.at (i);
-    map m;
-    m.insert (pair ("ip", std::string(t["ip"].c_str ())));
-    m.insert (pair ("port", std::string(t["port"].c_str ())));
-    result.push_back (m);
+    result.push_back (std::string (t["ip"].c_str ()));
+    result.push_back (std::string (t["ip"].c_str ()));
   }
   return result;
 }
+

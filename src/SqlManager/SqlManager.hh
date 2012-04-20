@@ -35,7 +35,7 @@ class SqlManager
   pqxx::result execute (std::string query);
   
  public:
-  sql_result getThreeServers ();
+  std::vector <std::string> getThreeServers ();
  public:
   static SqlManager& getInstance ();
 
