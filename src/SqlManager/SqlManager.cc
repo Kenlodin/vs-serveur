@@ -84,15 +84,13 @@ SqlManager::saveClientServerConnection (std::string client_token, int server_id)
 sql_result
 SqlManager::getThreeServers ()
 {
-  pqxx::result r = execute ("SELECT * FROM \"servers\" ORDER BY \"nb_client\" LIMIT 3");
-  std::cout << r.size () << std::endl;
-  for (unsigned long i = 0; i < r.size (); i++)
-  {
-    pqxx::result::tuple t = r.at (i);
-    std::cout << "toto : " << t["ip"] << std::endl;
-  }
-  //return execute ("SELECT * FROM \"servers\" ORDER BY \"nb_client\" LIMIT 3");
-  return r;
+  return execute ("SELECT * FROM \"servers\" ORDER BY \"nb_client\" LIMIT 3");
+//  std::cout << r.size () << std::endl;
+//  for (unsigned long i = 0; i < r.size (); i++)
+//  {
+//    pqxx::result::tuple t = r.at (i);
+//    std::cout << "toto : " << t["ip"] << std::endl;
+//  }
 }
 
 sql_result
@@ -102,16 +100,17 @@ SqlManager::getAllFlux ()
 }
 
 sql_result
-SqlManager::getFile (int id)
+SqlManager::getFlux (int id)
 {
-  //return execute ("SELECT * FROM \"files\" WHERE id=\"" + std::string(id) + "\"");
-  return execute ("SELECT * FROM \"files\"");
+  return execute ("SELECT * FROM \"files\" WHERE id='"+ tools::toString (id) +"'");
 }
 
 sql_result
 SqlManager::getNextsHandlings (int server_id)
 {
   std::string req;
-  req = "SELECT * FROM client_server LEFT JOIN client_handlings ON (client_server.client_id = client_handlings.client_id)";
+  req = "SELECT client_handlings.client_token, client_handlings.packet_id FROM client_server LEFT JOIN client_handlings ON ";
+  req += "(client_server.client_token = client_handlings.client_token)";
   req += "WHERE client_server.server_id='" + tools::toString (server_id) + "'";
+  return execute (req);
 }

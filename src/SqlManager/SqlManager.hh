@@ -44,7 +44,7 @@ class SqlManager
  public:
   sql_result getThreeServers ();
   sql_result getAllFlux ();
-  sql_result getFile (int id);
+  sql_result getFlux (int id);
   sql_result getNextsHandlings (int server_id);
 
  public:
