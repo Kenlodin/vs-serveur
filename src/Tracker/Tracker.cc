@@ -240,7 +240,7 @@ int Tracker::tcListDiff(sf::SocketTCP& sender, sql_result sqlResult)
   {
     pqxx::result::tuple t = sqlResult.at(i);
     packet << t["ip"].c_str();
-    tools::fromString<sf::Uint16>(t["ip"].c_str(), port);
+    tools::fromString<sf::Uint16>(t["port"].c_str(), port);
     packet << port;
   }
   return send(sender, packet);
@@ -261,8 +261,8 @@ int Tracker::tcListNDiff(sf::SocketTCP& sender, sql_result sqlResult)
   for (unsigned int i = 0; i < sqlResult.size(); i++)
   {
     pqxx::result::tuple t = sqlResult.at(i);
-    tools::fromString<sf::Uint16>(t["ip"].c_str(), port);
-    port = sf::Uint16(t["port"].c_str());
+    packet << t["ip"].c_str();
+    tools::fromString<sf::Uint16>(t["port"].c_str(), port);
     packet << port;
   }
   return send(sender, packet);

@@ -8,6 +8,7 @@
 #include <sys/param.h>
 
 #include "SqlManager.hh"
+#include "../Tools/Tools.hh"
 
 SqlManager&
 SqlManager::getInstance ()
@@ -45,7 +46,7 @@ sql_result
 SqlManager::addServer (std::string ip, int port)
 {
   std::string req;
-  req = "INSERT INTO servers (ip, port) VALUES ('" + ip + "'," + tools::toString (port) + ")";
+  req = "INSERT INTO servers (ip, port) VALUES ('" + ip + "'," + tools::toString<int> (port) + ")";
   return execute (req);
 }
 
@@ -67,7 +68,7 @@ SqlManager::addClient (std::string login, std::string password,
   std::string token = tools::token (private_ip, public_ip);
   req = "INSERT INTO clients (user_id, public_ip, private_ip, bandwith, token) VALUES ";
   req += "(" + user_id + ", '" + public_ip + "', '" + private_ip + "', ";
-  req += tools::toString (bandwith) + ", '" + token + "')";
+  req += tools::toString<int> (bandwith) + ", '" + token + "')";
   execute (req);
   return token;
 }
@@ -78,7 +79,7 @@ SqlManager::saveClientServerConnection (std::string client_token, int server_id)
   std::string req = "INSERT INTO client_server (client_id, server_id, created) VALUES (";
   req += client_token;
   req += ", ";
-  req += tools::toString (server_id);
+  req += tools::toString<int> (server_id);
   req += ", 0)";
   return execute (req);
 }
@@ -92,7 +93,7 @@ SqlManager::saveClientServerConnection (std::string client_token, int server_id)
 sql_result
 SqlManager::setHandlings (std::string client_token, int file_id)
 {
-  sql_result r = execute ("SELECT * FROM \"files\" WHERE id='" + tools::toString (file_id) + "'");
+  sql_result r = execute ("SELECT * FROM \"files\" WHERE id='" + tools::toString<int> (file_id) + "'");
   if (r.size () > 0)
   {
     int nb_packet;
@@ -106,13 +107,13 @@ SqlManager::setHandlings (std::string client_token, int file_id)
     {
       std::cout << "i : " << i << std::endl;
       std::string reaaa = "INSERT INTO client_handlings (client_token, file_id, packet_id, date) VALUES ('" +
-        client_token + "', " + tools::toString (file_id) + ", " + tools::toString (i) +
-        ", " + tools::toString (date) + ")";
+        client_token + "', " + tools::toString<int> (file_id) + ", " + tools::toString<int> (i) +
+        ", " + tools::toString<int> (date) + ")";
       std::cout << reaaa << std::endl;
       date += coeff;
       execute ("INSERT INTO client_handlings (client_token, file_id, packet_id, date) VALUES ('" +
-               client_token + "', " + tools::toString (file_id) + ", " + tools::toString (i) +
-               ", " + tools::toString (date) + ")");
+               client_token + "', " + tools::toString<int> (file_id) + ", " + tools::toString<int> (i) +
+               ", " + tools::toString<int> (date) + ")");
     }
   }
   return r;
@@ -139,7 +140,7 @@ SqlManager::getAllFlux ()
 sql_result
 SqlManager::getFlux (int id)
 {
-  return execute ("SELECT * FROM \"files\" WHERE id='" + tools::toString (id) + "'");
+  return execute ("SELECT * FROM \"files\" WHERE id='" + tools::toString<int> (id) + "'");
 }
 
 sql_result
@@ -148,6 +149,6 @@ SqlManager::getNextsHandlings (int server_id)
   std::string req;
   req = "SELECT client_handlings.client_token, client_handlings.packet_id FROM client_server LEFT JOIN client_handlings ON ";
   req += "(client_server.client_token = client_handlings.client_token)";
-  req += "WHERE client_server.server_id='" + tools::toString (server_id) + "'";
+  req += "WHERE client_server.server_id='" + tools::toString<int> (server_id) + "'";
   return execute (req);
 }

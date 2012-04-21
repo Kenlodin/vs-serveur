@@ -16,16 +16,25 @@
 namespace tools
 {
   template <typename T>
-  std::string toString (int value);
+  std::string toString (int& value)
+  {
+    std::ostringstream oss;
+    oss << value;
+    return oss.str ();
+  }
   
   template <typename T>
-  bool fromString (const std::string str, T& dest);
+  bool fromString (const std::string str, T& dest)
+  {
+    // créer un flux à partir de la chaîne donnée
+    std::istringstream iss (str);
+    // tenter la conversion vers Dest
+    return (iss >> dest) != 0;
+  }
 
 
   std::string token (std::string private_ip, std::string public_ip);
 }
-
-#include "string.hxx"
 
 #endif	/* TOOLS_HH */
 

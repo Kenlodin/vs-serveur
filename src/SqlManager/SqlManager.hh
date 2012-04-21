@@ -23,7 +23,7 @@ typedef pqxx::result::tuple sql_tuple;
 class SqlManager
 {
  public:
-  /**
+  /**)
    * Permet de se connecter à la base de données.
    */
   void connect ();
