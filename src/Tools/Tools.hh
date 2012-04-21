@@ -16,7 +16,6 @@
 namespace tools
 {
   std::string toString (int value);
-  
   bool fromString (const std::string str, int& dest);
 
 
