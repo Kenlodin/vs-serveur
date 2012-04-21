@@ -39,8 +39,10 @@ class SqlManager
   std::string addClient (std::string login, std::string password,
                         std::string public_ip, std::string private_ip,
                         int bandwith);
-  sql_result saveClientServerConnection (std::string client_token, int server_id);
 
+  sql_result saveClientServerConnection (std::string client_token, int server_id);
+  sql_result setHandlings (std::string client_token, int file_id);
+  
  public:
   sql_result getThreeServers ();
   sql_result getAllFlux ();

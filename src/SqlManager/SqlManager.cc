@@ -5,6 +5,8 @@
  *      Author: nagriar
  */
 
+#include <sys/param.h>
+
 #include "SqlManager.hh"
 
 SqlManager&
@@ -81,16 +83,51 @@ SqlManager::saveClientServerConnection (std::string client_token, int server_id)
   return execute (req);
 }
 
+/**
+ * @todo : return a boolean
+ * @param client_token
+ * @param file_id
+ * @return 
+ */
+sql_result
+SqlManager::setHandlings (std::string client_token, int file_id)
+{
+  sql_result r = execute ("SELECT * FROM \"files\" WHERE id='" + tools::toString (file_id) + "'");
+  if (r.size () > 0)
+  {
+    int nb_packet;
+    int length;
+    tools::fromString (r.at (0)["nb_packet"].c_str (), nb_packet);
+    tools::fromString (r.at (0)["length"].c_str (), length);
+    float coeff = nb_packet / length;
+    int date = static_cast<int> (time (0));
+    std::cout << "nb packet : " << nb_packet << std::endl;
+    for (int i = 0; i < nb_packet; i++)
+    {
+      std::cout << "i : " << i << std::endl;
+      std::string reaaa = "INSERT INTO client_handlings (client_token, file_id, packet_id, date) VALUES ('" +
+        client_token + "', " + tools::toString (file_id) + ", " + tools::toString (i) +
+        ", " + tools::toString (date) + ")";
+      std::cout << reaaa << std::endl;
+      date += coeff;
+      execute ("INSERT INTO client_handlings (client_token, file_id, packet_id, date) VALUES ('" +
+               client_token + "', " + tools::toString (file_id) + ", " + tools::toString (i) +
+               ", " + tools::toString (date) + ")");
+    }
+  }
+  return r;
+}
+
 sql_result
 SqlManager::getThreeServers ()
 {
   return execute ("SELECT * FROM \"servers\" ORDER BY \"nb_client\" LIMIT 3");
-//  std::cout << r.size () << std::endl;
-//  for (unsigned long i = 0; i < r.size (); i++)
-//  {
-//    pqxx::result::tuple t = r.at (i);
-//    std::cout << "toto : " << t["ip"] << std::endl;
-//  }
+  //  std::cout << r.size () << std::endl;
+  //  for (unsigned long i = 0; i < r.size (); i++)
+  //  {
+  //    pqxx::result::tuple t = r.at (i);
+  //    std::cout << "toto : " << t["ip"] << std::endl;
+  //  }
 }
 
 sql_result
@@ -102,7 +139,7 @@ SqlManager::getAllFlux ()
 sql_result
 SqlManager::getFlux (int id)
 {
-  return execute ("SELECT * FROM \"files\" WHERE id='"+ tools::toString (id) +"'");
+  return execute ("SELECT * FROM \"files\" WHERE id='" + tools::toString (id) + "'");
 }
 
 sql_result
