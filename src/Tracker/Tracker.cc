@@ -48,7 +48,7 @@ int Tracker::ctConnMaster(sf::Packet& packet, sf::SocketTCP& sock)
   std::string login;
   std::string password;
   std::string privateIp;
-  sf::Int16 bandwidth;
+  sf::Uint16 bandwidth;
 
   // Extract content of packet
   packet >> login;
@@ -80,7 +80,7 @@ int Tracker::ctConnSlave(sf::Packet& packet, sf::SocketTCP& sock)
 int Tracker::ctAskList(sf::Packet& packet, sf::SocketTCP& sock)
 {
   std::string token;
-  sf::Int8 filter;
+  sf::Uint8 filter;
   std::string regexFilter;
 
   // Extract content of packet
@@ -168,7 +168,7 @@ int Tracker::ctAskRem(sf::Packet& packet, sf::SocketTCP& sock)
 {
   std::string token;
   sf::Int32 startFrame;
-  sf::Int8 endFrame;
+  sf::Int32 endFrame;
 
   // Extract content of packet
   packet >> token;
@@ -198,7 +198,7 @@ int Tracker::ctDec(sf::Packet& packet, sf::SocketTCP& sock)
 int Tracker::tcToken(sf::SocketTCP& sender, std::string token)
 {
   sf::Packet packet;
-  sf::Int16 opcode = MERGE_OPCODE(ConnexionType::TRACKER_CLIENT, TC::TOKEN);
+  sf::Uint16 opcode = MERGE_OPCODE(ConnexionType::TRACKER_CLIENT, TC::TOKEN);
 
   // Create packet
   packet << opcode;
@@ -209,7 +209,7 @@ int Tracker::tcToken(sf::SocketTCP& sender, std::string token)
 int Tracker::tcList(sf::SocketTCP& sender, sql_result sqlResult)
 {
   sf::Packet packet;
-  sf::Int16 opcode = MERGE_OPCODE(ConnexionType::TRACKER_CLIENT, TC::LIST);
+  sf::Uint16 opcode = MERGE_OPCODE(ConnexionType::TRACKER_CLIENT, TC::LIST);
   sf::Int32 length;
 
   // Create packet
@@ -228,8 +228,9 @@ int Tracker::tcList(sf::SocketTCP& sender, sql_result sqlResult)
 int Tracker::tcListDiff(sf::SocketTCP& sender, sql_result sqlResult)
 {
   sf::Packet packet;
-  sf::Int16 opcode = MERGE_OPCODE(ConnexionType::TRACKER_CLIENT, TC::LIST_DIFF);
-  sf::Int8 length;
+  sf::Uint16 opcode = MERGE_OPCODE(ConnexionType::TRACKER_CLIENT, TC::LIST_DIFF);
+  sf::Uint8 length;
+  sf::Uint16 port;
 
   // Create packet
   packet << opcode;
@@ -239,7 +240,8 @@ int Tracker::tcListDiff(sf::SocketTCP& sender, sql_result sqlResult)
   {
     pqxx::result::tuple t = sqlResult.at(i);
     packet << t["ip"].c_str();
-    packet << t["port"].c_str();
+    tools::fromString<sf::Uint16>(t["ip"].c_str(), port);
+    packet << port;
   }
   return send(sender, packet);
 }
@@ -247,8 +249,10 @@ int Tracker::tcListDiff(sf::SocketTCP& sender, sql_result sqlResult)
 int Tracker::tcListNDiff(sf::SocketTCP& sender, sql_result sqlResult)
 {
   sf::Packet packet;
-  sf::Int16 opcode = MERGE_OPCODE(ConnexionType::TRACKER_CLIENT, TC::LIST_NDIFF);
-  sf::Int8 length;
+  sf::Uint16 opcode = MERGE_OPCODE(ConnexionType::TRACKER_CLIENT, TC::LIST_NDIFF);
+  sf::Uint8 length;
+  std::string temp;
+  sf::Uint16 port;
 
   // Create packet
   packet << opcode;
@@ -257,8 +261,9 @@ int Tracker::tcListNDiff(sf::SocketTCP& sender, sql_result sqlResult)
   for (unsigned int i = 0; i < sqlResult.size(); i++)
   {
     pqxx::result::tuple t = sqlResult.at(i);
-    packet << t["ip"].c_str();
-    packet << t["port"].c_str();
+    tools::fromString<sf::Uint16>(t["ip"].c_str(), port);
+    port = sf::Uint16(t["port"].c_str());
+    packet << port;
   }
   return send(sender, packet);
 }
@@ -273,7 +278,7 @@ Tracker& Tracker::getInstance()
 int Tracker::tcMsg(sf::SocketTCP& sender, sf::Int32 numMsg, std::string msg)
 {
   sf::Packet packet;
-  sf::Int16 opcode = MERGE_OPCODE(ConnexionType::TRACKER_CLIENT, TC::MSG);
+  sf::Uint16 opcode = MERGE_OPCODE(ConnexionType::TRACKER_CLIENT, TC::MSG);
 
   // Create packet
   packet << opcode;

@@ -15,13 +15,17 @@
 
 namespace tools
 {
+  template <typename T>
   std::string toString (int value);
   
-  bool fromString (const std::string str, int& dest);
+  template <typename T>
+  bool fromString (const std::string str, T& dest);
 
 
   std::string token (std::string private_ip, std::string public_ip);
 }
+
+#include "string.hxx"
 
 #endif	/* TOOLS_HH */
 

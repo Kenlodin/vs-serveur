@@ -44,9 +44,9 @@ Network::~Network()
 
 void Network::routing(sf::Packet& packet, sf::SocketTCP& sock)
 {
-  sf::Int16 opcode;
-  int type;
-  int code;
+  sf::Uint16 opcode;
+  unsigned int type;
+  unsigned int code;
 
   packet >> opcode;
   code = EXTRACT_CODE(opcode);
