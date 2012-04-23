@@ -116,7 +116,11 @@ void Network::run()
       {
         coutDebug("Nouveau packet.");
         sf::Packet packet;
-        sock.Receive(packet);
+        if (sock.Receive(packet) != sf::Socket::Done)
+        {
+          selector.Remove(sock);
+          continue;
+        }
         routing(packet, sock);
         /*
          if (returnValue != RETURN_VALUE_GOOD) // Suppress data socket
