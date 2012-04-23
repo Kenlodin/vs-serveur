@@ -115,13 +115,14 @@ void Network::run()
       }
       else
       {
-        coutDebug("Nouveau packet.");
         sf::Packet packet;
         if (sock.Receive(packet) != sf::Socket::Done) // TODO Dec Client
         {
+          coutDebug("Suppression d'un client.");
           selector.Remove(sock);
           continue;
         }
+        coutDebug("Nouveau packet.");
         routing(packet, sock);
         /*
          if (returnValue != RETURN_VALUE_GOOD) // Suppress data socket
