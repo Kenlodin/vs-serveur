@@ -31,6 +31,7 @@ int main()
   diffusionWorker.start();
   trackerWorker.start();
   networkManager.run ();
+
   //  SqlManager::getInstance ().getThreeServers ();
   //  SqlManager::getInstance ().addServer ("55.22.33.44", 1234);
   //  SqlManager::getInstance ().getThreeServers ();

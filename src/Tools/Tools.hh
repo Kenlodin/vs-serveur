@@ -16,7 +16,7 @@
 namespace tools
 {
   template <typename T>
-  std::string toString (int& value)
+  std::string toString (T value)
   {
     std::ostringstream oss;
     oss << value;

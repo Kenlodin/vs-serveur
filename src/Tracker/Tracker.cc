@@ -56,7 +56,8 @@ int Tracker::ctConnMaster(sf::Packet& packet, sf::SocketTCP& sock)
   packet >> password;
   packet >> privateIp;
   packet >> bandwidth;
-  coutDebug("Client --> Tracker : Connection master (" + login + ", " + password + ")");
+  coutDebug("Client --> Tracker : Connection master (" + login
+        + ", " + password + ", " + privateIp + ")");
   sf::SocketTCP newSocket = sock; //TODO Check copy
   std::string publicIp = ClientList::getInstance().getPrivateIp(sock);
   std::string token = SqlManager::getInstance().addClient(login, password,
