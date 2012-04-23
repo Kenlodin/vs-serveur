@@ -11,6 +11,7 @@
 #include <pqxx/pqxx>
 #include <iostream>
 #include "../Tools/Tools.hh"
+#include "../Log/Log.hh"
 
 
 typedef pqxx::result sql_result;
