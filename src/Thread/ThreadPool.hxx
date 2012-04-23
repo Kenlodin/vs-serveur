@@ -23,10 +23,12 @@ void ThreadPool<T>::Worker::run()
     coutDebug("ThreadPool");
     while (true)
     {
-      work = WorkList<T>::getInstance().getOneWork();
-      (T::getInstance().*(work.worker))
-          (work.args.first, work.args.second.first,
-              work.args.second.second);
+      if (WorkList<T>::getInstance().getOneWork(work))
+      {
+        (T::getInstance().*(work.worker))
+              (work.args.first, work.args.second.first,
+                  work.args.second.second);
+      }
     }
   }
   catch (std::exception& e)

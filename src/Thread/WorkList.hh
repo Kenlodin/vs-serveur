@@ -31,7 +31,7 @@ class WorkList
         Worker worker;
         ListElt args;
     } OneWork;
-    OneWork getOneWork();
+    bool getOneWork(OneWork&);
     void putWorks(Worker worker, unsigned int arg0, sf::Packet& arg1,
         sf::SocketTCP& arg2);
     void putWorks(ListFun works, ListArgs args);

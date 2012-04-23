@@ -28,10 +28,10 @@ WorkList<T>& WorkList<T>::getInstance()
 }
 
 template<class T>
-typename WorkList<T>::OneWork WorkList<T>::getOneWork()
+bool WorkList<T>::getOneWork(WorkList<T>::OneWork& oneWork)
 {
   mutex_.lock();
-  OneWork oneWork;
+  bool retValue = false;
   if (!work_.empty())
   {
     coutDebug("OneWorkGet : begin");
@@ -39,10 +39,11 @@ typename WorkList<T>::OneWork WorkList<T>::getOneWork()
     work_.pop_front();
     oneWork.args = *(args_.begin());
     args_.pop_front();
+    retValue = true;
+    coutDebug("OneWorkGet : end");
   }
   mutex_.unlock();
-  coutDebug("OneWorkGet : end");
-  return oneWork;
+  return retValue;
 }
 
 template<class T>
