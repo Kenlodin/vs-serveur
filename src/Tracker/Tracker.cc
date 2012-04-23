@@ -62,8 +62,9 @@ int Tracker::ctConnMaster(sf::Packet& packet, sf::SocketTCP& sock)
   std::string publicIp = ClientList::getInstance().getPrivateIp(sock);
   std::string token = SqlManager::getInstance().addClient(login, password,
       privateIp, publicIp, bandwidth);
+  if (token == "")
+    return RETURN_VALUE_ERROR;
   tcToken(sock, token);
-  coutDebug("token : " + token);
   ClientList::getInstance().addClient(newSocket, nullptr, token);
   return RETURN_VALUE_GOOD;
 }

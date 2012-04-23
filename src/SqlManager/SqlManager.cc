@@ -66,7 +66,6 @@ SqlManager::addClient (std::string login, std::string password,
   // Ajout du client 
   std::string user_id = r.at (0)["id"].c_str ();
   std::string token = tools::token (private_ip, public_ip);
-  coutDebug("token : " + token);
   req = "INSERT INTO clients (user_id, public_ip, private_ip, bandwith, token) VALUES ";
   req += "(" + user_id + ", '" + public_ip + "', '" + private_ip + "', ";
   req += tools::toString<int> (bandwith) + ", '" + token + "')";
