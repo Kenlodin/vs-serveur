@@ -97,6 +97,7 @@ void Network::run()
   sf::SelectorTCP selector;
   selector.Add(*dataSocket_);
   selector.Add(*controlSocket_);
+  coutDebug("Serveur démarré");
   while (true)
   {
     unsigned int nb = selector.Wait();
@@ -116,7 +117,7 @@ void Network::run()
       {
         coutDebug("Nouveau packet.");
         sf::Packet packet;
-        if (sock.Receive(packet) != sf::Socket::Done)
+        if (sock.Receive(packet) != sf::Socket::Done) // TODO Dec Client
         {
           selector.Remove(sock);
           continue;

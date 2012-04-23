@@ -24,10 +24,12 @@ int main()
 
   //  tools::Thread t();
   //  t.run ();
-  ThreadPool<Diffusion> t (1);
-  ThreadPool<Tracker> t2(1);
+  ThreadPool<Diffusion> diffusionWorker (1);
+  ThreadPool<Tracker> trackerWorker(1);
   SqlManager::getInstance ().connect ();
   Network networkManager (36000, 36001);
+  diffusionWorker.start();
+  trackerWorker.start();
   networkManager.run ();
   //  SqlManager::getInstance ().getThreeServers ();
   //  SqlManager::getInstance ().addServer ("55.22.33.44", 1234);
