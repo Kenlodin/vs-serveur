@@ -14,6 +14,7 @@
 # include "../fwd.hh"
 # include "../Diffusion/Diffusion.hh"
 # include "../Tracker/Tracker.hh"
+# include "../Log/Log.hh"
 
 class Network : public tools::Thread
 {

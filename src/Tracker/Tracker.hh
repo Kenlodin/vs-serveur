@@ -11,6 +11,7 @@
 # include "../fwd.hh"
 # include "../PacketHandler.hh"
 # include "../SqlManager/SqlManager.hh"
+# include "../Log/Log.hh"
 
 class Tracker: public PacketHandler
 {

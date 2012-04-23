@@ -55,6 +55,7 @@ int Tracker::ctConnMaster(sf::Packet& packet, sf::SocketTCP& sock)
   packet >> password;
   packet >> privateIp;
   packet >> bandwidth;
+  coutDebug("Client --> Tracker : Connection master (" + login + ", " + password + ")");
   sf::SocketTCP newSocket = sock; //TODO Check copy
   std::string publicIp = ClientList::getInstance().getPrivateIp(sock);
   std::string token = SqlManager::getInstance().addClient(login, password,
@@ -72,6 +73,7 @@ int Tracker::ctConnSlave(sf::Packet& packet, sf::SocketTCP& sock)
   packet >> token;
   sf::SocketTCP newSocket = sock; //TODO Check copy
   //TODO serverId and return value.
+  coutDebug("Client --> Tracker : Connection slave (" + token + ")");
   SqlManager::getInstance().saveClientServerConnection(token, 0);
   ClientList::getInstance().addClient(newSocket, nullptr, token);
   return RETURN_VALUE_GOOD; // We keep control socket in selector
@@ -87,6 +89,7 @@ int Tracker::ctAskList(sf::Packet& packet, sf::SocketTCP& sock)
   packet >> token;
   packet >> filter;
   packet >> regexFilter;
+  coutDebug("Client --> Tracker : Ask list");
   sql_result res = SqlManager::getInstance().getAllFlux();
   tcList(sock, res);
   return RETURN_VALUE_GOOD;
@@ -100,6 +103,7 @@ int Tracker::ctAskFlux(sf::Packet& packet, sf::SocketTCP& sock)
   // Extract content of packet
   packet >> token;
   packet >> videoId;
+  coutDebug("Client --> Tracker : Ask flux");
   SqlManager::getInstance().getFlux(videoId);
   //TODO add handling
   return RETURN_VALUE_GOOD;
@@ -111,6 +115,7 @@ int Tracker::ctAskCheck(sf::Packet& packet, sf::SocketTCP& sock)
 
   // Extract content of packet
   packet >> token;
+  coutDebug("Client --> Tracker : Ask check");
   return RETURN_VALUE_GOOD;
 }
 
@@ -128,6 +133,7 @@ int Tracker::ctAskPacket(sf::Packet& packet, sf::SocketTCP& sock)
   {
     packet >> frameNumber[i];
   }
+  coutDebug("Client --> Tracker : Ask packet");
   return RETURN_VALUE_GOOD;
 }
 
@@ -141,6 +147,7 @@ int Tracker::ctAskRpacket(sf::Packet& packet, sf::SocketTCP& sock)
   packet >> token;
   packet >> firstFrame;
   packet >> lastFrame;
+  coutDebug("Client --> Tracker : Ask range packet");
   return RETURN_VALUE_GOOD;
 }
 
@@ -152,6 +159,7 @@ int Tracker::ctAskMove(sf::Packet& packet, sf::SocketTCP& sock)
   // Extract content of packet
   packet >> token;
   packet >> nPosition;
+  coutDebug("Client --> Tracker : Ask move");
   return RETURN_VALUE_GOOD;
 }
 
@@ -161,6 +169,7 @@ int Tracker::ctAskDeficient(sf::Packet& packet, sf::SocketTCP& sock)
 
   // Extract content of packet
   packet >> token;
+  coutDebug("Client --> Tracker : Ask deficient");
   return RETURN_VALUE_GOOD;
 }
 
@@ -174,6 +183,7 @@ int Tracker::ctAskRem(sf::Packet& packet, sf::SocketTCP& sock)
   packet >> token;
   packet >> startFrame;
   packet >> endFrame;
+  coutDebug("Client --> Tracker : Ask remove");
   return RETURN_VALUE_GOOD;
 }
 
@@ -183,6 +193,7 @@ int Tracker::ctAskStop(sf::Packet& packet, sf::SocketTCP& sock)
 
   // Extract content of packet
   packet >> token;
+  coutDebug("Client --> Tracker : Ask stop");
   return RETURN_VALUE_GOOD;
 }
 
@@ -192,6 +203,7 @@ int Tracker::ctDec(sf::Packet& packet, sf::SocketTCP& sock)
 
   // Extract content of packet
   packet >> token;
+  coutDebug("Client --> Tracker : Deconnection");
   return RETURN_VALUE_GOOD;
 }
 
@@ -203,6 +215,7 @@ int Tracker::tcToken(sf::SocketTCP& sender, std::string token)
   // Create packet
   packet << opcode;
   packet << token;
+  coutDebug("Tracker --> Client : Token = " + token);
   return send(sender, packet);
 }
 
@@ -222,6 +235,7 @@ int Tracker::tcList(sf::SocketTCP& sender, sql_result sqlResult)
     packet << t["name"].c_str();
     packet << t["id"].c_str();
   }
+  coutDebug("Tracker --> Client : list");
   return send(sender, packet);
 }
 
@@ -243,6 +257,7 @@ int Tracker::tcListDiff(sf::SocketTCP& sender, sql_result sqlResult)
     tools::fromString<sf::Uint16>(t["port"].c_str(), port);
     packet << port;
   }
+  coutDebug("Tracker --> Client : list diffusion");
   return send(sender, packet);
 }
 
@@ -265,6 +280,7 @@ int Tracker::tcListNDiff(sf::SocketTCP& sender, sql_result sqlResult)
     tools::fromString<sf::Uint16>(t["port"].c_str(), port);
     packet << port;
   }
+  coutDebug("Tracker --> Client : list new diffusion");
   return send(sender, packet);
 }
 
@@ -284,6 +300,7 @@ int Tracker::tcMsg(sf::SocketTCP& sender, sf::Int32 numMsg, std::string msg)
   packet << opcode;
   packet << numMsg;
   packet << msg;
+  coutDebug("Tracker --> Client : send msg");
   return send(sender, packet);
 }
 

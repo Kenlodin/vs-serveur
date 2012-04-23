@@ -56,6 +56,7 @@ void Network::routing(sf::Packet& packet, sf::SocketTCP& sock)
 void Network::clientTracker(unsigned int route, sf::Packet& packet,
     sf::SocketTCP& sock)
 {
+  coutDebug("Client --> Tracker");
   WorkList<Tracker>::getInstance().putWorks(&Tracker::routing, route, packet,
       sock);
 }
@@ -63,12 +64,14 @@ void Network::clientTracker(unsigned int route, sf::Packet& packet,
 void Network::trackerClient(unsigned int route, sf::Packet& packet,
     sf::SocketTCP& sock)
 {
+  coutDebug("Tracker --> Client");
   //return RETURN_VALUE_ERROR;
 }
 
 void Network::clientDiffusion(unsigned int route, sf::Packet& packet,
     sf::SocketTCP& sock)
 {
+  coutDebug("Client --> Diffusion");
   WorkList<Diffusion>::getInstance().putWorks(&Diffusion::routing, route,
       packet, sock);
 }
@@ -76,18 +79,21 @@ void Network::clientDiffusion(unsigned int route, sf::Packet& packet,
 void Network::diffusionClient(unsigned int route, sf::Packet& packet,
     sf::SocketTCP& sock)
 {
+  coutDebug("Diffusion --> Client");
   //return RETURN_VALUE_ERROR;
 }
 
 void Network::diffusionDiffusion(unsigned int route, sf::Packet& packet,
     sf::SocketTCP& sock)
 {
+  coutDebug("Diffusion --> Diffusion");
   WorkList<Diffusion>::getInstance().putWorks(&Diffusion::routing_internal,
       route, packet, sock);
 }
 
 void Network::run()
 {
+  coutDebug("Démarrage du serveur.");
   sf::SelectorTCP selector;
   selector.Add(*dataSocket_);
   selector.Add(*controlSocket_);
@@ -99,6 +105,7 @@ void Network::run()
       sf::SocketTCP sock = selector.GetSocketReady(i);
       if (sock == *controlSocket_ || sock == *dataSocket_)
       {
+        coutDebug("Nouveau client.");
         sf::SocketTCP client;
         sf::IPAddress ip;
         sock.Accept(client, &ip);
@@ -107,6 +114,7 @@ void Network::run()
       }
       else
       {
+        coutDebug("Nouveau packet.");
         sf::Packet packet;
         sock.Receive(packet);
         routing(packet, sock);

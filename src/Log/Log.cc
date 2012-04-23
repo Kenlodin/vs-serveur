@@ -45,5 +45,5 @@ Log::write (std::string tag, std::string msg)
   m += "[" + tag + "] " + msg;
   if (isActive_)
     file_ << m << std::endl;
-  COUT (m);
+  coutDebug(m);
 }
