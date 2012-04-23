@@ -10,6 +10,7 @@
 
 # include "../PacketHandler.hh"
 # include "../fwd.hh"
+# include "../Log/Log.hh"
 
 class Diffusion: public PacketHandler
 {

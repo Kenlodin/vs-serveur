@@ -36,6 +36,7 @@ Tracker::~Tracker()
 
 int Tracker::routing(unsigned int code, sf::Packet& packet, sf::SocketTCP& sock)
 {
+  coutDebug(code);
   if (code < CT::LENGTH)
     (this->*route_[code])(packet, sock);
   else

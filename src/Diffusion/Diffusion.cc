@@ -26,6 +26,7 @@ Diffusion::~Diffusion()
 int Diffusion::routing(unsigned int code, sf::Packet& packet,
     sf::SocketTCP& sock)
 {
+  coutDebug(code);
   if (RETURN_VALUE_GOOD) //code < CD::LENGTH)
     (this->*route_[code])(packet, sock);
   else
@@ -36,6 +37,7 @@ int Diffusion::routing(unsigned int code, sf::Packet& packet,
 int Diffusion::routing_internal(unsigned int code, sf::Packet& packet,
     sf::SocketTCP& sock)
 {
+  coutDebug(code);
   if (code < DD::LENGTH)
     (this->*route_[code])(packet, sock);
   else
@@ -51,6 +53,7 @@ int Diffusion::ddVideoDemand(sf::Packet& packet, sf::SocketTCP& sock)
   // Extract content of packet
   packet >> videoId;
   packet >> serverId;
+  coutDebug("Diffusion --> Diffusion : Video Demand");
   return RETURN_VALUE_GOOD;
 }
 
@@ -60,6 +63,7 @@ int Diffusion::ddPingPong(sf::Packet& packet, sf::SocketTCP& sock)
 
   // Extract content of packet
   packet >> message;
+  coutDebug("Diffusion --> Diffusion : Ping Pong");
   return RETURN_VALUE_GOOD;
 }
 
@@ -75,6 +79,7 @@ int Diffusion::cdToken(sf::Packet& packet, sf::SocketTCP& sock)
     delete newSocket;
     return RETURN_VALUE_ERROR;
   }
+  coutDebug("Diffusion --> Diffusion : Token");
   return RETURN_VALUE_SUPPRESS;
 }
 
@@ -86,6 +91,7 @@ int Diffusion::ddLiveLink(sf::Packet& packet, sf::SocketTCP& sock)
   // Extract content of packet
   packet >> videoId;
   packet >> serverId;
+  coutDebug("Diffusion --> Diffusion : Live Link");
   return RETURN_VALUE_GOOD;
 }
 
@@ -106,6 +112,7 @@ int Diffusion::dcData(sf::SocketTCP& sender, sf::Int8 data[], int length)
   {
     packet << data[i];
   }
+  coutDebug("Diffusion --> Client : Data");
   return RETURN_VALUE_GOOD;
 }
 

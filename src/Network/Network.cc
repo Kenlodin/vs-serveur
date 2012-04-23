@@ -47,7 +47,7 @@ void Network::routing(sf::Packet& packet, sf::SocketTCP& sock)
   packet >> opcode;
   code = EXTRACT_CODE(opcode);
   type = EXTRACT_TYPE(opcode);
-  if (code < CD::LENGTH)
+  if (type < ConnexionType::LENGTH)
     (this->*route_[type])(code, packet, sock);
   else
     RETURN_VALUE_ERROR;
