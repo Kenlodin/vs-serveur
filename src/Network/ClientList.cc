@@ -84,9 +84,9 @@ void ClientList::removeClient(sf::SocketTCP& sock)
     else if (sock != c->getControlSocket())
       clientList_[(c->getControlSocket())] = nullptr;
     clientLink_[c->getToken()] = nullptr;
+    delete c;
   }
   generalMutex_.unlock();
-  delete c;
 
 }
 

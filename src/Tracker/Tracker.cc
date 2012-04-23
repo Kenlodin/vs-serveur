@@ -40,7 +40,10 @@ int Tracker::routing(unsigned int code, sf::Packet& packet, sf::SocketTCP& sock)
   if (code < CT::LENGTH)
     (this->*route_[code])(packet, sock);
   else
+  {
+    sock.Close();
     return RETURN_VALUE_ERROR;
+  }
   return RETURN_VALUE_GOOD;
 }
 
@@ -108,9 +111,9 @@ int Tracker::ctAskFlux(sf::Packet& packet, sf::SocketTCP& sock)
   packet >> token;
   packet >> videoId;
   coutDebug("Client --> Tracker : Ask flux");
-  SqlManager::getInstance().getFlux(videoId);
+  sql_result res = SqlManager::getInstance().getFlux(videoId);
   //TODO add handling
-  return RETURN_VALUE_GOOD;
+  return tcListDiff(sock, res);
 }
 
 int Tracker::ctAskCheck(sf::Packet& packet, sf::SocketTCP& sock)

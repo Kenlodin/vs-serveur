@@ -50,7 +50,10 @@ void Network::routing(sf::Packet& packet, sf::SocketTCP& sock)
   if (type < ConnexionType::LENGTH)
     (this->*route_[type])(code, packet, sock);
   else
-    RETURN_VALUE_ERROR;
+  {
+    coutDebug("Fail op");
+    sock.Close();
+  }
 }
 
 void Network::clientTracker(unsigned int route, sf::Packet& packet,
@@ -125,16 +128,6 @@ void Network::run()
         }
         coutDebug("Nouveau packet.");
         routing(packet, sock);
-        /*
-         if (returnValue != RETURN_VALUE_GOOD) // Suppress data socket
-         selector.Remove(sock);
-         if (returnValue == RETURN_VALUE_ERROR) //Data socket already suppress
-         {
-         //Suppress client referenced by this controlSocket
-         ClientList::getInstance().removeClient(sock);
-         sock.Close();
-
-         }*/
       }
     }
   }
