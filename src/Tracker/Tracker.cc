@@ -236,8 +236,10 @@ int Tracker::tcList(sf::SocketTCP& sender, sql_result sqlResult)
   for (unsigned int i = 0; i < sqlResult.size(); i++)
   {
     pqxx::result::tuple t = sqlResult.at(i);
+    sf::Int32 id;
     packet << t["name"].c_str();
-    packet << t["id"].c_str();
+    id = atoi(t["id"].c_str());
+    packet << id;
   }
   coutDebug("Tracker --> Client : list");
   return send(sender, packet);

@@ -119,6 +119,7 @@ void Network::run()
         if (sock.Receive(packet) != sf::Socket::Done) // TODO Dec Client
         {
           coutDebug("Suppression d'un client.");
+          ClientList::getInstance().removeClient(sock);
           selector.Remove(sock);
           continue;
         }

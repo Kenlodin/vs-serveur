@@ -75,12 +75,14 @@ void ClientList::addClient(sf::SocketTCP& control, sf::SocketTCP* data,
 void ClientList::removeClient(sf::SocketTCP& sock)
 {
   generalMutex_.lock();
-  Client* c = clientList_[sock]; //This socket is controlSocket
+  Client* c = clientList_[sock];
   if (c != nullptr)
   {
     clientList_[c->getControlSocket()] = nullptr;
-    if (c->getDataSocket() != nullptr) //On master serveur dataSocket is null
-    clientList_[*(c->getDataSocket())] = nullptr;
+    if (c->getDataSocket() != nullptr && sock != *(c->getDataSocket()))
+      clientList_[*(c->getDataSocket())] = nullptr;
+    else if (sock != c->getControlSocket())
+      clientList_[(c->getControlSocket())] = nullptr;
     clientLink_[c->getToken()] = nullptr;
   }
   generalMutex_.unlock();
