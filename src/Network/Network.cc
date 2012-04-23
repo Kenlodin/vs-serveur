@@ -11,8 +11,7 @@
 # include "../Thread/WorkList.hh"
 # include "ClientList.hh"
 
-Network::Network(int control_port, int data_port, Tracker* tracker,
-    Diffusion* diffusion)
+Network::Network(int control_port, int data_port)
     : route_(
     {
         &Network::clientTracker,
@@ -28,9 +27,6 @@ Network::Network(int control_port, int data_port, Tracker* tracker,
   dataPort_ = data_port;
   dataSocket_ = new sf::SocketTCP();
   dataSocket_->Listen(dataPort_);
-
-  tracker_ = tracker;
-  diffusion_ = diffusion;
 }
 
 Network::~Network()

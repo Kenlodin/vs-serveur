@@ -18,8 +18,7 @@
 class Network : public tools::Thread
 {
   public:
-    Network(int control_port, int data_port, Tracker* tracker,
-        Diffusion* diffusion);
+    Network(int control_port, int data_port);
     virtual ~Network();
   public:
     void run ();
@@ -47,10 +46,6 @@ class Network : public tools::Thread
 
     sf::SocketTCP* dataSocket_;
     unsigned short dataPort_;
-
-
-    Diffusion* diffusion_;
-    Tracker* tracker_;
 };
 
 #endif /* NETWORK_HH_ */
