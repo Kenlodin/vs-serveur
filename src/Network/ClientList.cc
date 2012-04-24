@@ -78,12 +78,11 @@ void ClientList::removeClient(sf::SocketTCP& sock)
   Client* c = clientList_[sock];
   if (c != nullptr)
   {
-    clientList_[c->getControlSocket()] = nullptr;
-    if (c->getDataSocket() != nullptr && sock != *(c->getDataSocket()))
-      clientList_[*(c->getDataSocket())] = nullptr;
-    else if (sock != c->getControlSocket())
-      clientList_[(c->getControlSocket())] = nullptr;
-    clientLink_[c->getToken()] = nullptr;
+	sf::SocketTCP sock2 = c->getControlSocket();
+    clientList_.erase(sock2);
+    if (c->getDataSocket() != nullptr)
+      clientList_.erase(*(c->getDataSocket()));
+    clientLink_.erase(c->getToken());
     delete c;
   }
   generalMutex_.unlock();

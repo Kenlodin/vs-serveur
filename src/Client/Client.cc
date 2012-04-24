@@ -7,7 +7,7 @@
 
 #include "Client.hh"
 
-Client::Client(sf::SocketTCP& control, sf::SocketTCP*& data, std::string token)
+Client::Client(sf::SocketTCP control, sf::SocketTCP*& data, std::string token)
     : controlSocket_(control), dataSocket_(data), token_(token)
 {
   // TODO Auto-generated constructor stub
@@ -17,8 +17,8 @@ Client::Client(sf::SocketTCP& control, sf::SocketTCP*& data, std::string token)
 Client::~Client()
 {
   // TODO Auto-generated destructor stub
-  controlSocket_.Close();
-  dataSocket_->Close();
+  //controlSocket_.Close();
+  //dataSocket_->Close();
   delete dataSocket_;
 }
 

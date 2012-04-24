@@ -15,7 +15,7 @@
 class Client
 {
   public:
-    Client(sf::SocketTCP& control, sf::SocketTCP*& data, std::string token);
+    Client(sf::SocketTCP control, sf::SocketTCP*& data, std::string token);
     virtual ~Client();
 
     sf::SocketTCP& getControlSocket() const;
