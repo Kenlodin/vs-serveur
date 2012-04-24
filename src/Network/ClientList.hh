@@ -10,6 +10,7 @@
 
 # include "../Client/Client.hh"
 # include <SFML/Network.hpp>
+# include <list>
 # include <boost/thread/mutex.hpp>
 
 class ClientList
@@ -27,12 +28,18 @@ class ClientList
     std::string getPrivateIp(sf::SocketTCP sock);
     void setPrivateIp(sf::SocketTCP sock, std::string ip);
     std::map<sf::SocketTCP, Client*> getClientList() const;
+    void addBadClient(sf::SocketTCP& sock);
+    std::list<sf::SocketTCP>& getBadClient();
+    void getBadClientRelease();
+
   private:
     boost::mutex generalMutex_;
-    boost::mutex weakMutex_;
+    boost::mutex privateIpMutex_;
+    boost::mutex badClientMutex_;
     std::map<sf::SocketTCP, Client*> clientList_;
     std::map<std::string, Client*> clientLink_;
     std::map<sf::SocketTCP, std::string> privateIpList_;
+    std::list<sf::SocketTCP> badClient_;
 };
 
 #endif /* CLIENTLIST_HH_ */
