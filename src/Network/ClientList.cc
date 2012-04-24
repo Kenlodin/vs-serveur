@@ -75,15 +75,14 @@ void ClientList::addClient(sf::SocketTCP& control, sf::SocketTCP* data,
 void ClientList::removeClient(sf::SocketTCP& sock)
 {
   generalMutex_.lock();
-  Client* c = clientList_[sock];
-  if (c != nullptr)
+  std::map<sf::SocketTCP, Client*>::iterator c = clientList_.find(sock);
+  if (c != clientList_.end())
   {
-	sf::SocketTCP sock2 = c->getControlSocket();
-    clientList_.erase(sock2);
-    if (c->getDataSocket() != nullptr)
-      clientList_.erase(*(c->getDataSocket()));
-    clientLink_.erase(c->getToken());
-    delete c;
+    clientList_.erase((c->second)->getControlSocket());
+    if ((c->second)->getDataSocket() != nullptr)
+      clientList_.erase(*((c->second)->getDataSocket()));
+    clientLink_.erase((c->second)->getToken());
+    delete c->second;
   }
   else
     sock.Close();
@@ -124,6 +123,4 @@ void ClientList::getBadClientRelease()
 {
   badClientMutex_.unlock();
 }
-
-
 
