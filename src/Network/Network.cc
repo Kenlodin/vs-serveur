@@ -120,7 +120,8 @@ void Network::run()
       toRemove.pop_front();
     }
     ClientList::getInstance().getBadClientRelease();
-    unsigned int nb = selector.Wait();
+
+    unsigned int nb = selector.Wait(0.5);
     for (unsigned int i = 0; i < nb; i++)
     {
       sf::SocketTCP sock = selector.GetSocketReady(i);
@@ -139,9 +140,8 @@ void Network::run()
         sf::Socket::Status status;
         if ((status = sock.Receive(packet)) != sf::Socket::Done) // TODO Dec Client
         {
-          coutDebug("Suppression d'un client.");
-          ClientList::getInstance().removeClient(sock);
-          selector.Remove(sock);
+          coutDebug("Deconnection d'un client.");
+          ClientList::getInstance().addBadClient(sock);
           continue;
         }
         coutDebug("Nouveau packet.");

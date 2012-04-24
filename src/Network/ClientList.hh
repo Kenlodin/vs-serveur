@@ -11,6 +11,7 @@
 # include "../Client/Client.hh"
 # include <SFML/Network.hpp>
 # include <list>
+# include "../Log/Log.hh"
 # include <boost/thread/mutex.hpp>
 
 class ClientList

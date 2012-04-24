@@ -176,7 +176,7 @@ int Tracker::ctAskRpacket(sf::Packet& packet, sf::SocketTCP& sock)
 {
   sf::Int32 firstFrame;
   sf::Int32 lastFrame;
-  int count;
+  int count = 0;
 
   // Extract content of packet
   INCTEST(!packet.EndOfPacket(), count)
