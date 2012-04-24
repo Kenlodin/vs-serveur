@@ -109,9 +109,9 @@ void Network::run()
     while (!toRemove.empty())
     {
       sf::SocketTCP& badClient = toRemove.front();
-      toRemove.pop_front();
       selector.Remove(badClient);
       ClientList::getInstance().removeClient(badClient);
+      toRemove.pop_front();
     }
     ClientList::getInstance().getBadClientRelease();
     unsigned int nb = selector.Wait();
