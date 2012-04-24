@@ -102,7 +102,7 @@ SqlManager::setHandlings (std::string client_token, int file_id)
     tools::fromString (r.at (0)["nb_packet"].c_str (), nb_packet);
     tools::fromString (r.at (0)["length"].c_str (), length);
     
-    float coeff = (nb_packet / length) * 10;
+    int coeff = ((float) nb_packet / (float)length) * 10;
     int date = static_cast<int> (time (0));
     
     for (int i = 0; i < nb_packet; i += 10)
