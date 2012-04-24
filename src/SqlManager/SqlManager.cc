@@ -100,20 +100,18 @@ SqlManager::setHandlings (std::string client_token, int file_id)
     int length;
     tools::fromString (r.at (0)["nb_packet"].c_str (), nb_packet);
     tools::fromString (r.at (0)["length"].c_str (), length);
-    float coeff = nb_packet / length;
+    float coeff = (nb_packet / length) * 10;
     int date = static_cast<int> (time (0));
     std::cout << "nb packet : " << nb_packet << std::endl;
-    for (int i = 0; i < nb_packet; i++)
+    for (int i = 0; i < nb_packet; i += 10)
     {
       std::cout << "i : " << i << std::endl;
-      std::string reaaa = "INSERT INTO client_handlings (client_token, file_id, packet_id, date) VALUES ('" +
-        client_token + "', " + tools::toString<int> (file_id) + ", " + tools::toString<int> (i) +
-        ", " + tools::toString<int> (date) + ")";
-      std::cout << reaaa << std::endl;
+      std::string req = "INSERT INTO client_handlings (client_token, file_id, date, packet_begin, packet_end) VALUES ('" +
+        client_token + "', " + tools::toString<int> (file_id) + ", " + tools::toString<int> (date) +
+        ", " + tools::toString<int> (i) + ", " + tools::toString<int> (i + 10) + ")";
+      std::cout << req << std::endl;
       date += coeff;
-      execute ("INSERT INTO client_handlings (client_token, file_id, packet_id, date) VALUES ('" +
-               client_token + "', " + tools::toString<int> (file_id) + ", " + tools::toString<int> (i) +
-               ", " + tools::toString<int> (date) + ")");
+      execute (req);
     }
   }
   return r;
