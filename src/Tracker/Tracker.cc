@@ -41,6 +41,7 @@ int Tracker::routing(unsigned int code, sf::Packet& packet, sf::SocketTCP& sock)
     return RETURN_VALUE_GOOD;
   else
   {
+    coutDebug("Tracker : mauvais routing.");
     ClientList::getInstance().addBadClient(sock);
     return RETURN_VALUE_ERROR;
   }

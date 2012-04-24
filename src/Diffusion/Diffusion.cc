@@ -31,6 +31,7 @@ int Diffusion::routing(unsigned int code, sf::Packet& packet,
     return RETURN_VALUE_GOOD;
   else
   {
+    coutDebug("Diffusion : mauvais routing.");
     ClientList::getInstance().addBadClient(sock);
     return RETURN_VALUE_ERROR;
   }
@@ -44,6 +45,7 @@ int Diffusion::routing_internal(unsigned int code, sf::Packet& packet,
     return RETURN_VALUE_GOOD;
   else
   {
+    coutDebug("Diffusion : mauvais routing interne.");
     ClientList::getInstance().addBadClient(sock);
     return RETURN_VALUE_ERROR;
   }

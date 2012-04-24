@@ -85,6 +85,8 @@ void ClientList::removeClient(sf::SocketTCP& sock)
     clientLink_.erase(c->getToken());
     delete c;
   }
+  else
+    sock.Close();
   generalMutex_.unlock();
 
 }

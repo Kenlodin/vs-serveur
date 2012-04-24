@@ -53,6 +53,7 @@ void Network::routing(sf::Packet& packet, sf::SocketTCP& sock)
     (this->*route_[type])(code, packet, sock);
   else
   {
+    coutDebug("Network : mauvais routing.");
     ClientList::getInstance().addBadClient(sock);
   }
 }
@@ -69,6 +70,7 @@ void Network::trackerClient(unsigned int route, sf::Packet& packet,
     sf::SocketTCP& sock)
 {
   coutDebug("Tracker --> Client");
+  coutDebug("Client : mauvais routing.");
   ClientList::getInstance().addBadClient(sock);
   //return RETURN_VALUE_ERROR;
 }
@@ -85,6 +87,7 @@ void Network::diffusionClient(unsigned int route, sf::Packet& packet,
     sf::SocketTCP& sock)
 {
   coutDebug("Diffusion --> Client");
+  coutDebug("Client : mauvais routing.");
   ClientList::getInstance().addBadClient(sock);
   //return RETURN_VALUE_ERROR;
 }
@@ -110,6 +113,7 @@ void Network::run()
         ClientList::getInstance().getBadClient();
     while (!toRemove.empty())
     {
+      coutDebug("Suppression d'un client.");
       sf::SocketTCP& badClient = toRemove.front();
       ClientList::getInstance().removeClient(badClient);
       selector.Remove(badClient);
