@@ -56,5 +56,5 @@ Config::getPort ()
 bool
 Config::check ()
 {
-  config_.find ()
+//  config_.find ()
 }
