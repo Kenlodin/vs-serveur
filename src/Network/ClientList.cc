@@ -20,18 +20,18 @@ ClientList::~ClientList()
 
 std::string ClientList::getPrivateIp(sf::SocketTCP sock)
 {
-  weakMutex_.lock();
+  privateIpMutex_.lock();
   std::string res = privateIpList_[sock];
   privateIpList_.erase(sock);
-  weakMutex_.unlock();
+  privateIpMutex_.unlock();
   return res;
 }
 
 void ClientList::setPrivateIp(sf::SocketTCP sock, std::string ip)
 {
-  weakMutex_.lock();
+  privateIpMutex_.lock();
   privateIpList_[sock] = ip;
-  weakMutex_.unlock();
+  privateIpMutex_.unlock();
 }
 
 std::map<sf::SocketTCP, Client*> ClientList::getClientList() const
@@ -105,3 +105,24 @@ Client* ClientList::getClient(sf::SocketTCP& sock)
   generalMutex_.unlock();
   return c;
 }
+
+void ClientList::addBadClient(sf::SocketTCP& sock)
+{
+  badClientMutex_.lock();
+  badClient_.insert(badClient_.begin(), sock);
+  badClientMutex_.unlock();
+}
+
+std::list<sf::SocketTCP>& ClientList::getBadClient()
+{
+  badClientMutex_.lock();
+  return badClient_;
+}
+
+void ClientList::getBadClientRelease()
+{
+  badClientMutex_.unlock();
+}
+
+
+

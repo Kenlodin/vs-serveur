@@ -27,22 +27,26 @@ int Diffusion::routing(unsigned int code, sf::Packet& packet,
     sf::SocketTCP& sock)
 {
   coutDebug(code);
-  if (RETURN_VALUE_GOOD) //code < CD::LENGTH)
-    (this->*route_[code])(packet, sock);
+  if (code < CD::LENGTH && (this->*route_[code])(packet, sock))
+    return RETURN_VALUE_GOOD;
   else
+  {
+    ClientList::getInstance().addBadClient(sock);
     return RETURN_VALUE_ERROR;
-  return RETURN_VALUE_GOOD;
+  }
 }
 
 int Diffusion::routing_internal(unsigned int code, sf::Packet& packet,
     sf::SocketTCP& sock)
 {
   coutDebug(code);
-  if (code < DD::LENGTH)
-    (this->*route_[code])(packet, sock);
+  if (code < DD::LENGTH && (this->*route_[code])(packet, sock))
+    return RETURN_VALUE_GOOD;
   else
+  {
+    ClientList::getInstance().addBadClient(sock);
     return RETURN_VALUE_ERROR;
-  return RETURN_VALUE_GOOD;
+  }
 }
 
 int Diffusion::ddVideoDemand(sf::Packet& packet, sf::SocketTCP& sock)

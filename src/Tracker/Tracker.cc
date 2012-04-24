@@ -37,14 +37,13 @@ Tracker::~Tracker()
 int Tracker::routing(unsigned int code, sf::Packet& packet, sf::SocketTCP& sock)
 {
   coutDebug(code);
-  if (code < CT::LENGTH)
-    (this->*route_[code])(packet, sock);
+  if (code < CT::LENGTH && (this->*route_[code])(packet, sock))
+    return RETURN_VALUE_GOOD;
   else
   {
-    sock.Close();
+    ClientList::getInstance().addBadClient(sock);
     return RETURN_VALUE_ERROR;
   }
-  return RETURN_VALUE_GOOD;
 }
 
 int Tracker::ctConnMaster(sf::Packet& packet, sf::SocketTCP& sock)

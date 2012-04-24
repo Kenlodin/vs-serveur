@@ -11,10 +11,12 @@
 #include <iostream>
 #include <fstream>
 
+#define DEBUG
+
 template <typename T>
 inline void coutDebug (T msg)
 {
-  #ifndef DEBUG
+  #ifdef DEBUG
     std::cout << msg << std::endl;
   #endif
 }

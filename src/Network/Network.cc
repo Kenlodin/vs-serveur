@@ -51,8 +51,7 @@ void Network::routing(sf::Packet& packet, sf::SocketTCP& sock)
     (this->*route_[type])(code, packet, sock);
   else
   {
-    coutDebug("Fail op");
-    sock.Close();
+    ClientList::getInstance().addBadClient(sock);
   }
 }
 
@@ -68,6 +67,7 @@ void Network::trackerClient(unsigned int route, sf::Packet& packet,
     sf::SocketTCP& sock)
 {
   coutDebug("Tracker --> Client");
+  ClientList::getInstance().addBadClient(sock);
   //return RETURN_VALUE_ERROR;
 }
 
@@ -83,6 +83,7 @@ void Network::diffusionClient(unsigned int route, sf::Packet& packet,
     sf::SocketTCP& sock)
 {
   coutDebug("Diffusion --> Client");
+  ClientList::getInstance().addBadClient(sock);
   //return RETURN_VALUE_ERROR;
 }
 
@@ -103,6 +104,16 @@ void Network::run()
   coutDebug("Serveur démarré");
   while (true)
   {
+    std::list<sf::SocketTCP>& toRemove =
+        ClientList::getInstance().getBadClient();
+    while (!toRemove.empty())
+    {
+      sf::SocketTCP& badClient = toRemove.front();
+      selector.Remove(badClient);
+      ClientList::getInstance().removeClient(badClient);
+      toRemove.pop_front();
+    }
+    ClientList::getInstance().getBadClientRelease();
     unsigned int nb = selector.Wait();
     for (unsigned int i = 0; i < nb; i++)
     {
@@ -119,11 +130,12 @@ void Network::run()
       else
       {
         sf::Packet packet;
-        if (sock.Receive(packet) != sf::Socket::Done) // TODO Dec Client
+        sf::Socket::Status status;
+        if ((status = sock.Receive(packet)) != sf::Socket::Done) // TODO Dec Client
         {
           coutDebug("Suppression d'un client.");
-          ClientList::getInstance().removeClient(sock);
           selector.Remove(sock);
+          ClientList::getInstance().removeClient(sock);
           continue;
         }
         coutDebug("Nouveau packet.");
