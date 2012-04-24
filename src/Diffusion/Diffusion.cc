@@ -31,6 +31,7 @@ int Diffusion::routing(unsigned int code, sf::Packet& packet,
     return RETURN_VALUE_GOOD;
   else
   {
+    coutDebug("Diffusion : mauvais routing.");
     ClientList::getInstance().addBadClient(sock);
     return RETURN_VALUE_ERROR;
   }
@@ -44,6 +45,7 @@ int Diffusion::routing_internal(unsigned int code, sf::Packet& packet,
     return RETURN_VALUE_GOOD;
   else
   {
+    coutDebug("Diffusion : mauvais routing interne.");
     ClientList::getInstance().addBadClient(sock);
     return RETURN_VALUE_ERROR;
   }
@@ -53,32 +55,47 @@ int Diffusion::ddVideoDemand(sf::Packet& packet, sf::SocketTCP& sock)
 {
   sf::Int32 videoId;
   sf::Int32 serverId;
+  int count = 0;
 
   // Extract content of packet
+  INCTEST(!packet.EndOfPacket(), count)
   packet >> videoId;
+  INCTEST(!packet.EndOfPacket(), count)
   packet >> serverId;
+  INCTEST(packet.EndOfPacket(), count)
   coutDebug("Diffusion --> Diffusion : Video Demand");
+  if (count != 3)
+    return RETURN_VALUE_ERROR;
   return RETURN_VALUE_GOOD;
 }
 
 int Diffusion::ddPingPong(sf::Packet& packet, sf::SocketTCP& sock)
 {
   std::string message;
+  int count = 0;
 
   // Extract content of packet
+  INCTEST(!packet.EndOfPacket(), count)
   packet >> message;
+  INCTEST(packet.EndOfPacket(), count)
   coutDebug("Diffusion --> Diffusion : Ping Pong");
+  if (count != 2)
+    return RETURN_VALUE_ERROR;
   return RETURN_VALUE_GOOD;
 }
 
 int Diffusion::cdToken(sf::Packet& packet, sf::SocketTCP& sock)
 {
   std::string token;
+  int count = 0;
 
   // Extract content of packet
+  INCTEST(!packet.EndOfPacket(), count)
   packet >> token;
+  INCTEST(packet.EndOfPacket(), count)
   sf::SocketTCP* newSocket = new sf::SocketTCP(sock);
-  if (ClientList::getInstance().link(newSocket, token) == RETURN_VALUE_ERROR)
+  if (ClientList::getInstance().link(newSocket, token) == RETURN_VALUE_ERROR
+      || count != 2)
   {
     delete newSocket;
     return RETURN_VALUE_ERROR;
@@ -91,11 +108,17 @@ int Diffusion::ddLiveLink(sf::Packet& packet, sf::SocketTCP& sock)
 {
   sf::Int32 videoId;
   sf::Int32 serverId;
+  int count = 0;
 
   // Extract content of packet
+  INCTEST(!packet.EndOfPacket(), count)
   packet >> videoId;
+  INCTEST(!packet.EndOfPacket(), count)
   packet >> serverId;
+  INCTEST(packet.EndOfPacket(), count)
   coutDebug("Diffusion --> Diffusion : Live Link");
+  if (count != 3)
+    return RETURN_VALUE_ERROR;
   return RETURN_VALUE_GOOD;
 }
 

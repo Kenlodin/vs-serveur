@@ -27,7 +27,7 @@ std::string ClientList::getPrivateIp(sf::SocketTCP sock)
   return res;
 }
 
-void ClientList::setPrivateIp(sf::SocketTCP sock, std::string ip)
+void ClientList::setPrivateIp(sf::SocketTCP& sock, std::string ip)
 {
   privateIpMutex_.lock();
   privateIpList_[sock] = ip;
@@ -75,15 +75,20 @@ void ClientList::addClient(sf::SocketTCP& control, sf::SocketTCP* data,
 void ClientList::removeClient(sf::SocketTCP& sock)
 {
   generalMutex_.lock();
-  Client* c = clientList_[sock];
-  if (c != nullptr)
+  std::map<sf::SocketTCP, Client*>::iterator it = clientList_.find(sock);
+  Client* c;
+  if (it != clientList_.end())
   {
-	sf::SocketTCP sock2 = c->getControlSocket();
-    clientList_.erase(sock2);
+    c = it->second;
+    clientList_.erase(c->getControlSocket());
     if (c->getDataSocket() != nullptr)
       clientList_.erase(*(c->getDataSocket()));
     clientLink_.erase(c->getToken());
     delete c;
+  }
+  else
+  {
+    sock.Close();
   }
   generalMutex_.unlock();
 
@@ -122,6 +127,4 @@ void ClientList::getBadClientRelease()
 {
   badClientMutex_.unlock();
 }
-
-
 
