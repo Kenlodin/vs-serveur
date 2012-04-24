@@ -11,7 +11,7 @@
 # define EXTRACT_TYPE(OPCODE) OPCODE >> 12
 # define EXTRACT_CODE(OPCODE) OPCODE % (1 << 12)
 # define MERGE_OPCODE(TYPE, CODE) ((TYPE << 12) + CODE)
-
+# define INCTEST(TEST, VAR) if (TEST) {VAR++;}
 
 
 # define RETURN_VALUE_GOOD 0
