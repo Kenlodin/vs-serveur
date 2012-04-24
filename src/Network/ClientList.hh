@@ -26,7 +26,7 @@ class ClientList
     Client* getClient(sf::SocketTCP& sock);
     Client* getClient(sf::SocketTCP* sock);
     std::string getPrivateIp(sf::SocketTCP sock);
-    void setPrivateIp(sf::SocketTCP sock, std::string ip);
+    void setPrivateIp(sf::SocketTCP& sock, std::string ip);
     std::map<sf::SocketTCP, Client*> getClientList() const;
     void addBadClient(sf::SocketTCP& sock);
     std::list<sf::SocketTCP>& getBadClient();

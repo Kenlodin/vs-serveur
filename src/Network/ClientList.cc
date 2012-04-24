@@ -27,7 +27,7 @@ std::string ClientList::getPrivateIp(sf::SocketTCP sock)
   return res;
 }
 
-void ClientList::setPrivateIp(sf::SocketTCP sock, std::string ip)
+void ClientList::setPrivateIp(sf::SocketTCP& sock, std::string ip)
 {
   privateIpMutex_.lock();
   privateIpList_[sock] = ip;

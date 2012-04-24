@@ -17,12 +17,14 @@ Client::Client(sf::SocketTCP control, sf::SocketTCP*& data, std::string token)
 Client::~Client()
 {
   // TODO Auto-generated destructor stub
-  //controlSocket_.Close();
-  //dataSocket_->Close();
+  if (controlSocket_.IsValid())
+    controlSocket_.Close();
+  if (dataSocket_->IsValid())
+  dataSocket_->Close();
   delete dataSocket_;
 }
 
-sf::SocketTCP& Client::getControlSocket() const
+sf::SocketTCP Client::getControlSocket() const
 {
   return controlSocket_;
 }

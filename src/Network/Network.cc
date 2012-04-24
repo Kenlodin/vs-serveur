@@ -31,8 +31,10 @@ Network::Network(int control_port, int data_port)
 
 Network::~Network()
 {
-  dataSocket_->Close();
-  controlSocket_->Close();
+  if (dataSocket_->IsValid())
+    dataSocket_->Close();
+  if (controlSocket_->IsValid())
+    controlSocket_->Close();
   delete dataSocket_;
   delete controlSocket_;
   // TODO Auto-generated destructor stub
@@ -109,8 +111,8 @@ void Network::run()
     while (!toRemove.empty())
     {
       sf::SocketTCP& badClient = toRemove.front();
-      selector.Remove(badClient);
       ClientList::getInstance().removeClient(badClient);
+      selector.Remove(badClient);
       toRemove.pop_front();
     }
     ClientList::getInstance().getBadClientRelease();
@@ -134,8 +136,8 @@ void Network::run()
         if ((status = sock.Receive(packet)) != sf::Socket::Done) // TODO Dec Client
         {
           coutDebug("Suppression d'un client.");
-          selector.Remove(sock);
           ClientList::getInstance().removeClient(sock);
+          selector.Remove(sock);
           continue;
         }
         coutDebug("Nouveau packet.");
