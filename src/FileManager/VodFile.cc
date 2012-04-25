@@ -49,6 +49,7 @@ VodFile::~VodFile()
 
 void VodFile::loadSubChunk()
 {
+  COUTDEBUG("LoadSubChuck : no:" << nbpacket_ << " offset:" << offset_);
   seekPos_[nbpacket_] = offset_;
   nbpacket_++;
   maxnbpacket_ = MAX(nbpacket_, maxnbpacket_);
@@ -56,6 +57,8 @@ void VodFile::loadSubChunk()
   currentPacket_->subChunk_ = reinterpret_cast<avifile::s_sub_chunk*>(malloc(
       sizeof(avifile::s_sub_chunk)));
   read(fd_, currentPacket_->subChunk_, SIZE_SUBCHUNK_HEADER);
+  //printf("type:%.4s name:%.4s size:%u\n", chunk->fcc, chunk->name, chunk->size);
+  COUTDEBUG("Read:" << currentPacket_->subChunk_->size);
   currentPacket_->subChunk_->data = malloc(
       MOD2(currentPacket_->subChunk_->size));
   read(fd_, currentPacket_->subChunk_->data,
@@ -66,6 +69,7 @@ void VodFile::loadSubChunk()
 
 void VodFile::loadChunk(avifile::e_opcode type)
 {
+  COUTDEBUG("LoadSubChuck : no:" << nbpacket_ << " offset:" << offset_);
   fileHeader_[type] = reinterpret_cast<avifile::s_chunk*>(malloc(
       sizeof(avifile::s_chunk)));
   read(fd_, fileHeader_[type], SIZE_CHUNK_HEADER);
@@ -100,6 +104,7 @@ avifile::s_chunk* const * VodFile::getFileHeader() const
 
 Chuck* VodFile::getPacket(int number)
 {
+  COUTDEBUG("GetPacket : no:" << videoId_ << " : no:" << nbpacket_);
   if (number > nbpacket_)
     moveUp(number);
   else if (number < nbpacket_)

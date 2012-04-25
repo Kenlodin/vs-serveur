@@ -12,6 +12,7 @@
 # include "../fwd.hh"
 # include "Chuck.hh"
 # include "FileVideo.hh"
+# include "../Log/Log.hh"
 # include <fcntl.h>
 # include <unistd.h>
 # include <map>
