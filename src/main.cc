@@ -13,6 +13,7 @@
 #include "Thread/Thread.hh"
 #include "Thread/ThreadPool.hh"
 #include "SqlManager/SqlManager.hh"
+#include "Diffusion/HandlingSender.hh"
 
 
 int main()
@@ -26,10 +27,12 @@ int main()
   //  t.run ();
   ThreadPool<Diffusion> diffusionWorker (1);
   ThreadPool<Tracker> trackerWorker(1);
+  HandlingSender handlingSender (1);
   SqlManager::getInstance ().connect ();
   Network networkManager (36000, 36001);
   diffusionWorker.start();
   trackerWorker.start();
+  handlingSender.start();
   networkManager.run ();
 
   //  SqlManager::getInstance ().getThreeServers ();
