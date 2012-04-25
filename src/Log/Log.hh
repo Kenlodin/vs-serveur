@@ -11,16 +11,13 @@
 #include <iostream>
 #include <fstream>
 
-#define DEBUG
+# define DEBUG
 
-template <typename T>
-inline void coutDebug (T msg)
-{
-  #ifdef DEBUG
-    std::cout << msg << std::endl;
-  #endif
-}
-
+# ifdef DEBUG
+#  define COUTDEBUG(MSG) std::cout << MSG << std::endl
+# else
+#  define COUTDEBUG(MSG) void
+# endif
 /**
  * La classe log permet de mettre en place un systeme de log. C'est un singleton
  * qui ne nécessite pas d'être thread-safe puisqu'il doit être appellé pour être

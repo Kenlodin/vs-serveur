@@ -26,12 +26,12 @@ Diffusion::~Diffusion()
 int Diffusion::routing(unsigned int code, sf::Packet& packet,
     sf::SocketTCP& sock)
 {
-  coutDebug(code);
+  COUTDEBUG(code);
   if (code < CD::LENGTH && (this->*route_[code])(packet, sock))
     return RETURN_VALUE_GOOD;
   else
   {
-    coutDebug("Diffusion : mauvais routing.");
+    COUTDEBUG("Diffusion : mauvais routing.");
     ClientList::getInstance().addBadClient(sock);
     return RETURN_VALUE_ERROR;
   }
@@ -40,12 +40,12 @@ int Diffusion::routing(unsigned int code, sf::Packet& packet,
 int Diffusion::routing_internal(unsigned int code, sf::Packet& packet,
     sf::SocketTCP& sock)
 {
-  coutDebug(code);
+  COUTDEBUG(code);
   if (code < DD::LENGTH && (this->*route_[code])(packet, sock))
     return RETURN_VALUE_GOOD;
   else
   {
-    coutDebug("Diffusion : mauvais routing interne.");
+    COUTDEBUG("Diffusion : mauvais routing interne.");
     ClientList::getInstance().addBadClient(sock);
     return RETURN_VALUE_ERROR;
   }
@@ -63,7 +63,7 @@ int Diffusion::ddVideoDemand(sf::Packet& packet, sf::SocketTCP& sock)
   INCTEST(!packet.EndOfPacket(), count)
   packet >> serverId;
   INCTEST(packet.EndOfPacket(), count)
-  coutDebug("Diffusion --> Diffusion : Video Demand");
+  COUTDEBUG("Diffusion --> Diffusion : Video Demand");
   if (count != 3)
     return RETURN_VALUE_ERROR;
   return RETURN_VALUE_GOOD;
@@ -78,7 +78,7 @@ int Diffusion::ddPingPong(sf::Packet& packet, sf::SocketTCP& sock)
   INCTEST(!packet.EndOfPacket(), count)
   packet >> message;
   INCTEST(packet.EndOfPacket(), count)
-  coutDebug("Diffusion --> Diffusion : Ping Pong");
+  COUTDEBUG("Diffusion --> Diffusion : Ping Pong");
   if (count != 2)
     return RETURN_VALUE_ERROR;
   return RETURN_VALUE_GOOD;
@@ -100,7 +100,7 @@ int Diffusion::cdToken(sf::Packet& packet, sf::SocketTCP& sock)
     delete newSocket;
     return RETURN_VALUE_ERROR;
   }
-  coutDebug("Diffusion --> Diffusion : Token");
+  COUTDEBUG("Diffusion --> Diffusion : Token");
   return RETURN_VALUE_SUPPRESS;
 }
 
@@ -116,7 +116,7 @@ int Diffusion::ddLiveLink(sf::Packet& packet, sf::SocketTCP& sock)
   INCTEST(!packet.EndOfPacket(), count)
   packet >> serverId;
   INCTEST(packet.EndOfPacket(), count)
-  coutDebug("Diffusion --> Diffusion : Live Link");
+  COUTDEBUG("Diffusion --> Diffusion : Live Link");
   if (count != 3)
     return RETURN_VALUE_ERROR;
   return RETURN_VALUE_GOOD;
@@ -139,7 +139,7 @@ int Diffusion::dcData(sf::SocketTCP& sender, Chuck* chuck)
   packet << type;
   packet.Append(chuck->subChunk_, 8);
   packet.Append(chuck->subChunk_->data, chuck->subChunk_->size);
-  coutDebug("Diffusion --> Client : Data");
+  COUTDEBUG("Diffusion --> Client : Data");
   return RETURN_VALUE_GOOD;
 }
 
@@ -155,7 +155,7 @@ int Diffusion::dcData(sf::SocketTCP& sender, int code,
   packet.Append(headers, 12);
   if (headers->data)
     packet.Append(headers->data, headers->size - sizeof(avifile::u32));
-  coutDebug("Diffusion --> Client : Data");
+  COUTDEBUG("Diffusion --> Client : Data");
   return RETURN_VALUE_GOOD;
 }
 

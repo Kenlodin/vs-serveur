@@ -53,7 +53,7 @@ void Network::routing(sf::Packet& packet, sf::SocketTCP& sock)
     (this->*route_[type])(code, packet, sock);
   else
   {
-    coutDebug("Network : mauvais routing.");
+    COUTDEBUG("Network : mauvais routing.");
     ClientList::getInstance().addBadClient(sock);
   }
 }
@@ -61,7 +61,7 @@ void Network::routing(sf::Packet& packet, sf::SocketTCP& sock)
 void Network::clientTracker(unsigned int route, sf::Packet& packet,
     sf::SocketTCP& sock)
 {
-  coutDebug("Client --> Tracker");
+  COUTDEBUG("Client --> Tracker");
   WorkList<Tracker>::getInstance().putWorks(&Tracker::routing, route, packet,
       sock);
 }
@@ -69,8 +69,8 @@ void Network::clientTracker(unsigned int route, sf::Packet& packet,
 void Network::trackerClient(unsigned int route, sf::Packet& packet,
     sf::SocketTCP& sock)
 {
-  coutDebug("Tracker --> Client");
-  coutDebug("Client : mauvais routing.");
+  COUTDEBUG("Tracker --> Client");
+  COUTDEBUG("Client : mauvais routing.");
   ClientList::getInstance().addBadClient(sock);
   //return RETURN_VALUE_ERROR;
 }
@@ -78,7 +78,7 @@ void Network::trackerClient(unsigned int route, sf::Packet& packet,
 void Network::clientDiffusion(unsigned int route, sf::Packet& packet,
     sf::SocketTCP& sock)
 {
-  coutDebug("Client --> Diffusion");
+  COUTDEBUG("Client --> Diffusion");
   WorkList<Diffusion>::getInstance().putWorks(&Diffusion::routing, route,
       packet, sock);
 }
@@ -86,8 +86,8 @@ void Network::clientDiffusion(unsigned int route, sf::Packet& packet,
 void Network::diffusionClient(unsigned int route, sf::Packet& packet,
     sf::SocketTCP& sock)
 {
-  coutDebug("Diffusion --> Client");
-  coutDebug("Client : mauvais routing.");
+  COUTDEBUG("Diffusion --> Client");
+  COUTDEBUG("Client : mauvais routing.");
   ClientList::getInstance().addBadClient(sock);
   //return RETURN_VALUE_ERROR;
 }
@@ -95,25 +95,25 @@ void Network::diffusionClient(unsigned int route, sf::Packet& packet,
 void Network::diffusionDiffusion(unsigned int route, sf::Packet& packet,
     sf::SocketTCP& sock)
 {
-  coutDebug("Diffusion --> Diffusion");
+  COUTDEBUG("Diffusion --> Diffusion");
   WorkList<Diffusion>::getInstance().putWorks(&Diffusion::routing_internal,
       route, packet, sock);
 }
 
 void Network::run()
 {
-  coutDebug("Démarrage du serveur.");
+  COUTDEBUG("Démarrage du serveur.");
   sf::SelectorTCP selector;
   selector.Add(*dataSocket_);
   selector.Add(*controlSocket_);
-  coutDebug("Serveur démarré");
+  COUTDEBUG("Serveur démarré");
   while (true)
   {
     std::list<sf::SocketTCP>& toRemove =
         ClientList::getInstance().getBadClient();
     while (!toRemove.empty())
     {
-      coutDebug("Suppression d'un client.");
+      COUTDEBUG("Suppression d'un client.");
       sf::SocketTCP& badClient = toRemove.front();
       ClientList::getInstance().removeClient(badClient);
       selector.Remove(badClient);
@@ -127,7 +127,7 @@ void Network::run()
       sf::SocketTCP sock = selector.GetSocketReady(i);
       if (sock == *controlSocket_ || sock == *dataSocket_)
       {
-        coutDebug("Nouveau client.");
+        COUTDEBUG("Nouveau client.");
         sf::SocketTCP client;
         sf::IPAddress ip;
         sock.Accept(client, &ip);
@@ -140,11 +140,11 @@ void Network::run()
         sf::Socket::Status status;
         if ((status = sock.Receive(packet)) != sf::Socket::Done) // TODO Dec Client
         {
-          coutDebug("Deconnection d'un client.");
+          COUTDEBUG("Deconnection d'un client.");
           ClientList::getInstance().addBadClient(sock);
           continue;
         }
-        coutDebug("Nouveau packet.");
+        COUTDEBUG("Nouveau packet.");
         routing(packet, sock);
       }
     }

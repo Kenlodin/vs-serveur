@@ -38,12 +38,12 @@ Tracker::~Tracker()
 
 int Tracker::routing(unsigned int code, sf::Packet& packet, sf::SocketTCP& sock)
 {
-  coutDebug(code);
+  COUTDEBUG(code);
   if (code < CT::LENGTH && (this->*route_[code])(packet, sock))
     return RETURN_VALUE_GOOD;
   else
   {
-    coutDebug("Tracker : mauvais routing.");
+    COUTDEBUG("Tracker : mauvais routing.");
     ClientList::getInstance().addBadClient(sock);
     return RETURN_VALUE_ERROR;
   }
@@ -67,7 +67,7 @@ int Tracker::ctConnMaster(sf::Packet& packet, sf::SocketTCP& sock)
   INCTEST(!packet.EndOfPacket(), count)
   packet >> bandwidth;
   INCTEST(packet.EndOfPacket(), count)
-  coutDebug("Client --> Tracker : Connection master (" + login
+  COUTDEBUG("Client --> Tracker : Connection master (" + login
         + ", " + password + ", " + privateIp + ")");
   if (count != 5)
     return RETURN_VALUE_ERROR;
@@ -90,7 +90,7 @@ int Tracker::ctConnSlave(sf::Packet& packet, sf::SocketTCP& sock)
   INCTEST(!packet.EndOfPacket(), count)
   packet >> token;
   INCTEST(packet.EndOfPacket(), count)
-  coutDebug("Client --> Tracker : Connection slave (" + token + ")");
+  COUTDEBUG("Client --> Tracker : Connection slave (" + token + ")");
   if (count != 2)
     return RETURN_VALUE_ERROR;
   //TODO serverId and return value.
@@ -111,7 +111,7 @@ int Tracker::ctAskList(sf::Packet& packet, sf::SocketTCP& sock)
   INCTEST(!packet.EndOfPacket(), count)
   packet >> regexFilter;
   INCTEST(packet.EndOfPacket(), count)
-  coutDebug("Client --> Tracker : Ask list");
+  COUTDEBUG("Client --> Tracker : Ask list");
   if (count != 3)
     return RETURN_VALUE_ERROR;
   sql_result res = SqlManager::getInstance().getAllFlux();
@@ -129,7 +129,7 @@ int Tracker::ctAskFlux(sf::Packet& packet, sf::SocketTCP& sock)
   INCTEST(!packet.EndOfPacket(), count)
   packet >> videoId;
   INCTEST(packet.EndOfPacket(), count)
-  coutDebug("Client --> Tracker : Ask flux");
+  COUTDEBUG("Client --> Tracker : Ask flux");
   if (count != 2)
     return RETURN_VALUE_ERROR;
   client = ClientList::getInstance().getClient(sock);
@@ -147,7 +147,7 @@ int Tracker::ctAskCheck(sf::Packet& packet, sf::SocketTCP& sock)
 
   // Extract content of packet
   INCTEST(packet.EndOfPacket(), count)
-  coutDebug("Client --> Tracker : Ask check");
+  COUTDEBUG("Client --> Tracker : Ask check");
   if (count != 1)
     return RETURN_VALUE_ERROR;
   return RETURN_VALUE_GOOD;
@@ -170,7 +170,7 @@ int Tracker::ctAskPacket(sf::Packet& packet, sf::SocketTCP& sock)
     packet >> frameNumber[i];
   }
   INCTEST(packet.EndOfPacket(), count)
-  coutDebug("Client --> Tracker : Ask packet");
+  COUTDEBUG("Client --> Tracker : Ask packet");
   if (count != 3 + nbFrame)
   {
     delete frameNumber;
@@ -191,7 +191,7 @@ int Tracker::ctAskRpacket(sf::Packet& packet, sf::SocketTCP& sock)
   INCTEST(!packet.EndOfPacket(), count)
   packet >> lastFrame;
   INCTEST(packet.EndOfPacket(), count)
-  coutDebug("Client --> Tracker : Ask range packet");
+  COUTDEBUG("Client --> Tracker : Ask range packet");
   if (count != 3)
     return RETURN_VALUE_ERROR;
   return RETURN_VALUE_GOOD;
@@ -206,7 +206,7 @@ int Tracker::ctAskMove(sf::Packet& packet, sf::SocketTCP& sock)
   INCTEST(!packet.EndOfPacket(), count);
   packet >> nPosition;
   INCTEST(packet.EndOfPacket(), count)
-  coutDebug("Client --> Tracker : Ask move");
+  COUTDEBUG("Client --> Tracker : Ask move");
   if (count != 2)
     return RETURN_VALUE_ERROR;
   return RETURN_VALUE_GOOD;
@@ -218,7 +218,7 @@ int Tracker::ctAskDeficient(sf::Packet& packet, sf::SocketTCP& sock)
 
   // Extract content of packet
   INCTEST(packet.EndOfPacket(), count)
-  coutDebug("Client --> Tracker : Ask deficient");
+  COUTDEBUG("Client --> Tracker : Ask deficient");
   if (count != 1)
     return RETURN_VALUE_ERROR;
   return RETURN_VALUE_GOOD;
@@ -236,7 +236,7 @@ int Tracker::ctAskRem(sf::Packet& packet, sf::SocketTCP& sock)
   INCTEST(!packet.EndOfPacket(), count)
   packet >> endFrame;
   INCTEST(packet.EndOfPacket(), count)
-  coutDebug("Client --> Tracker : Ask remove");
+  COUTDEBUG("Client --> Tracker : Ask remove");
   if (count != 3)
     return RETURN_VALUE_ERROR;
   return RETURN_VALUE_GOOD;
@@ -248,7 +248,7 @@ int Tracker::ctAskStop(sf::Packet& packet, sf::SocketTCP& sock)
 
   // Extract content of packet
   INCTEST(packet.EndOfPacket(), count)
-  coutDebug("Client --> Tracker : Ask stop");
+  COUTDEBUG("Client --> Tracker : Ask stop");
   if (count != 1)
     return RETURN_VALUE_ERROR;
   return RETURN_VALUE_GOOD;
@@ -260,7 +260,7 @@ int Tracker::ctDec(sf::Packet& packet, sf::SocketTCP& sock)
 
   // Extract content of packet
   INCTEST(packet.EndOfPacket(), count)
-  coutDebug("Client --> Tracker : Deconnection");
+  COUTDEBUG("Client --> Tracker : Deconnection");
   if (count != 1)
     return RETURN_VALUE_ERROR;
   return RETURN_VALUE_GOOD;
@@ -274,7 +274,7 @@ int Tracker::tcToken(sf::SocketTCP& sender, std::string token)
   // Create packet
   packet << opcode;
   packet << token;
-  coutDebug("Tracker --> Client : Token = " + token);
+  COUTDEBUG("Tracker --> Client : Token = " + token);
   return send(sender, packet);
 }
 
@@ -296,7 +296,7 @@ int Tracker::tcList(sf::SocketTCP& sender, sql_result sqlResult)
     id = atoi(t["id"].c_str());
     packet << id;
   }
-  coutDebug("Tracker --> Client : list");
+  COUTDEBUG("Tracker --> Client : list");
   return send(sender, packet);
 }
 
@@ -318,7 +318,7 @@ int Tracker::tcListDiff(sf::SocketTCP& sender, sql_result sqlResult)
     tools::fromString<sf::Uint16>(t["port"].c_str(), port);
     packet << port;
   }
-  coutDebug("Tracker --> Client : list diffusion");
+  COUTDEBUG("Tracker --> Client : list diffusion");
   return send(sender, packet);
 }
 
@@ -341,7 +341,7 @@ int Tracker::tcListNDiff(sf::SocketTCP& sender, sql_result sqlResult)
     tools::fromString<sf::Uint16>(t["port"].c_str(), port);
     packet << port;
   }
-  coutDebug("Tracker --> Client : list new diffusion");
+  COUTDEBUG("Tracker --> Client : list new diffusion");
   return send(sender, packet);
 }
 
@@ -361,7 +361,7 @@ int Tracker::tcMsg(sf::SocketTCP& sender, sf::Int32 numMsg, std::string msg)
   packet << opcode;
   packet << numMsg;
   packet << msg;
-  coutDebug("Tracker --> Client : send msg");
+  COUTDEBUG("Tracker --> Client : send msg");
   return send(sender, packet);
 }
 

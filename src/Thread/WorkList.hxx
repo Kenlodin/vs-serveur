@@ -34,13 +34,13 @@ bool WorkList<T>::getOneWork(WorkList<T>::OneWork& oneWork)
   bool retValue = false;
   if (!work_.empty())
   {
-    coutDebug("OneWorkGet : begin");
+    COUTDEBUG("OneWorkGet : begin");
     oneWork.worker = *(work_.begin());
     work_.pop_front();
     oneWork.args = *(args_.begin());
     args_.pop_front();
     retValue = true;
-    coutDebug("OneWorkGet : end");
+    COUTDEBUG("OneWorkGet : end");
   }
   mutex_.unlock();
   return retValue;
@@ -51,13 +51,13 @@ void WorkList<T>::putWorks(Worker worker, unsigned int arg0, sf::Packet& arg1,
     sf::SocketTCP& arg2)
 {
   mutex_.lock();
-  coutDebug("OneWorkPut : begin");
+  COUTDEBUG("OneWorkPut : begin");
   std::pair<sf::Packet, sf::SocketTCP> second = std::pair<sf::Packet,
       sf::SocketTCP>(arg1, arg2);
   ListElt elt = ListElt(arg0, second);
   work_.push_back(worker);
   args_.push_back(elt);
-  coutDebug("OneWorkPut : end");
+  COUTDEBUG("OneWorkPut : end");
   mutex_.unlock();
 }
 

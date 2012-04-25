@@ -20,7 +20,7 @@ void ThreadPool<T>::Worker::run()
   try
   {
     typename WorkList<T>::OneWork work;
-    coutDebug("ThreadPool");
+    COUTDEBUG("ThreadPool");
     while (true)
     {
       if (WorkList<T>::getInstance().getOneWork(work))
