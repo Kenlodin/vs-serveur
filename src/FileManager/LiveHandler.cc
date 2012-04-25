@@ -6,6 +6,7 @@
  */
 
 #include "LiveHandler.hh"
+#include "../SqlManager/SqlManager.hh"
 
 LiveHandler::LiveHandler()
 {

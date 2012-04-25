@@ -13,16 +13,23 @@
 class Chuck
 {
   public:
+    typedef unsigned long long u64;
+    typedef unsigned int u32;
+    typedef unsigned short u16;
+    typedef unsigned char u8;
+    typedef struct
+    {
+        char fcc[4];
+        u32 size;
+        void *data;
+    }__attribute__((packed)) s_sub_chunk;
+
+  public:
     Chuck();
-    Chuck(int length, sf::Int8* data);
     virtual ~Chuck();
-    sf::Int8* getData() const;
-    void setData(sf::Int8* data);
-    int getLength() const;
-    void setLength(int length);
-  private:
-    int length_;
-    sf::Int8* data_;
+    void clear();
+  public:
+    s_sub_chunk *subChunk_;
 };
 
 #endif /* CHUCK_HH_ */

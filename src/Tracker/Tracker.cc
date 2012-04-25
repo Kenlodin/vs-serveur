@@ -7,6 +7,8 @@
 
 #include "Tracker.hh"
 #include "../Network/ClientList.hh"
+#include "../Client/LiveClient.hh"
+#include "../Client/VodClient.hh"
 
 
 Tracker::Tracker()
@@ -121,6 +123,7 @@ int Tracker::ctAskFlux(sf::Packet& packet, sf::SocketTCP& sock)
 {
   sf::Int32 videoId;
   int count = 0;
+  Client* client;
 
   // Extract content of packet
   INCTEST(!packet.EndOfPacket(), count)
@@ -129,8 +132,12 @@ int Tracker::ctAskFlux(sf::Packet& packet, sf::SocketTCP& sock)
   coutDebug("Client --> Tracker : Ask flux");
   if (count != 2)
     return RETURN_VALUE_ERROR;
-  sql_result res = SqlManager::getInstance().getFlux(videoId);
-  //TODO add handling
+  client = ClientList::getInstance().getClient(sock);
+  if (!client)
+    return RETURN_VALUE_ERROR;
+  SqlManager::getInstance().setHandlings(client->getToken(), videoId);
+  sql_result res = SqlManager::getInstance().getThreeServers(); //TODO videoId
+  client->setTypeClient(new VodClient(videoId));
   return tcListDiff(sock, res);
 }
 

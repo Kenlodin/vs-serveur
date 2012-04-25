@@ -8,6 +8,16 @@
 #ifndef FILEVIDEO_HH_
 #define FILEVIDEO_HH_
 
+typedef enum
+{
+  OPCODE_RIFF_AVI,
+  OPCODE_LIST_HDRL,
+  OPCODE_LIST_INFO,
+  OPCODE_JUNK,
+  OPCODE_LIST_MOVI,
+  OPCODE_CHUNK
+} e_opcode;
+
 # include "Chuck.hh"
 
 class FileVideo

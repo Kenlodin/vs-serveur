@@ -10,40 +10,31 @@
 Chuck::Chuck()
 {
   // TODO Auto-generated constructor stub
-  length_ = 0;
-  data_ = nullptr;
-}
-
-Chuck::Chuck(int length, sf::Int8* data)
-{
-  length_ = length;
-  data_ = data;
+  subChunk_ = nullptr;
 }
 
 Chuck::~Chuck()
 {
   // TODO Auto-generated destructor stub
-  delete data_;
+  if (subChunk_)
+  {
+    if (subChunk_->data)
+      free(subChunk_->data);
+    free(subChunk_);
+  }
 }
 
-sf::Int8* Chuck::getData() const
+void Chuck::clear()
 {
-  return data_;
+  if (subChunk_)
+    {
+      if (subChunk_->data)
+        free(subChunk_->data);
+      subChunk_->data = nullptr;
+      free(subChunk_);
+      subChunk_ = nullptr;
+    }
 }
 
-void Chuck::setData(sf::Int8* data)
-{
-  this->data_ = data;
-}
-
-int Chuck::getLength() const
-{
-  return length_;
-}
-
-void Chuck::setLength(int length)
-{
-  this->length_ = length;
-}
 
 
