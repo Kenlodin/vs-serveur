@@ -8,16 +8,7 @@
 #ifndef FILEVIDEO_HH_
 #define FILEVIDEO_HH_
 
-typedef enum
-{
-  OPCODE_RIFF_AVI,
-  OPCODE_LIST_HDRL,
-  OPCODE_LIST_INFO,
-  OPCODE_JUNK,
-  OPCODE_LIST_MOVI,
-  OPCODE_CHUNK
-} e_opcode;
-
+# include "../fwd.hh"
 # include "Chuck.hh"
 
 class FileVideo
@@ -27,6 +18,7 @@ class FileVideo
     FileVideo();
     virtual ~FileVideo();
     virtual Chuck* getPacket(int number) = 0;
+    virtual avifile::s_chunk* const* getFileHeader() const = 0;
     int getVideoId() const;
     void setVideoId(int videoId);
   protected:

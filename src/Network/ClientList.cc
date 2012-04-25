@@ -123,6 +123,21 @@ std::list<sf::SocketTCP>& ClientList::getBadClient()
   return badClient_;
 }
 
+Client* ClientList::getClient(std::string token)
+{
+  std::map<std::string, Client*>::iterator it;
+  Client* client = nullptr;
+
+  generalMutex_.lock();
+  it = clientLink_.find(token);
+  if (it != clientLink_.end())
+  {
+    client = it->second;
+  }
+  generalMutex_.unlock();
+  return client;
+}
+
 void ClientList::getBadClientRelease()
 {
   badClientMutex_.unlock();

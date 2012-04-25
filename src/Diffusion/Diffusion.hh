@@ -9,6 +9,7 @@
 #define DIFFUSION_HH_
 
 # include "../PacketHandler.hh"
+# include "../FileManager/Chuck.hh"
 # include "../fwd.hh"
 # include "../Log/Log.hh"
 
@@ -32,8 +33,9 @@ class Diffusion: public PacketHandler
     int ddVideoDemand(sf::Packet& packet, sf::SocketTCP& sock);
     int ddPingPong(sf::Packet& packet, sf::SocketTCP& sock);
     int ddLiveLink(sf::Packet& packet, sf::SocketTCP& sock);
-  private:
-    int dcData(sf::SocketTCP& sender, sf::Int8 data[], int length);
+  public:
+    int dcData(sf::SocketTCP& sender, Chuck* chuck);
+    int dcData(sf::SocketTCP& sender, int code, avifile::s_chunk* headers);
 };
 
 #endif /* DIFFUSION_HH_ */

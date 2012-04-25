@@ -9,6 +9,11 @@
 #define HANDLINGSENDER_HH_
 
 # include "../Thread/Thread.hh"
+# include "../Network/ClientList.hh"
+# include "../Thread/Thread.hh"
+# include "../FileManager/Chuck.hh"
+# include "../fwd.hh"
+# include "Diffusion.hh"
 
 class HandlingSender
 {

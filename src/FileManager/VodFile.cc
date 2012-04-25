@@ -16,11 +16,11 @@ VodFile::VodFile()
   fd_ = open("toto.avi", O_RDONLY); //TODO Name
   if (fd_ == -1) //TODO Error
     exit(1);
-  loadChunk(OPCODE_RIFF_AVI);
-  loadChunk(OPCODE_LIST_HDRL);
-  loadChunk(OPCODE_LIST_INFO);
-  loadChunk(OPCODE_JUNK);
-  loadChunk(OPCODE_LIST_MOVI);
+  loadChunk(avifile::e_opcode::OPCODE_RIFF_AVI);
+  loadChunk(avifile::e_opcode::OPCODE_LIST_HDRL);
+  loadChunk(avifile::e_opcode::OPCODE_LIST_INFO);
+  loadChunk(avifile::e_opcode::OPCODE_JUNK);
+  loadChunk(avifile::e_opcode::OPCODE_LIST_MOVI);
 }
 
 VodFile::VodFile(int videoId)
@@ -53,19 +53,21 @@ void VodFile::loadSubChunk()
   nbpacket_++;
   maxnbpacket_ = MAX(nbpacket_, maxnbpacket_);
   currentPacket_->clear();
-  currentPacket_->subChunk_ = reinterpret_cast<Chuck::s_sub_chunk*>(malloc(sizeof(Chuck::s_sub_chunk)));
+  currentPacket_->subChunk_ = reinterpret_cast<avifile::s_sub_chunk*>(malloc(
+      sizeof(avifile::s_sub_chunk)));
   read(fd_, currentPacket_->subChunk_, SIZE_SUBCHUNK_HEADER);
-  currentPacket_->subChunk_->data = malloc(MOD2(currentPacket_->subChunk_->size));
+  currentPacket_->subChunk_->data = malloc(
+      MOD2(currentPacket_->subChunk_->size));
   read(fd_, currentPacket_->subChunk_->data,
       MOD2(currentPacket_->subChunk_->size));
   offset_ += SIZE_SUBCHUNK_HEADER + currentPacket_->subChunk_->size;
   //+= MOD2(currentPacket_->subChunk->size) + 2 * sizeof(u32);
 }
 
-
-void VodFile::loadChunk(e_opcode type)
+void VodFile::loadChunk(avifile::e_opcode type)
 {
-  fileHeader_[type] = reinterpret_cast<s_chunk*>(malloc(sizeof(s_chunk)));
+  fileHeader_[type] = reinterpret_cast<avifile::s_chunk*>(malloc(
+      sizeof(avifile::s_chunk)));
   read(fd_, fileHeader_[type], SIZE_CHUNK_HEADER);
   fileHeader_[type]->data = NULL;
 
@@ -74,10 +76,13 @@ void VodFile::loadChunk(e_opcode type)
   {
     videoLength_ = fileHeader_[type]->size;
   }
-  if (type == OPCODE_RIFF_AVI || type == OPCODE_LIST_MOVI)
+  if (type == avifile::e_opcode::OPCODE_RIFF_AVI
+      || type == avifile::e_opcode::OPCODE_LIST_MOVI)
   {
-    fileHeader_[type]->data = malloc(fileHeader_[type]->size - sizeof(u32));
-    read(fd_, fileHeader_[type]->data, fileHeader_[type]->size - sizeof(u32));
+    fileHeader_[type]->data = malloc(
+        fileHeader_[type]->size - sizeof(avifile::u32));
+    read(fd_, fileHeader_[type]->data,
+        fileHeader_[type]->size - sizeof(avifile::u32));
     offset_ += fileHeader_[type]->size;
   }
   offset_ += SIZE_CHUNK_HEADER;
@@ -88,7 +93,7 @@ std::string VodFile::getName() const
   return name_;
 }
 
-VodFile::s_chunk* const* VodFile::getFileHeader() const
+avifile::s_chunk* const * VodFile::getFileHeader() const
 {
   return fileHeader_;
 }
