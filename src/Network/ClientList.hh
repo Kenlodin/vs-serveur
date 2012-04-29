@@ -8,39 +8,89 @@
 #ifndef CLIENTLIST_HH_
 #define CLIENTLIST_HH_
 
-# include "../Client/Client.hh"
+// External include
 # include <SFML/Network.hpp>
 # include <list>
-# include "../Log/Log.hh"
 # include <boost/thread/mutex.hpp>
 
+// Internal include
+# include "../Client/Client.hh"
+# include "../Log/Log.hh"
+
+/*
+ * Manage client of this server
+ */
 class ClientList
 {
-  public:
+  private: // Private because of singleton
+    // Constructor
     ClientList();
+
+    //Destructor
     virtual ~ClientList();
+
+  public:
+    // Get instance of Clientlist
     static ClientList& getInstance();
+
+    // Add Client in list
     void addClient(sf::SocketTCP& control, sf::SocketTCP* data
         , std::string token);
+
+    // Link dataSocket to a client
     int link(sf::SocketTCP* data, std::string token);
+
+    // Remove client
     void removeClient(sf::SocketTCP& sock);
+
+    // Get client from a socket
     Client* getClient(sf::SocketTCP& sock);
     Client* getClient(sf::SocketTCP* sock);
+
+    // Get client from token
     Client* getClient(std::string token);
+
+    // Get private IP of this socket
     std::string getPrivateIp(sf::SocketTCP sock);
+
+    // Set private IP of a socket
     void setPrivateIp(sf::SocketTCP& sock, std::string ip);
+
+    // Get list of client
     std::map<sf::SocketTCP, Client*> getClientList() const;
+
+    // Add sock which create a problem
     void addBadClient(sf::SocketTCP& sock);
+
+    // get list of bad client and lock it
     std::list<sf::SocketTCP>& getBadClient();
+
+    // unlock bad client list
     void getBadClientRelease();
 
   private:
+    // Mutex of clientList_
     boost::mutex generalMutex_;
+
+    // Mutex of privateIP
     boost::mutex privateIpMutex_;
+
+    // Mutex of badClient
     boost::mutex badClientMutex_;
+
+    // Mutex of every client
+    //TODO
+
+    // List of every client
     std::map<sf::SocketTCP, Client*> clientList_;
+
+    // List of link between token and client
     std::map<std::string, Client*> clientLink_;
+
+    // List of link between socket and privateIP
     std::map<sf::SocketTCP, std::string> privateIpList_;
+
+    // List of badClient
     std::list<sf::SocketTCP> badClient_;
 };
 
