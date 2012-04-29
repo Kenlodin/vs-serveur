@@ -5,8 +5,10 @@
  *      Author: nagriar
  */
 
+// Internal include
 #include "HandlingSender.hh"
 #include "../SqlManager/SqlManager.hh"
+
 
 HandlingSender::HandlingSender(int number)
 {
@@ -16,7 +18,6 @@ HandlingSender::HandlingSender(int number)
 
 HandlingSender::~HandlingSender()
 {
-  // TODO Auto-generated destructor stub
   delete[] threadPool_;
 }
 
@@ -55,7 +56,7 @@ void HandlingSender::Worker::run()
     }
     for (int nbPacket = begin; nbPacket < end; i++)
     {
-      Chuck* chuck = client->getTypeClient()->getElement(nbPacket);
+      Chunk* chuck = client->getTypeClient()->getElement(nbPacket);
       Diffusion::getInstance().dcData(*(client->getDataSocket()), chuck);
     }
   }

@@ -23,15 +23,3 @@ FileVideo::~FileVideo()
 {
   // TODO Auto-generated destructor stub
 }
-
-int FileVideo::getVideoId() const
-{
-  return videoId_;
-}
-
-void FileVideo::setVideoId(int videoId)
-{
-  videoId_ = videoId;
-}
-
-

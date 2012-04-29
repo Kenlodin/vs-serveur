@@ -6,27 +6,44 @@
  */
 
 #ifndef THREADPOOL_HH_
-#define THREADPOOL_HH_
+# define THREADPOOL_HH_
 
+// Internal include
 # include "Thread.hh"
 
+/*
+ * Class which manage a pool of thread
+ */
 template <class T>
 class ThreadPool
 {
   public:
+    // Constructor
     ThreadPool(int number);
+
+    // Destructor
     virtual ~ThreadPool();
+
+    // Start every thread
     void start();
+
+    // Join every thread
     void join();
   private:
+    // Represent a thread
     class Worker: public tools::Thread
     {
       public:
         Worker();
+
+        //Overloading of function of thread
         void run();
     };
   private:
+    // Array of thread
     tools::Thread *threadPool_;
+
+    // Number of thread
     int number_;
 };
 

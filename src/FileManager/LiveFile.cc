@@ -5,6 +5,7 @@
  *      Author: nagriar
  */
 
+// Internal include
 #include "LiveFile.hh"
 
 LiveFile::LiveFile(int videoId)
@@ -19,18 +20,18 @@ LiveFile::~LiveFile()
   // TODO Auto-generated destructor stub
 }
 
-Chuck* LiveFile::getPacket(int number)
+Chunk* LiveFile::getPacket(int number)
 {
   packetsMutex.lock();
-  std::map<int, Chuck*>::iterator it = packets_.find(number);
-  Chuck* chuck = nullptr;
+  std::map<int, Chunk*>::iterator it = packets_.find(number);
+  Chunk* chuck = nullptr;
   if (it != packets_.end())
     chuck = it->second;
   packetsMutex.unlock();
   return chuck;
 }
 
-void LiveFile::addPacket(int number, Chuck* data)
+void LiveFile::addPacket(int number, Chunk* data)
 {
   packetsMutex.lock();
   packets_[number] = data;

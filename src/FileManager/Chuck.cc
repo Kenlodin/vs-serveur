@@ -7,15 +7,13 @@
 
 #include "Chuck.hh"
 
-Chuck::Chuck()
+Chunk::Chunk()
 {
-  // TODO Auto-generated constructor stub
   subChunk_ = nullptr;
 }
 
-Chuck::~Chuck()
+Chunk::~Chunk()
 {
-  // TODO Auto-generated destructor stub
   if (subChunk_)
   {
     if (subChunk_->data)
@@ -24,7 +22,7 @@ Chuck::~Chuck()
   }
 }
 
-void Chuck::clear()
+void Chunk::clear()
 {
   if (subChunk_)
     {

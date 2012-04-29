@@ -6,17 +6,26 @@
  */
 
 #ifndef LIVECLIENT_HH_
-#define LIVECLIENT_HH_
+# define LIVECLIENT_HH_
 
+// Internal Include
 # include "TypeClient.hh"
 
-class LiveClient : public TypeClient
+/*
+ * This class implement TypeClient interface to provide method
+ * to get Chuck for live client
+ */
+class LiveClient: public TypeClient
 {
   public:
+    // Constructor
     LiveClient(int videoId);
+
+    // Destructor
     virtual ~LiveClient();
-    virtual Chuck* getElement(int number);
-  private:
+
+    // Get Chuck represented by number
+    virtual Chunk* getElement(int number);
 };
 
 #endif /* LIVECLIENT_HH_ */

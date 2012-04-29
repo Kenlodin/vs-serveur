@@ -5,6 +5,7 @@
  *      Author: nagriar
  */
 
+// Internal include
 #include "LiveClient.hh"
 #include "../FileManager/LiveHandler.hh"
 
@@ -21,7 +22,7 @@ LiveClient::~LiveClient()
   LiveHandler::getInstance().leaveLive(getVideoId());
 }
 
-Chuck* LiveClient::getElement(int number)
+Chunk* LiveClient::getElement(int number)
 {
   return getFileVideo()->getPacket(number);
 }

@@ -20,7 +20,7 @@ VodClient::~VodClient()
 
 }
 
-Chuck* VodClient::getElement(int number)
+Chunk* VodClient::getElement(int number)
 {
   return getFileVideo()->getPacket(number);
 }

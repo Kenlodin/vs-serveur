@@ -5,6 +5,7 @@
  *      Author: nagriar
  */
 
+// Internal include
 #include "Diffusion.hh"
 #include "../Network/ClientList.hh"
 
@@ -129,7 +130,7 @@ Diffusion& Diffusion::getInstance()
   return instance_;
 }
 
-int Diffusion::dcData(sf::SocketTCP& sender, Chuck* chuck)
+int Diffusion::dcData(sf::SocketTCP& sender, Chunk* chuck)
 {
   sf::Packet packet;
   sf::Int16 opcode = MERGE_OPCODE(ConnexionType::DIFFUSION_CLIENT, DC::DATA);

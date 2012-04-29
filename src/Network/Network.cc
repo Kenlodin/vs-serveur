@@ -5,6 +5,7 @@
  *      Author: nagriar
  */
 
+//Internal include
 # include "Network.hh"
 # include "../Diffusion/Diffusion.hh"
 # include "../Tracker/Tracker.hh"

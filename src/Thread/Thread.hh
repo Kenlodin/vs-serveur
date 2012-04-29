@@ -6,8 +6,9 @@
  */
 
 #ifndef THREAD_HH
-#define	THREAD_HH
+# define	THREAD_HH
 
+//External include
 #include <boost/thread.hpp>
 
 namespace tools

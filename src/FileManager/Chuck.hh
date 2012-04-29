@@ -5,20 +5,31 @@
  *      Author: nagriar
  */
 
-#ifndef CHUCK_HH_
-#define CHUCK_HH_
+#ifndef CHUNCK_HH_
+# define CHUNCK_HH_
 
+//External include
 # include <SFML/System.hpp>
+
+// Internal include
 # include "../fwd.hh"
 
-class Chuck
+/*
+ * Class which represent a chuck of avi
+ */
+class Chunk
 {
   public:
-    Chuck();
-    virtual ~Chuck();
+    // Constructor
+    Chunk();
+
+    // Destructor
+    virtual ~Chunk();
+
+    // Empting the chunck
     void clear();
   public:
     avifile::s_sub_chunk *subChunk_;
 };
 
-#endif /* CHUCK_HH_ */
+#endif /* CHUNCK_HH_ */

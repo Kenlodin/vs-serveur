@@ -102,7 +102,7 @@ avifile::s_chunk* const * VodFile::getFileHeader() const
   return fileHeader_;
 }
 
-Chuck* VodFile::getPacket(int number)
+Chunk* VodFile::getPacket(int number)
 {
   COUTDEBUG("GetPacket : no:" << videoId_ << " : no:" << nbpacket_);
   if (number > nbpacket_)

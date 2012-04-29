@@ -6,21 +6,36 @@
  */
 
 #ifndef LIVEFILE_HH_
-#define LIVEFILE_HH_
+# define LIVEFILE_HH_
 
-# include "FileVideo.hh"
+// External include
 # include <boost/thread/mutex.hpp>
 # include <map>
 
+// Internal include
+# include "FileVideo.hh"
+
+/*
+ * Virtual file that represent a live
+ */
 class LiveFile : public FileVideo
 {
   public:
     LiveFile(int videoId);
+
+    // Destructor
     virtual ~LiveFile();
-    Chuck* getPacket(int number);
-    void addPacket(int number, Chuck* data);
+
+    // Get packet
+    Chunk* getPacket(int number);
+
+    // Insert a new packet
+    void addPacket(int number, Chunk* data);
   private:
-    std::map<int, Chuck*> packets_;
+    // Contain every live packet.
+    std::map<int, Chunk*> packets_;
+
+    // Mutex for packets_
     boost::mutex packetsMutex;
 };
 

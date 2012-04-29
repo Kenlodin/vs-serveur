@@ -6,32 +6,68 @@
  */
 
 #ifndef CLIENT_H_
-#define CLIENT_H_
+# define CLIENT_H_
 
+// External include
 # include <SFML/Network.hpp>
+
+// Internal include
 # include "../fwd.hh"
 # include "TypeClient.hh"
 
+/*
+ * This class keep information of a connecting client in tracker or diffusion
+ */
 class Client
 {
   public:
+    // Constructor
     Client(sf::SocketTCP control, sf::SocketTCP*& data, std::string token);
+
+    // Destructor
     virtual ~Client();
 
+    // Get controlSocket
     sf::SocketTCP getControlSocket() const;
+
+    // Get dataSocket
     sf::SocketTCP* getDataSocket() const;
+
+    // Use controlSocket to send a packet
     int sendControl(sf::Packet& packet);
+
+    // Use dataSocket to send a packet
     int sendData(sf::Packet& packet);
+
+    // Set data socket
     void setDataSocket(sf::SocketTCP* dataSocket);
+
+    // Get token client
     std::string getToken() const;
+
+    // Set token client
     void setToken(std::string token);
+
+    // Get client type
     TypeClient* getTypeClient() const;
+
+    // Set client type
     void setTypeClient(TypeClient* typeClient);
 private:
+    // Socket for tracker dialog
     sf::SocketTCP controlSocket_;
+
+    // Socket for diffusion data transfert
     sf::SocketTCP* dataSocket_;
+
+    // Interface which represent a VOD or Live connection
     TypeClient* typeClient_;
+
+    // Token of connection
     std::string token_;
 };
+
+//Inline Get/Set
+# include "Client.hxx"
 
 #endif /* CLIENT_H_ */
