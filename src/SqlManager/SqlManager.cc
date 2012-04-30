@@ -44,12 +44,21 @@ SqlManager::execute (std::string query)
   //}
 }
 
-sql_result
+/**
+ * 
+ * @param ip
+ * @param port
+ * @return id of the server
+ */
+int
 SqlManager::addServer (std::string ip, int port)
 {
   std::string req;
-  req = "INSERT INTO servers (ip, port) VALUES ('" + ip + "'," + tools::toString<int> (port) + ")";
-  return execute (req);
+  int id;
+  req = "INSERT INTO servers (ip, port) VALUES ('" + ip + "'," + tools::toString<int> (port) + ") RETURNING id";
+  sql_result r = execute (req);
+  r.at (0)["id"].to<int>(id);
+  return id;
 }
 
 std::string

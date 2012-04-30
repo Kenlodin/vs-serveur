@@ -36,7 +36,7 @@ class SqlManager
   pqxx::result execute (std::string query);
 
  public:
-  sql_result addServer (std::string ip, int port);
+  int addServer (std::string ip, int port);
   std::string addClient (std::string login, std::string password,
                         std::string public_ip, std::string private_ip,
                         int bandwith);
