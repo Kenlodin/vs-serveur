@@ -107,6 +107,7 @@ void Network::run()
   sf::SelectorTCP selector;
   selector.Add(*dataSocket_);
   selector.Add(*controlSocket_);
+  SqlManager::getInstance().addServer("37.59.85.217", 36000); // TODO
   COUTDEBUG("Serveur démarré");
   while (true)
   {

@@ -10,7 +10,6 @@
 #include "../Client/LiveClient.hh"
 #include "../Client/VodClient.hh"
 
-
 Tracker::Tracker()
     : route_(
     {
@@ -39,7 +38,8 @@ Tracker::~Tracker()
 int Tracker::routing(unsigned int code, sf::Packet& packet, sf::SocketTCP& sock)
 {
   COUTDEBUG(code);
-  if (code < CT::LENGTH && (this->*route_[code])(packet, sock))
+  if (code < CT::LENGTH
+      && (this->*route_[code])(packet, sock) == RETURN_VALUE_GOOD)
     return RETURN_VALUE_GOOD;
   else
   {
@@ -67,8 +67,8 @@ int Tracker::ctConnMaster(sf::Packet& packet, sf::SocketTCP& sock)
   INCTEST(!packet.EndOfPacket(), count)
   packet >> bandwidth;
   INCTEST(packet.EndOfPacket(), count)
-  COUTDEBUG("Client --> Tracker : Connection master (" + login
-        + ", " + password + ", " + privateIp + ")");
+  COUTDEBUG(
+      "Client --> Tracker : Connection master (" + login + ", " + password + ", " + privateIp + ")");
   if (count != 5)
     return RETURN_VALUE_ERROR;
   std::string publicIp = ClientList::getInstance().getPrivateIp(sock);
@@ -133,7 +133,7 @@ int Tracker::ctAskFlux(sf::Packet& packet, sf::SocketTCP& sock)
   if (count != 2)
     return RETURN_VALUE_ERROR;
   client = ClientList::getInstance().getClient(sock);
-  if (client != nullptr)
+  if (client == nullptr)
     return RETURN_VALUE_ERROR;
   SqlManager::getInstance().setHandlings(client->getToken(), videoId);
   client->unlock();
@@ -326,7 +326,8 @@ int Tracker::tcListDiff(sf::SocketTCP& sender, sql_result sqlResult)
 int Tracker::tcListNDiff(sf::SocketTCP& sender, sql_result sqlResult)
 {
   sf::Packet packet;
-  sf::Uint16 opcode = MERGE_OPCODE(ConnexionType::TRACKER_CLIENT, TC::LIST_NDIFF);
+  sf::Uint16 opcode =
+      MERGE_OPCODE(ConnexionType::TRACKER_CLIENT, TC::LIST_NDIFF);
   sf::Uint8 length;
   std::string temp;
   sf::Uint16 port;
@@ -370,5 +371,6 @@ int Tracker::send(sf::SocketTCP& sender, sf::Packet& packet)
 {
   if (sender.Send(packet) == sf::Socket::Done)
     return RETURN_VALUE_GOOD;
+
   return RETURN_VALUE_ERROR;
 }
