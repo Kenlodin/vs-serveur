@@ -18,20 +18,23 @@ Config::getInstance ()
 void
 Config::load (std::string file)
 {
-  TiXmlDocument c (file);
-  if (!c.LoadFile ())
+  c_ = TiXmlDocument (file);
+  if (!c_.LoadFile ())
   {
     std::cerr << "Impossible de charger le fichier de configuration ! " << std::endl;
     std::exit (1);
   }
-  TiXmlElement *elt = c.RootElement ();
+}
+
+void
+Config::loadConfig ()
+{
+  TiXmlElement *elt = c_.RootElement ();
   if (elt != nullptr)
     elt = elt->FirstChildElement ();
   while (elt != nullptr)
   {
-    if (elt->ValueStr () == "files")
-      loadFiles (elt);
-    else
+    if (elt->ValueStr () != "files")
     {
       std::string text = std::string (elt->GetText ());
       config_.insert (std::pair<std::string, std::string > (elt->ValueStr (), text));
@@ -41,13 +44,24 @@ Config::load (std::string file)
 }
 
 void
-Config::loadFiles (TiXmlElement* parent)
+Config::loadFiles ()
 {
-  TiXmlElement* elt = parent->FirstChildElement ();
+  TiXmlElement *elt = c_.RootElement ();
+  if (elt != nullptr)
+    elt = elt->FirstChildElement ();
   while (elt != nullptr)
   {
-    std::string id = std::string (elt->GetText ());
-    SqlManager::getInstance ().setFileServer (id);
+    if (elt->ValueStr () == "files")
+    {
+      elt = elt->FirstChildElement ();
+      while (elt != nullptr)
+      {
+        std::string id = std::string (elt->GetText ());
+        SqlManager::getInstance ().setFileServer (id);
+        elt = elt->NextSiblingElement ();
+      }
+      return;
+    }
     elt = elt->NextSiblingElement ();
   }
 }

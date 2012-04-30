@@ -26,8 +26,10 @@ int main()
   //  tools::Thread t();
   //  t.run ();
   SqlManager::getInstance ().connect ();
-  SqlManager::getInstance().addServer("37.59.85.217", 36000);
   Config::getInstance ().load ("config.xml");
+  Config::getInstance ().loadConfig ();
+  SqlManager::getInstance().addServer("37.59.85.217", 36000);
+  Config::getInstance ().loadFiles ();
   ThreadPool<Diffusion> diffusionWorker (1);
   ThreadPool<Tracker> trackerWorker(1);
   HandlingSender handlingSender (1);

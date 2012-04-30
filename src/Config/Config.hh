@@ -20,8 +20,9 @@ class Config
  public:
   static Config& getInstance ();
   void load (std::string file);
-  void loadFiles (TiXmlElement* parent);
-  
+  void loadConfig ();
+  void loadFiles ();
+
   void print ();
   bool check ();
   void add (std::string key, int value);
@@ -31,8 +32,7 @@ class Config
 
  private:
   std::map<std::string, std::string> config_;
-
- private:
+  TiXmlDocument c_;
   boost::mutex mutex_;
 
   Config () { };
