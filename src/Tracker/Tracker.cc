@@ -133,9 +133,10 @@ int Tracker::ctAskFlux(sf::Packet& packet, sf::SocketTCP& sock)
   if (count != 2)
     return RETURN_VALUE_ERROR;
   client = ClientList::getInstance().getClient(sock);
-  if (!client)
+  if (client != nullptr)
     return RETURN_VALUE_ERROR;
   SqlManager::getInstance().setHandlings(client->getToken(), videoId);
+  client->unlock();
   sql_result res = SqlManager::getInstance().getThreeServers(); //TODO videoId
   client->setTypeClient(new VodClient(videoId));
   return tcListDiff(sock, res);

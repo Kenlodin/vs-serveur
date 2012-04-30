@@ -10,6 +10,7 @@
 
 // External include
 # include <SFML/Network.hpp>
+# include <boost/thread/mutex.hpp>
 
 // Internal include
 # include "../fwd.hh"
@@ -53,6 +54,15 @@ class Client
 
     // Set client type
     void setTypeClient(TypeClient* typeClient);
+
+    // Try to lock this client
+    bool tryLock();
+
+    // Lock this client
+    void lock();
+
+    // Unlock this client
+    void unlock();
 private:
     // Socket for tracker dialog
     sf::SocketTCP controlSocket_;
@@ -65,6 +75,9 @@ private:
 
     // Token of connection
     std::string token_;
+
+    // Mutex of this instance of client
+    boost::mutex using_;
 };
 
 //Inline Get/Set

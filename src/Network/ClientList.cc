@@ -10,7 +10,6 @@
 ClientList::ClientList()
 {
   // TODO Auto-generated constructor stub
-
 }
 
 ClientList::~ClientList()
@@ -68,12 +67,15 @@ void ClientList::addClient(sf::SocketTCP& control, sf::SocketTCP* data,
   generalMutex_.lock();
   Client* c = new Client(control, data, token);
   clientList_[control] = c;
+  if (data != nullptr)
+    clientList_[*data] = c;
   clientLink_[token] = c;
   generalMutex_.unlock();
 }
 
 void ClientList::removeClient(sf::SocketTCP& sock)
 {
+  purgeClient();
   generalMutex_.lock();
   std::map<sf::SocketTCP, Client*>::iterator it = clientList_.find(sock);
   Client* c;
@@ -84,7 +86,14 @@ void ClientList::removeClient(sf::SocketTCP& sock)
     if (c->getDataSocket() != nullptr)
       clientList_.erase(*(c->getDataSocket()));
     clientLink_.erase(c->getToken());
-    delete c;
+    if (c->tryLock())
+      delete c;
+    else
+    {
+      temporaryMutex_.lock();
+      temporaryClient_.insert(temporaryClient_.end(), c);
+      temporaryMutex_.unlock();
+    }
   }
   else
   {
@@ -98,14 +107,23 @@ Client* ClientList::getClient(sf::SocketTCP* sock)
 {
   generalMutex_.lock();
   Client* c = clientList_[*sock];
+  c->lock();
   generalMutex_.unlock();
   return c;
 }
 
 Client* ClientList::getClient(sf::SocketTCP& sock)
 {
+  std::map<sf::SocketTCP, Client*>::iterator it;
+  Client* c = nullptr;
+
   generalMutex_.lock();
-  Client* c = clientList_[sock];
+  it = clientList_.find(sock);
+  if (it != clientList_.end())
+  {
+    c = it->second;
+    c->lock();
+  }
   generalMutex_.unlock();
   return c;
 }
@@ -133,13 +151,31 @@ Client* ClientList::getClient(std::string token)
   if (it != clientLink_.end())
   {
     client = it->second;
+    client->lock();
   }
   generalMutex_.unlock();
   return client;
 }
 
+void ClientList::purgeClient()
+{
+  Client* c = nullptr;
+  temporaryMutex_.lock();
+  unsigned int length = temporaryClient_.size();
+  for (unsigned int i = 0; i < length; i++)
+  {
+    c = temporaryClient_.front();
+    temporaryClient_.pop_front();
+    if (c->tryLock())
+      delete c;
+    else
+      temporaryClient_.insert(temporaryClient_.end(), c);
+  }
+  temporaryMutex_.unlock();
+}
+
 void ClientList::getBadClientRelease()
 {
-  badClientMutex_.unlock();
+badClientMutex_.unlock();
 }
 

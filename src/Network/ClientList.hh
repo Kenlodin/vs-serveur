@@ -40,15 +40,19 @@ class ClientList
     // Link dataSocket to a client
     int link(sf::SocketTCP* data, std::string token);
 
-    // Remove client
+    // Remove client if possible
     void removeClient(sf::SocketTCP& sock);
 
-    // Get client from a socket
+    // Purge temporary client if possible
+    void purgeClient();
+
+    // Get client from a socket !!! Take care of lock
     Client* getClient(sf::SocketTCP& sock);
     Client* getClient(sf::SocketTCP* sock);
 
-    // Get client from token
+    // Get client from token !!! Take care of lock
     Client* getClient(std::string token);
+
 
     // Get private IP of this socket
     std::string getPrivateIp(sf::SocketTCP sock);
@@ -78,11 +82,14 @@ class ClientList
     // Mutex of badClient
     boost::mutex badClientMutex_;
 
-    // Mutex of every client
-    //TODO
+    // Mutex of remove temporary
+    boost::mutex temporaryMutex_;
 
     // List of every client
     std::map<sf::SocketTCP, Client*> clientList_;
+
+    // Temporary list of bad client
+    std::list<Client*> temporaryClient_;
 
     // List of link between token and client
     std::map<std::string, Client*> clientLink_;

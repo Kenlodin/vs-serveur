@@ -34,3 +34,19 @@ int Client::sendData(sf::Packet& packet)
     return RETURN_VALUE_ERROR;
   return RETURN_VALUE_GOOD;
 }
+
+bool Client::tryLock()
+{
+  return using_.try_lock();
+}
+
+void Client::lock()
+{
+  using_.lock();
+}
+
+void Client::unlock()
+{
+  using_.unlock();
+}
+

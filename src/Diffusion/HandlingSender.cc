@@ -45,8 +45,13 @@ void HandlingSender::Worker::run()
     end = atoi(t["packet_end"].c_str());
     token = t["client_token"].c_str();
     client = ClientList::getInstance().getClient(token);
-    if (client == nullptr || client->getDataSocket() == nullptr) // TODO Error
+    if (client == nullptr)
       continue;
+    if (client->getDataSocket() == nullptr) // TODO Error
+    {
+      client->unlock();
+      continue;
+    }
     if (begin == 0)
     {
       FileVideo* video = client->getTypeClient()->getFileVideo();
@@ -59,6 +64,7 @@ void HandlingSender::Worker::run()
       Chunk* chuck = client->getTypeClient()->getElement(nbPacket);
       Diffusion::getInstance().dcData(*(client->getDataSocket()), chuck);
     }
+    client->unlock();
   }
 
 }
