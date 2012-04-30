@@ -7,13 +7,14 @@
 
 #include "VodFile.hh"
 
-VodFile::VodFile()
+VodFile::VodFile(int videoId)
 {
   // TODO Auto-generated constructor stub
-  fd_ = -1;
-  name_ = "";
+  name_ = tools::toString(videoId);
   nbpacket_ = 0;
-  fd_ = open("toto.avi", O_RDONLY); //TODO Name
+  maxnbpacket_ = 0;
+  offset_ = 0;
+  fd_ = open(name_.c_str(), O_RDONLY); //TODO Name
   if (fd_ == -1) //TODO Error
     exit(1);
   loadChunk(avifile::e_opcode::OPCODE_RIFF_AVI);
@@ -21,14 +22,7 @@ VodFile::VodFile()
   loadChunk(avifile::e_opcode::OPCODE_LIST_INFO);
   loadChunk(avifile::e_opcode::OPCODE_JUNK);
   loadChunk(avifile::e_opcode::OPCODE_LIST_MOVI);
-}
-
-VodFile::VodFile(int videoId)
-{
-  videoId_ = videoId;
-  fd_ = -1;
-  name_ = "";
-  nbpacket_ = 0;
+  loadSubChunk();
 }
 
 VodFile::~VodFile()

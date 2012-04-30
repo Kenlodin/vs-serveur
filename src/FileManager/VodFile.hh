@@ -18,6 +18,7 @@
 # include "Chuck.hh"
 # include "FileVideo.hh"
 # include "../Log/Log.hh"
+# include "../Tools/Tools.hh"
 
 # define SIZE_CHUNK_HEADER (sizeof(avifile::s_chunk) - sizeof(void*))
 # define SIZE_SUBCHUNK_HEADER (sizeof(avifile::s_sub_chunk) - sizeof(void*))

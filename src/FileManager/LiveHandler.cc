@@ -33,7 +33,7 @@ LiveFile* LiveHandler::getLive(int videoId)
   std::map<int, std::pair<LiveFile*, int>>::iterator it = lives_.find(videoId);
   LiveFile* live;
   if (it == lives_.end())
-    addLive(videoId);
+    live = addLive(videoId);
   else
   {
     live = it->second.first;
