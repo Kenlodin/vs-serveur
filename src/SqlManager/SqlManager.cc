@@ -159,8 +159,14 @@ SqlManager::getNextsHandlings (int server_id)
 sql_result
 SqlManager::setFileServer (int file_id)
 {
+  return setFileServer (tools::toString<int> (file_id));
+}
+
+sql_result
+SqlManager::setFileServer (std::string file_id)
+{
   std::string req;
   int server_id = Config::getInstance ().getInt ("server_id");
-  req = "INSERT INTO file_server (server_id, file_id) VALUES(" + tools::toString<int> (server_id) + ", " + tools::toString<int> (file_id) + ")";
+  req = "INSERT INTO file_server (server_id, file_id) VALUES(" + tools::toString<int> (server_id) + ", " + file_id + ")";
   return execute (req);
 }

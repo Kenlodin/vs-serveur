@@ -11,14 +11,17 @@
 #include <map>
 #include <iostream>
 #include <boost/thread/mutex.hpp>
+#include <tinyxml.h>
 #include "../Tools/Tools.hh"
+#include "../SqlManager/SqlManager.hh"
 
 class Config
 {
  public:
   static Config& getInstance ();
   void load (std::string file);
-
+  void loadFiles (TiXmlElement* parent);
+  
   void print ();
   bool check ();
   void add (std::string key, int value);

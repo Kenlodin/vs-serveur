@@ -10,7 +10,7 @@
 
 #include <pqxx/pqxx>
 #include <iostream>
-# include <boost/thread/mutex.hpp>
+#include <boost/thread/mutex.hpp>
 #include "../Tools/Tools.hh"
 #include "../Log/Log.hh"
 #include "../Config/Config.hh"
@@ -39,14 +39,15 @@ class SqlManager
  public:
   void addServer (std::string ip, int port);
   std::string addClient (std::string login, std::string password,
-                        std::string public_ip, std::string private_ip,
-                        int bandwith);
+                         std::string public_ip, std::string private_ip,
+                         int bandwith);
 
   sql_result saveClientServerConnection (std::string client_token, int server_id);
   sql_result setHandlings (std::string client_token, int file_id);
   sql_result setFileServer (int file_id);
-  
-  
+  sql_result setFileServer (std::string file_id);
+
+
  public:
   sql_result getThreeServers ();
   sql_result getAllFlux ();

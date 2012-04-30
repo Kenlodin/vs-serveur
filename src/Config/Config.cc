@@ -6,7 +6,6 @@
  */
 
 #include "Config.hh"
-#include <tinyxml.h>
 
 Config&
 Config::getInstance ()
@@ -30,8 +29,25 @@ Config::load (std::string file)
     elt = elt->FirstChildElement ();
   while (elt != nullptr)
   {
-    std::string text = std::string (elt->GetText ());
-    config_.insert (std::pair<std::string, std::string > (elt->ValueStr (), text));
+    if (elt->ValueStr () == "files")
+      loadFiles (elt);
+    else
+    {
+      std::string text = std::string (elt->GetText ());
+      config_.insert (std::pair<std::string, std::string > (elt->ValueStr (), text));
+    }
+    elt = elt->NextSiblingElement ();
+  }
+}
+
+void
+Config::loadFiles (TiXmlElement* parent)
+{
+  TiXmlElement* elt = parent->FirstChildElement ();
+  while (elt != nullptr)
+  {
+    std::string id = std::string (elt->GetText ());
+    SqlManager::getInstance ().setFileServer (id);
     elt = elt->NextSiblingElement ();
   }
 }
@@ -47,7 +63,7 @@ Config::print ()
 bool
 Config::check ()
 {
-//  config_.find ()
+  //  config_.find ()
   return true;
 }
 
