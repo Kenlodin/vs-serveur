@@ -10,9 +10,10 @@
 
 #include <pqxx/pqxx>
 #include <iostream>
+# include <boost/thread/mutex.hpp>
 #include "../Tools/Tools.hh"
 #include "../Log/Log.hh"
-# include <boost/thread/mutex.hpp>
+#include "../Config/Config.hh"
 
 typedef pqxx::result sql_result;
 typedef pqxx::result::tuple sql_tuple;
@@ -36,14 +37,14 @@ class SqlManager
   pqxx::result execute (std::string query);
 
  public:
-  int addServer (std::string ip, int port);
+  void addServer (std::string ip, int port);
   std::string addClient (std::string login, std::string password,
                         std::string public_ip, std::string private_ip,
                         int bandwith);
 
   sql_result saveClientServerConnection (std::string client_token, int server_id);
   sql_result setHandlings (std::string client_token, int file_id);
-  sql_result setFileServer (int file_id, int server_id);
+  sql_result setFileServer (int file_id);
   
   
  public:
