@@ -44,17 +44,46 @@ Config::print ()
     std::cout << i->first << "-" << i->second << std::endl;
 }
 
-int
-Config::getPort ()
-{
-    std::string port = config_.at ("port");
-    int p;
-    tools::fromString (port, p);
-    return p;
-}
-
 bool
 Config::check ()
 {
 //  config_.find ()
+  return true;
+}
+
+void
+Config::add (std::string key, int value)
+{
+  mutex_.lock ();
+  config_.insert (std::pair<std::string, std::string > (key, tools::toString<int> (value)));
+  mutex_.unlock ();
+}
+
+void
+Config::add (std::string key, std::string value)
+{
+  mutex_.lock ();
+  config_.insert (std::pair<std::string, std::string > (key, value));
+  mutex_.unlock ();
+}
+
+int
+Config::getInt (std::string key)
+{
+  int value_int;
+  mutex_.lock ();
+  std::string value_str = config_.at (key);
+  mutex_.unlock ();
+  tools::fromString (value_str, value_int);
+  return value_int;
+}
+
+std::string
+Config::getString (std::string key)
+{
+  std::string value;
+  mutex_.lock ();
+  value = config_.at (key);
+  mutex_.unlock ();
+  return value;
 }
