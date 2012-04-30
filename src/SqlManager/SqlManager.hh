@@ -12,7 +12,7 @@
 #include <iostream>
 #include "../Tools/Tools.hh"
 #include "../Log/Log.hh"
-
+# include <boost/thread/mutex.hpp>
 
 typedef pqxx::result sql_result;
 typedef pqxx::result::tuple sql_tuple;
@@ -60,6 +60,7 @@ class SqlManager
 
  private:
   pqxx::connection* connection_;
+  boost::mutex mutex_;
 } ;
 
 #endif /* SQLMANAGER_HH_ */

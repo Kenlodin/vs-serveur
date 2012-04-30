@@ -6,6 +6,7 @@
  */
 
 #include <sys/param.h>
+#include <boost/thread/pthread/mutex.hpp>
 
 #include "SqlManager.hh"
 #include "../Tools/Tools.hh"
@@ -32,12 +33,13 @@ SqlManager::connect ()
 pqxx::result
 SqlManager::execute (std::string query)
 {
-  query = query;
   //if (connection_->is_open ())
   //{
+  mutex_.lock ();
   pqxx::work w (*connection_);
   pqxx::result r = w.exec (query);
   w.commit ();
+  mutex_.unlock ();
   return r;
   //}
 }
