@@ -146,3 +146,11 @@ SqlManager::getNextsHandlings (int server_id)
   req += "WHERE client_server.server_id='" + tools::toString<int> (server_id) + "'";
   return execute (req);
 }
+
+sql_result
+SqlManager::setFileServer (int file_id, int server_id)
+{
+  std::string req;
+  req = "INSERT INTO file_server (server_id, file_id) VALUES(" + tools::toString<int> (server_id) + ", " + tools::toString<int> (file_id) + ")";
+  return execute (req);
+}

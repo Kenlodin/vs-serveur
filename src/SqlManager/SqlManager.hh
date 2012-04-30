@@ -43,6 +43,8 @@ class SqlManager
 
   sql_result saveClientServerConnection (std::string client_token, int server_id);
   sql_result setHandlings (std::string client_token, int file_id);
+  sql_result setFileServer (int file_id, int server_id);
+  
   
  public:
   sql_result getThreeServers ();
