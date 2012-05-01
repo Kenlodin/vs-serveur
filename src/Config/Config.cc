@@ -6,7 +6,6 @@
  */
 
 #include "Config.hh"
-#include <tinyxml.h>
 
 Config&
 Config::getInstance ()
@@ -19,19 +18,50 @@ Config::getInstance ()
 void
 Config::load (std::string file)
 {
-  TiXmlDocument c (file);
-  if (!c.LoadFile ())
+  c_ = TiXmlDocument (file);
+  if (!c_.LoadFile ())
   {
     std::cerr << "Impossible de charger le fichier de configuration ! " << std::endl;
     std::exit (1);
   }
-  TiXmlElement *elt = c.RootElement ();
+}
+
+void
+Config::loadConfig ()
+{
+  TiXmlElement *elt = c_.RootElement ();
   if (elt != nullptr)
     elt = elt->FirstChildElement ();
   while (elt != nullptr)
   {
-    std::string text = std::string (elt->GetText ());
-    config_.insert (std::pair<std::string, std::string > (elt->ValueStr (), text));
+    if (elt->ValueStr () != "files")
+    {
+      std::string text = std::string (elt->GetText ());
+      config_.insert (std::pair<std::string, std::string > (elt->ValueStr (), text));
+    }
+    elt = elt->NextSiblingElement ();
+  }
+}
+
+void
+Config::loadFiles ()
+{
+  TiXmlElement *elt = c_.RootElement ();
+  if (elt != nullptr)
+    elt = elt->FirstChildElement ();
+  while (elt != nullptr)
+  {
+    if (elt->ValueStr () == "files")
+    {
+      elt = elt->FirstChildElement ();
+      while (elt != nullptr)
+      {
+        std::string id = std::string (elt->GetText ());
+        SqlManager::getInstance ().setFileServer (id);
+        elt = elt->NextSiblingElement ();
+      }
+      return;
+    }
     elt = elt->NextSiblingElement ();
   }
 }
@@ -47,7 +77,7 @@ Config::print ()
 bool
 Config::check ()
 {
-//  config_.find ()
+  //  config_.find ()
   return true;
 }
 

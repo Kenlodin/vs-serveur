@@ -11,13 +11,17 @@
 #include <map>
 #include <iostream>
 #include <boost/thread/mutex.hpp>
+#include <tinyxml.h>
 #include "../Tools/Tools.hh"
+#include "../SqlManager/SqlManager.hh"
 
 class Config
 {
  public:
   static Config& getInstance ();
   void load (std::string file);
+  void loadConfig ();
+  void loadFiles ();
 
   void print ();
   bool check ();
@@ -28,8 +32,7 @@ class Config
 
  private:
   std::map<std::string, std::string> config_;
-
- private:
+  TiXmlDocument c_;
   boost::mutex mutex_;
 
   Config () { };

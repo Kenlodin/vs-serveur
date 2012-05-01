@@ -48,9 +48,9 @@ SqlManager::execute (std::string query)
  * 
  * @param ip
  * @param port
- * @return id of the server
+ * 
  */
-int
+void
 SqlManager::addServer (std::string ip, int port)
 {
   std::string req;
@@ -58,7 +58,7 @@ SqlManager::addServer (std::string ip, int port)
   req = "INSERT INTO servers (ip, port) VALUES ('" + ip + "'," + tools::toString<int> (port) + ") RETURNING id";
   sql_result r = execute (req);
   r.at (0)["id"].to<int>(id);
-  return id;
+  Config::getInstance ().add ("server_id", id);
 }
 
 std::string
@@ -157,9 +157,16 @@ SqlManager::getNextsHandlings (int server_id)
 }
 
 sql_result
-SqlManager::setFileServer (int file_id, int server_id)
+SqlManager::setFileServer (int file_id)
+{
+  return setFileServer (tools::toString<int> (file_id));
+}
+
+sql_result
+SqlManager::setFileServer (std::string file_id)
 {
   std::string req;
-  req = "INSERT INTO file_server (server_id, file_id) VALUES(" + tools::toString<int> (server_id) + ", " + tools::toString<int> (file_id) + ")";
+  int server_id = Config::getInstance ().getInt ("server_id");
+  req = "INSERT INTO file_server (server_id, file_id) VALUES(" + tools::toString<int> (server_id) + ", " + file_id + ")";
   return execute (req);
 }
