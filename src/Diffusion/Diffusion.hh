@@ -60,6 +60,12 @@ class Diffusion: public PacketHandler
 
     // Fonction which link server for live
     int ddLiveLink(sf::Packet& packet, sf::SocketTCP& sock);
+
+    // Receive fragment of video live
+    int ddLiveData(sf::Packet& packet, sf::SocketTCP& sock);
+
+    // Receive fragment of video data
+    int ddVodData(sf::Packet& packet, sf::SocketTCP& sock);
   public:
     // Fonction which send data chuck for client
     int dcData(sf::SocketTCP& sender, Chunk* chuck);

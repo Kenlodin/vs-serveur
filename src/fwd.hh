@@ -117,6 +117,8 @@ namespace DD
     VIDEO_DEMAND,
     PING_PONG,
     LIVE_LINK,
+    LIVE_DATA,
+    VOD_DATA,
     LENGTH
   };
 }

@@ -128,14 +128,15 @@ Client* ClientList::getClient(sf::SocketTCP& sock)
   return c;
 }
 
-void ClientList::addBadClient(sf::SocketTCP& sock)
+void ClientList::addBadClient(sf::SocketTCP& sock, int errorNumber)
 {
   badClientMutex_.lock();
-  badClient_.insert(badClient_.begin(), sock);
+  badClient_.insert(badClient_.begin(),
+      std::pair<sf::SocketTCP, int>(sock, errorNumber));
   badClientMutex_.unlock();
 }
 
-std::list<sf::SocketTCP>& ClientList::getBadClient()
+std::list<std::pair<sf::SocketTCP, int>>& ClientList::getBadClient()
 {
   badClientMutex_.lock();
   return badClient_;
@@ -176,6 +177,6 @@ void ClientList::purgeClient()
 
 void ClientList::getBadClientRelease()
 {
-badClientMutex_.unlock();
+  badClientMutex_.unlock();
 }
 
