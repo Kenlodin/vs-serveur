@@ -37,14 +37,15 @@ Tracker::~Tracker()
 
 int Tracker::routing(unsigned int code, sf::Packet& packet, sf::SocketTCP& sock)
 {
+  int retVal = RETURN_VALUE_ERROR;
   COUTDEBUG(code);
   if (code < CT::LENGTH
-      && (this->*route_[code])(packet, sock) == RETURN_VALUE_GOOD)
+      && (retVal = (this->*route_[code])(packet, sock)) == RETURN_VALUE_GOOD)
     return RETURN_VALUE_GOOD;
   else
   {
     COUTDEBUG("Tracker : mauvais routing.");
-    ClientList::getInstance().addBadClient(sock);
+    ClientList::getInstance().addBadClient(sock, retVal);
     return RETURN_VALUE_ERROR;
   }
 }

@@ -64,10 +64,10 @@ class ClientList
     std::map<sf::SocketTCP, Client*> getClientList() const;
 
     // Add sock which create a problem
-    void addBadClient(sf::SocketTCP& sock);
+    void addBadClient(sf::SocketTCP& sock, int errorNumber);
 
     // get list of bad client and lock it
-    std::list<sf::SocketTCP>& getBadClient();
+    std::list<std::pair<sf::SocketTCP, int>>& getBadClient();
 
     // unlock bad client list
     void getBadClientRelease();
@@ -98,7 +98,7 @@ class ClientList
     std::map<sf::SocketTCP, std::string> privateIpList_;
 
     // List of badClient
-    std::list<sf::SocketTCP> badClient_;
+    std::list<std::pair<sf::SocketTCP, int>> badClient_;
 };
 
 #endif /* CLIENTLIST_HH_ */

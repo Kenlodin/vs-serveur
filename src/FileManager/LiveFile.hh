@@ -11,6 +11,8 @@
 // External include
 # include <boost/thread/mutex.hpp>
 # include <map>
+# include <list>
+# include <SFML/Network.hpp>
 
 // Internal include
 # include "FileVideo.hh"
@@ -31,12 +33,27 @@ class LiveFile : public FileVideo
 
     // Insert a new packet
     void addPacket(int number, Chunk* data);
+
+    // Add linkedServer
+    void addServer(sf::SocketTCP);
+
+    // Remove linkedServer
+    void suppServer(sf::SocketTCP);
+  private:
+    // Forward a packet to linked server
+    void forwardPacket(int number, Chunk* data);
   private:
     // Contain every live packet.
     std::map<int, Chunk*> packets_;
 
     // Mutex for packets_
-    boost::mutex packetsMutex;
+    boost::mutex packetsMutex_;
+
+    // List of linked server
+    std::list<sf::SocketTCP> linkedServer_;
+
+    // Mutex for linkedServer_
+    boost::mutex linkedServerMutex_;
 };
 
 #endif /* LIVEFILE_HH_ */

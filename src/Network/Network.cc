@@ -55,7 +55,7 @@ void Network::routing(sf::Packet& packet, sf::SocketTCP& sock)
   else
   {
     COUTDEBUG("Network : mauvais routing.");
-    ClientList::getInstance().addBadClient(sock);
+    ClientList::getInstance().addBadClient(sock, RETURN_VALUE_ERROR);
   }
 }
 
@@ -72,7 +72,7 @@ void Network::trackerClient(unsigned int route, sf::Packet& packet,
 {
   COUTDEBUG("Tracker --> Client");
   COUTDEBUG("Client : mauvais routing.");
-  ClientList::getInstance().addBadClient(sock);
+  ClientList::getInstance().addBadClient(sock, RETURN_VALUE_ERROR);
   //return RETURN_VALUE_ERROR;
 }
 
@@ -89,7 +89,7 @@ void Network::diffusionClient(unsigned int route, sf::Packet& packet,
 {
   COUTDEBUG("Diffusion --> Client");
   COUTDEBUG("Client : mauvais routing.");
-  ClientList::getInstance().addBadClient(sock);
+  ClientList::getInstance().addBadClient(sock, RETURN_VALUE_ERROR);
   //return RETURN_VALUE_ERROR;
 }
 
@@ -110,14 +110,15 @@ void Network::run()
   COUTDEBUG("Serveur démarré");
   while (true)
   {
-    std::list<sf::SocketTCP>& toRemove =
+    std::list<std::pair<sf::SocketTCP, int>>& toRemove =
         ClientList::getInstance().getBadClient();
     while (!toRemove.empty())
     {
       COUTDEBUG("Suppression d'un client.");
-      sf::SocketTCP& badClient = toRemove.front();
-      ClientList::getInstance().removeClient(badClient);
-      selector.Remove(badClient);
+      std::pair<sf::SocketTCP, int>& badClient = toRemove.front();
+      if (badClient.second == RETURN_VALUE_ERROR)
+        ClientList::getInstance().removeClient(badClient.first);
+      selector.Remove(badClient.first);
       toRemove.pop_front();
     }
     ClientList::getInstance().getBadClientRelease();
@@ -142,7 +143,7 @@ void Network::run()
         if ((status = sock.Receive(packet)) != sf::Socket::Done) // TODO Dec Client
         {
           COUTDEBUG("Deconnection d'un client.");
-          ClientList::getInstance().addBadClient(sock);
+          ClientList::getInstance().addBadClient(sock, RETURN_VALUE_ERROR);
           continue;
         }
         COUTDEBUG("Nouveau packet.");
