@@ -14,11 +14,12 @@ Client::Client(sf::SocketTCP control, sf::SocketTCP*& data, std::string token)
 
 Client::~Client()
 {
-  //if (controlSocket_.IsValid())
+  if (controlSocket_.IsValid())
     controlSocket_.Close();
-  if (dataSocket_ != nullptr)// && dataSocket_->IsValid())
+  if (dataSocket_ != nullptr && dataSocket_->IsValid())
   dataSocket_->Close();
   delete dataSocket_;
+  using_.unlock();
 }
 
 int Client::sendControl(sf::Packet& packet)
