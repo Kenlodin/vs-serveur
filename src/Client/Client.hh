@@ -14,6 +14,7 @@
 
 // Internal include
 # include "../fwd.hh"
+# include "../Log/Log.hh"
 # include "TypeClient.hh"
 
 /*

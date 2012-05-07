@@ -103,7 +103,7 @@ void ClientList::removeClient(sf::SocketTCP& sock)
       temporaryMutex_.unlock();
     }
   }
-  else
+  else if (sock.IsValid())
   {
     sock.Close();
   }

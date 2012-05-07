@@ -76,13 +76,10 @@ int Tracker::ctConnMaster(sf::Packet& packet, sf::SocketTCP& sock)
   std::string publicIp = ClientList::getInstance().getPrivateIp(sock);
   std::string token = SqlManager::getInstance().addClient(login, password,
       privateIp, publicIp, bandwidth);
-  if (token == "")
-    return RETURN_VALUE_ERROR;
-  tcToken(sock, token);
-  if (ClientList::getInstance().addClient(sock, nullptr, token)
+  if (token == "" || ClientList::getInstance().addClient(sock, nullptr, token)
       == RETURN_VALUE_ERROR)
     return RETURN_VALUE_ERROR;
-  return RETURN_VALUE_GOOD;
+  return tcToken(sock, token);
 }
 
 int Tracker::ctConnSlave(sf::Packet& packet, sf::SocketTCP& sock)
@@ -121,8 +118,8 @@ int Tracker::ctAskList(sf::Packet& packet, sf::SocketTCP& sock)
   if (count != 3)
     return RETURN_VALUE_ERROR;
   sql_result res = SqlManager::getInstance().getAllFlux();
-  tcList(sock, res);
-  return RETURN_VALUE_GOOD;
+
+  return tcList(sock, res);
 }
 
 int Tracker::ctAskFlux(sf::Packet& packet, sf::SocketTCP& sock)
@@ -144,7 +141,7 @@ int Tracker::ctAskFlux(sf::Packet& packet, sf::SocketTCP& sock)
   SqlManager::getInstance().setHandlings(client->getToken(), videoId);
   client->unlock();
   sql_result res = SqlManager::getInstance().getThreeServers(); //TODO videoId
-  client->setTypeClient(new VodClient(videoId));
+  client->setTypeClient(new VodClient(videoId)); // TODO
   return tcListDiff(sock, res);
 }
 
@@ -376,7 +373,8 @@ int Tracker::tcMsg(sf::SocketTCP& sender, sf::Int32 numMsg, std::string msg)
 int Tracker::send(sf::SocketTCP& sender, sf::Packet& packet)
 {
   if (sender.Send(packet) == sf::Socket::Done)
+  {
     return RETURN_VALUE_GOOD;
-
+  }
   return RETURN_VALUE_ERROR;
 }
