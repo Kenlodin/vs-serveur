@@ -60,17 +60,25 @@ ClientList& ClientList::getInstance()
   return instance_;
 }
 
-void ClientList::addClient(sf::SocketTCP& control, sf::SocketTCP* data,
+int ClientList::addClient(sf::SocketTCP& control, sf::SocketTCP* data,
     std::string token)
 {
   //Wait token and add in list
   generalMutex_.lock();
+  if (clientList_.find(control) != clientList_.end()
+      || (data && clientList_.find(*data) != clientList_.end())
+      || clientLink_.find(token) != clientLink_.end())
+  {
+    generalMutex_.unlock();
+    return RETURN_VALUE_ERROR;
+  }
   Client* c = new Client(control, data, token);
   clientList_[control] = c;
   if (data != nullptr)
     clientList_[*data] = c;
   clientLink_[token] = c;
   generalMutex_.unlock();
+  return RETURN_VALUE_GOOD;
 }
 
 void ClientList::removeClient(sf::SocketTCP& sock)

@@ -34,7 +34,7 @@ class ClientList
     static ClientList& getInstance();
 
     // Add Client in list
-    void addClient(sf::SocketTCP& control, sf::SocketTCP* data
+    int addClient(sf::SocketTCP& control, sf::SocketTCP* data
         , std::string token);
 
     // Link dataSocket to a client

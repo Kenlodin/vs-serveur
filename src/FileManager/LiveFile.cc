@@ -64,7 +64,7 @@ void LiveFile::forwardPacket(int number, Chunk* data)
   packet << number;
   packet.Append(data->subChunk_, 8);
   packet.Append(data->subChunk_->data, data->subChunk_->size);
-  for (sf::SocketTCP& sock : linkedServer_) //Todo
+  for (sf::SocketTCP& sock : linkedServer_) //Todo dec
   {
     sock.Send(packet);
   }

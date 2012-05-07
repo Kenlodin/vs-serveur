@@ -69,7 +69,8 @@ int Tracker::ctConnMaster(sf::Packet& packet, sf::SocketTCP& sock)
   packet >> bandwidth;
   INCTEST(packet.EndOfPacket(), count)
   COUTDEBUG(
-      "Client --> Tracker : Connection master (" + login + ", " + password + ", " + privateIp + ")");
+      "Client --> Tracker : Connection master (" + login + ", "
+      + password + ", " + privateIp + ")");
   if (count != 5)
     return RETURN_VALUE_ERROR;
   std::string publicIp = ClientList::getInstance().getPrivateIp(sock);
@@ -78,7 +79,9 @@ int Tracker::ctConnMaster(sf::Packet& packet, sf::SocketTCP& sock)
   if (token == "")
     return RETURN_VALUE_ERROR;
   tcToken(sock, token);
-  ClientList::getInstance().addClient(sock, nullptr, token);
+  if (ClientList::getInstance().addClient(sock, nullptr, token)
+      == RETURN_VALUE_ERROR)
+    return RETURN_VALUE_ERROR;
   return RETURN_VALUE_GOOD;
 }
 
@@ -96,7 +99,9 @@ int Tracker::ctConnSlave(sf::Packet& packet, sf::SocketTCP& sock)
     return RETURN_VALUE_ERROR;
   //TODO serverId and return value.
   SqlManager::getInstance().saveClientServerConnection(token, 0);
-  ClientList::getInstance().addClient(sock, nullptr, token);
+  if (ClientList::getInstance().addClient(sock, nullptr, token)
+      == RETURN_VALUE_ERROR)
+    return RETURN_VALUE_ERROR;
   return RETURN_VALUE_GOOD; // We keep control socket in selector
 }
 
