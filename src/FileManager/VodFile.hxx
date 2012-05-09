@@ -23,4 +23,10 @@ avifile::s_chunk* const * VodFile::getFileHeader() const
   return fileHeader_;
 }
 
+inline
+int VodFile::getIsValid() const
+{
+  return isValid_;
+}
+
 #endif /* VODFILE_HXX_ */

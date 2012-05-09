@@ -11,7 +11,7 @@ VodClient::VodClient(int videoId)
 : TypeClient(videoId)
 {
   // TODO Auto-generated constructor stub
-  setFileVideo(new VodFile(videoId));
+  setFileVideo(VodHandler::getInstance().getVod(videoId));
 }
 
 VodClient::~VodClient()

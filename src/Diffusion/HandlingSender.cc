@@ -56,6 +56,13 @@ void HandlingSender::Worker::run()
       client->unlock();
       continue;
     }
+    if (client->getTypeClient() == nullptr
+        || client->getTypeClient()->getFileVideo() == nullptr) // TODO Error
+        {
+          COUTDEBUG(("No video type on client : " + token));
+          client->unlock();
+          continue;
+        }
     if (begin == 0) // TODO Live
     {
       COUTDEBUG("Send header n° :" << begin << " to " + token);

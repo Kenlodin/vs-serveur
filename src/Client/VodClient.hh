@@ -10,8 +10,8 @@
 
 // Internal include
 # include "TypeClient.hh"
-# include "../FileManager/VodFile.hh"
 # include "../FileManager/Chuck.hh"
+# include "../FileManager/VodHandler.hh"
 
 /*
  * Class which implément TypeClient interface for VODclient

@@ -27,7 +27,7 @@ VodFile* VodHandler::getVod(int videoId)
   COUTDEBUG("New VOD n° :" << videoId);
   vodsMutex.lock();
   std::map<int, std::pair<VodFile*, int>>::iterator it = vods_.find(videoId);
-  VodFile* vod;
+  VodFile* vod = nullptr;
   if (it == vods_.end())
   {
     COUTDEBUG("Open VOD n° :" << videoId);
@@ -63,6 +63,11 @@ void VodHandler::leaveVod(int videoId)
 VodFile* VodHandler::addVod(int videoId)
 {
   std::pair<VodFile*, int> element (new VodFile(videoId), 1);
+  if (element.first->getIsValid() == 0)
+  {
+    delete element.first;
+    return nullptr;
+  }
   vods_.insert(std::pair<int,std::pair<VodFile*, int>>(videoId
       , element));
 

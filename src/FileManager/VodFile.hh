@@ -59,7 +59,13 @@ class VodFile : public FileVideo
 
     // Get chunk header
     avifile::s_chunk* const* getFileHeader() const;
+
+    // Return the attribute isValid
+    int getIsValid() const;
   private:
+    // Check is this VodFile is valid
+    int isValid_;
+
     // file descriptor
     int fd_;
 

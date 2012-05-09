@@ -12,21 +12,29 @@ VodFile::VodFile(int videoId)
   // TODO Auto-generated constructor stub
   COUTDEBUG("Init Vod n° :" << videoId);
   name_ = tools::toString(videoId);
+  name_.push_back('.'); // TODO Degeux
+  name_.push_back('a'); // TODO Degeux
+  name_.push_back('v'); // TODO Degeux
+  name_.push_back('i'); // TODO Degeux
   nbpacket_ = 0;
   maxnbpacket_ = 0;
   offset_ = 0;
   fd_ = open(name_.c_str(), O_RDONLY); //TODO Name
   if (fd_ == -1) //TODO Error
   {
+    isValid_ = 0;
     COUTDEBUG("Unable to open : " << name_);
-    exit(1);
   }
-  loadChunk(avifile::e_opcode::OPCODE_RIFF_AVI);
-  loadChunk(avifile::e_opcode::OPCODE_LIST_HDRL);
-  loadChunk(avifile::e_opcode::OPCODE_LIST_INFO);
-  loadChunk(avifile::e_opcode::OPCODE_JUNK);
-  loadChunk(avifile::e_opcode::OPCODE_LIST_MOVI);
-  loadSubChunk();
+  else
+  {
+    isValid_ = 1;
+    loadChunk(avifile::e_opcode::OPCODE_RIFF_AVI);
+    loadChunk(avifile::e_opcode::OPCODE_LIST_HDRL);
+    loadChunk(avifile::e_opcode::OPCODE_LIST_INFO);
+    loadChunk(avifile::e_opcode::OPCODE_JUNK);
+    loadChunk(avifile::e_opcode::OPCODE_LIST_MOVI);
+    loadSubChunk();
+  }
   COUTDEBUG("Init Vod done n° :" << videoId);
 }
 
@@ -49,6 +57,11 @@ VodFile::~VodFile()
 void VodFile::loadSubChunk()
 {
   COUTDEBUG("LoadSubChuck : no:" << nbpacket_ << " offset:" << offset_);
+  if (isValid_ == 0)
+  {
+    COUTDEBUG("LoadSubChunk : BadFile");
+    return;
+  }
   seekPos_[nbpacket_] = offset_;
   nbpacket_++;
   maxnbpacket_ = MAX(nbpacket_, maxnbpacket_);
@@ -69,6 +82,11 @@ void VodFile::loadSubChunk()
 void VodFile::loadChunk(avifile::e_opcode type)
 {
   COUTDEBUG("LoadSubChuck : no:" << nbpacket_ << " offset:" << offset_);
+  if (isValid_ == 0)
+  {
+    COUTDEBUG("LoadChunk : BadFile");
+    return;
+  }
   fileHeader_[type] = reinterpret_cast<avifile::s_chunk*>(malloc(
       sizeof(avifile::s_chunk)));
   read(fd_, fileHeader_[type], SIZE_CHUNK_HEADER);
@@ -94,6 +112,11 @@ void VodFile::loadChunk(avifile::e_opcode type)
 Chunk* VodFile::getPacket(int number)
 {
   COUTDEBUG("GetPacket : no:" << videoId_ << " : no:" << nbpacket_);
+  if (isValid_ == 0)
+  {
+    COUTDEBUG("getPacket : BadFile");
+    return nullptr;
+  }
   actionMutex_.lock();
   if (number > nbpacket_)
     moveUp(number);
@@ -105,6 +128,11 @@ Chunk* VodFile::getPacket(int number)
 
 void VodFile::moveUp(int number)
 {
+  if (isValid_ == 0)
+    {
+      COUTDEBUG("moveUp : BadFile");
+      return;
+    }
   offset_ = seekPos_[maxnbpacket_];
   nbpacket_ = maxnbpacket_;
   int nbToLoad = number - maxnbpacket_;
@@ -117,9 +145,16 @@ void VodFile::moveUp(int number)
 
 void VodFile::moveDown(int number)
 {
+  if (isValid_ == 0)
+    {
+      COUTDEBUG("moveDown : BadFile");
+      return;
+    }
   offset_ = seekPos_[number];
   lseek(fd_, offset_, SEEK_SET);
   nbpacket_ = number;
   loadSubChunk();
 }
+
+
 
