@@ -28,4 +28,7 @@ class LiveClient: public TypeClient
     virtual Chunk* getElement(int number);
 };
 
+//Inline get/set
+# include "LiveClient.hxx"
+
 #endif /* LIVECLIENT_HH_ */

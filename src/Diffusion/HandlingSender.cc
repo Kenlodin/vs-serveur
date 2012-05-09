@@ -46,14 +46,19 @@ void HandlingSender::Worker::run()
     token = t["client_token"].c_str();
     client = ClientList::getInstance().getClient(token);
     if (client == nullptr)
+    {
+      COUTDEBUG(("No client with token = " + token));
       continue;
+    }
     if (client->getDataSocket() == nullptr) // TODO Error
     {
+      COUTDEBUG(("No data socket on client : " + token));
       client->unlock();
       continue;
     }
     if (begin == 0)
     {
+      COUTDEBUG("Send header n° :" << begin << " to " + token);
       FileVideo* video = client->getTypeClient()->getFileVideo();
       for (int i = avifile::e_opcode::OPCODE_RIFF_AVI; i < 5; i++)
         Diffusion::getInstance().dcData(*(client->getDataSocket()), i,
@@ -61,6 +66,7 @@ void HandlingSender::Worker::run()
     }
     for (int nbPacket = begin; nbPacket < end; i++)
     {
+      COUTDEBUG("Send packet n° " << begin << " to " << token);
       Chunk* chuck = client->getTypeClient()->getElement(nbPacket);
       Diffusion::getInstance().dcData(*(client->getDataSocket()), chuck);
     }

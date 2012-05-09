@@ -52,4 +52,22 @@ void Client::setTypeClient(TypeClient* typeClient)
   typeClient_ = typeClient;
 }
 
+inline
+bool Client::tryLock()
+{
+  return using_.try_lock();
+}
+
+inline
+void Client::lock()
+{
+  using_.lock();
+}
+
+inline
+void Client::unlock()
+{
+  using_.unlock();
+}
+
 #endif /* CLIENT_HXX_ */

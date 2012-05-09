@@ -22,9 +22,5 @@ LiveClient::~LiveClient()
   LiveHandler::getInstance().leaveLive(getVideoId());
 }
 
-Chunk* LiveClient::getElement(int number)
-{
-  return getFileVideo()->getPacket(number);
-}
 
 

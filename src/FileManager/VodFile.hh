@@ -90,4 +90,7 @@ class VodFile : public FileVideo
     Chunk* currentPacket_;
 };
 
+// Inline get/set
+# include "VodFile.hxx"
+
 #endif /* FILE_HH_ */

@@ -10,6 +10,7 @@
 VodFile::VodFile(int videoId)
 {
   // TODO Auto-generated constructor stub
+  COUTDEBUG("Init Vod n° :" << videoId);
   name_ = tools::toString(videoId);
   nbpacket_ = 0;
   maxnbpacket_ = 0;
@@ -23,6 +24,7 @@ VodFile::VodFile(int videoId)
   loadChunk(avifile::e_opcode::OPCODE_JUNK);
   loadChunk(avifile::e_opcode::OPCODE_LIST_MOVI);
   loadSubChunk();
+  COUTDEBUG("Init Vod done n° :" << videoId);
 }
 
 VodFile::~VodFile()
@@ -84,11 +86,6 @@ void VodFile::loadChunk(avifile::e_opcode type)
     offset_ += fileHeader_[type]->size;
   }
   offset_ += SIZE_CHUNK_HEADER;
-}
-
-std::string VodFile::getName() const
-{
-  return name_;
 }
 
 avifile::s_chunk* const * VodFile::getFileHeader() const

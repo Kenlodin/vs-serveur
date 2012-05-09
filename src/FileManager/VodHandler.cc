@@ -24,11 +24,15 @@ VodHandler& VodHandler::getInstance()
 
 VodFile* VodHandler::getVod(int videoId)
 {
+  COUTDEBUG("New VOD n° :" << videoId);
   vodsMutex.lock();
   std::map<int, std::pair<VodFile*, int>>::iterator it = vods_.find(videoId);
   VodFile* vod;
   if (it == vods_.end())
+  {
+    COUTDEBUG("Open VOD n° :" << videoId);
     vod = addVod(videoId);
+  }
   else
   {
     vod = it->second.first;
@@ -40,13 +44,17 @@ VodFile* VodHandler::getVod(int videoId)
 
 void VodHandler::leaveVod(int videoId)
 {
+  COUTDEBUG("End VOD n° :" << videoId);
   vodsMutex.lock();
     std::map<int, std::pair<VodFile*, int>>::iterator it = vods_.find(videoId);
     if (it != vods_.end())
     {
       it->second.second--;
       if (it->second.second <= 0)
+      {
+        COUTDEBUG("Close VOD n° :" << videoId);
         vods_.erase(it);
+      }
     } // TODO else error
 }
 

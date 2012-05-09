@@ -29,11 +29,15 @@ LiveHandler& LiveHandler::getInstance()
 
 LiveFile* LiveHandler::getLive(int videoId)
 {
+  COUTDEBUG("New live n° :" << videoId);
   livesMutex.lock();
   std::map<int, std::pair<LiveFile*, int>>::iterator it = lives_.find(videoId);
   LiveFile* live;
   if (it == lives_.end())
+  {
+    COUTDEBUG("New live link n° :" << videoId);
     live = addLive(videoId);
+  }
   else
   {
     live = it->second.first;
@@ -45,13 +49,17 @@ LiveFile* LiveHandler::getLive(int videoId)
 
 void LiveHandler::leaveLive(int videoId)
 {
+  COUTDEBUG("End of live n° :" << videoId);
   livesMutex.lock();
   std::map<int, std::pair<LiveFile*, int>>::iterator it = lives_.find(videoId);
   if (it != lives_.end())
   {
     it->second.second--;
     if (it->second.second <= 0)
+    {
+      COUTDEBUG("End of live deconnection n° :" << videoId);
       lives_.erase(it);
+    }
   } // TODO else error
 }
 

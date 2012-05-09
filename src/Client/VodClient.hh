@@ -29,4 +29,7 @@ class VodClient : public TypeClient
     virtual Chunk* getElement(int number);
 };
 
+// Inline get/set
+# include "VodClient.hxx"
+
 #endif /* VODCLIENT_HH_ */
