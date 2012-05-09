@@ -12,6 +12,7 @@
 # include <fcntl.h>
 # include <unistd.h>
 # include <map>
+# include <boost/thread/mutex.hpp>
 
 // Internal include
 # include "../fwd.hh"
@@ -88,6 +89,9 @@ class VodFile : public FileVideo
 
     // Current chunk
     Chunk* currentPacket_;
+
+    // Mutex for move into file
+    boost::mutex actionMutex_;
 };
 
 // Inline get/set

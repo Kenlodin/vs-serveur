@@ -61,6 +61,7 @@ void LiveHandler::leaveLive(int videoId)
       lives_.erase(it);
     }
   } // TODO else error
+  livesMutex.unlock();
 }
 
 LiveFile* LiveHandler::addLive(int videoId)

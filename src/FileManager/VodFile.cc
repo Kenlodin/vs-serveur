@@ -17,7 +17,10 @@ VodFile::VodFile(int videoId)
   offset_ = 0;
   fd_ = open(name_.c_str(), O_RDONLY); //TODO Name
   if (fd_ == -1) //TODO Error
+  {
+    COUTDEBUG("Unable to open : " << name_);
     exit(1);
+  }
   loadChunk(avifile::e_opcode::OPCODE_RIFF_AVI);
   loadChunk(avifile::e_opcode::OPCODE_LIST_HDRL);
   loadChunk(avifile::e_opcode::OPCODE_LIST_INFO);
@@ -88,19 +91,16 @@ void VodFile::loadChunk(avifile::e_opcode type)
   offset_ += SIZE_CHUNK_HEADER;
 }
 
-avifile::s_chunk* const * VodFile::getFileHeader() const
-{
-  return fileHeader_;
-}
-
 Chunk* VodFile::getPacket(int number)
 {
   COUTDEBUG("GetPacket : no:" << videoId_ << " : no:" << nbpacket_);
+  actionMutex_.lock();
   if (number > nbpacket_)
     moveUp(number);
   else if (number < nbpacket_)
     moveDown(number);
-  return currentPacket_;
+  actionMutex_.unlock();
+  return currentPacket_; // TODO GPb
 }
 
 void VodFile::moveUp(int number)

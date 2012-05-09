@@ -46,16 +46,17 @@ void VodHandler::leaveVod(int videoId)
 {
   COUTDEBUG("End VOD n° :" << videoId);
   vodsMutex.lock();
-    std::map<int, std::pair<VodFile*, int>>::iterator it = vods_.find(videoId);
-    if (it != vods_.end())
+  std::map<int, std::pair<VodFile*, int>>::iterator it = vods_.find(videoId);
+  if (it != vods_.end())
+  {
+    it->second.second--;
+    if (it->second.second <= 0)
     {
-      it->second.second--;
-      if (it->second.second <= 0)
-      {
-        COUTDEBUG("Close VOD n° :" << videoId);
-        vods_.erase(it);
-      }
-    } // TODO else error
+      COUTDEBUG("Close VOD n° :" << videoId);
+      vods_.erase(it);
+    }
+  } // TODO else error
+  vodsMutex.unlock();
 }
 
 

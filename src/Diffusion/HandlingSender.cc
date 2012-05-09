@@ -56,7 +56,7 @@ void HandlingSender::Worker::run()
       client->unlock();
       continue;
     }
-    if (begin == 0)
+    if (begin == 0) // TODO Live
     {
       COUTDEBUG("Send header n° :" << begin << " to " + token);
       FileVideo* video = client->getTypeClient()->getFileVideo();
