@@ -108,6 +108,7 @@ namespace DC
   enum DC
   {
     DATA,
+    MSG,
     LENGTH
   };
 }

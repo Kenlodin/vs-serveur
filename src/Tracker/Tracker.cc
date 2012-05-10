@@ -40,13 +40,22 @@ int Tracker::routing(unsigned int code, sf::Packet& packet, sf::SocketTCP& sock)
 {
   int retVal = RETURN_VALUE_ERROR;
   COUTDEBUG(code);
-  if (code < CT::LENGTH
-      && (retVal = (this->*route_[code])(packet, sock)) == RETURN_VALUE_GOOD)
+  if (code < CT::LENGTH)
+  {
+      if ((retVal = (this->*route_[code])(packet, sock)) == RETURN_VALUE_ERROR)
+      {
+        COUTDEBUG("Tracker : mauvais processing.");
+        ClientList::getInstance().addBadClient(sock, retVal);
+        return retVal;
+      }
     return RETURN_VALUE_GOOD;
+  }
   else
   {
     COUTDEBUG("Tracker : mauvais routing.");
     ClientList::getInstance().addBadClient(sock, retVal);
+    Tracker::getInstance().tcMsg(sock, retVal
+              , std::string("Tracker : Bad command code."));
     return RETURN_VALUE_ERROR;
   }
 }
@@ -73,13 +82,28 @@ int Tracker::ctConnMaster(sf::Packet& packet, sf::SocketTCP& sock)
       "Client --> Tracker : Connection master (" + login + ", "
       + password + ", " + privateIp + ")");
   if (count != 5)
+  {
+    Tracker::getInstance().tcMsg(sock, RETURN_VALUE_ERROR
+          , std::string("Tracker : Bad number of attributes."));
     return RETURN_VALUE_ERROR;
+  }
   std::string publicIp = ClientList::getInstance().getPrivateIp(sock);
   std::string token = SqlManager::getInstance().addClient(login, password,
       privateIp, publicIp, bandwidth);
-  if (token == "" || ClientList::getInstance().addClient(sock, nullptr, token)
-      == RETURN_VALUE_ERROR)
+  if (token == "")
+  {
+    Tracker::getInstance().tcMsg(sock, RETURN_VALUE_ERROR
+              , std::string("Tracker : Empty token."));
     return RETURN_VALUE_ERROR;
+  }
+  if (ClientList::getInstance().addClient(sock, nullptr, token)
+      == RETURN_VALUE_ERROR)
+  {
+    Tracker::getInstance().tcMsg(sock, RETURN_VALUE_ERROR
+              , std::string("Tracker : Client with this token"
+                  " already connected."));
+    return RETURN_VALUE_ERROR;
+  }
   return tcToken(sock, token);
 }
 
@@ -94,12 +118,22 @@ int Tracker::ctConnSlave(sf::Packet& packet, sf::SocketTCP& sock)
   INCTEST(packet.EndOfPacket(), count)
   COUTDEBUG("Client --> Tracker : Connection slave (" + token + ")");
   if (count != 2)
+  {
+    Tracker::getInstance().tcMsg(sock, RETURN_VALUE_ERROR
+            , std::string("Tracker : Bad number of attributes."));
     return RETURN_VALUE_ERROR;
+  }
   //TODO serverId and return value.
-  SqlManager::getInstance().saveClientServerConnection(token, 0);
+  SqlManager::getInstance().saveClientServerConnection(token
+      , Config::getInstance().getInstance().getInt("server_id"));
   if (ClientList::getInstance().addClient(sock, nullptr, token)
       == RETURN_VALUE_ERROR)
+  {
+    Tracker::getInstance().tcMsg(sock, RETURN_VALUE_ERROR
+                  , std::string("Tracker : Client with this token"
+                      " already connected."));
     return RETURN_VALUE_ERROR;
+  }
   return RETURN_VALUE_GOOD; // We keep control socket in selector
 }
 
@@ -117,7 +151,11 @@ int Tracker::ctAskList(sf::Packet& packet, sf::SocketTCP& sock)
   INCTEST(packet.EndOfPacket(), count)
   COUTDEBUG("Client --> Tracker : Ask list");
   if (count != 3)
+  {
+    Tracker::getInstance().tcMsg(sock, RETURN_VALUE_ERROR
+                , std::string("Tracker : Bad number of attributes."));
     return RETURN_VALUE_ERROR;
+  }
   sql_result res = SqlManager::getInstance().getAllFlux();
 
   return tcList(sock, res);
@@ -135,10 +173,18 @@ int Tracker::ctAskFlux(sf::Packet& packet, sf::SocketTCP& sock)
   INCTEST(packet.EndOfPacket(), count)
   COUTDEBUG("Client --> Tracker : Ask flux");
   if (count != 2)
+  {
+    Tracker::getInstance().tcMsg(sock, RETURN_VALUE_ERROR
+                , std::string("Tracker : Bad number of attributes."));
     return RETURN_VALUE_ERROR;
+  }
   client = ClientList::getInstance().getClient(sock);
   if (client == nullptr)
+  {
+    Tracker::getInstance().tcMsg(sock, RETURN_VALUE_ERROR
+                , std::string("Tracker : Unknown client."));
     return RETURN_VALUE_ERROR;
+  }
   SqlManager::getInstance().setHandlings(client->getToken(), videoId);
   client->unlock();
   sql_result res = SqlManager::getInstance().getThreeServers(); //TODO videoId
@@ -154,7 +200,11 @@ int Tracker::ctAskCheck(sf::Packet& packet, sf::SocketTCP& sock)
   INCTEST(packet.EndOfPacket(), count)
   COUTDEBUG("Client --> Tracker : Ask check");
   if (count != 1)
+  {
+    Tracker::getInstance().tcMsg(sock, RETURN_VALUE_ERROR
+                , std::string("Tracker : Bad number of attributes."));
     return RETURN_VALUE_ERROR;
+  }
   return RETURN_VALUE_GOOD;
 }
 
@@ -178,6 +228,8 @@ int Tracker::ctAskPacket(sf::Packet& packet, sf::SocketTCP& sock)
   COUTDEBUG("Client --> Tracker : Ask packet");
   if (count != 3 + nbFrame)
   {
+    Tracker::getInstance().tcMsg(sock, RETURN_VALUE_ERROR
+                , std::string("Tracker : Bad number of attributes."));
     delete frameNumber;
     return RETURN_VALUE_ERROR;
   }
@@ -198,7 +250,11 @@ int Tracker::ctAskRpacket(sf::Packet& packet, sf::SocketTCP& sock)
   INCTEST(packet.EndOfPacket(), count)
   COUTDEBUG("Client --> Tracker : Ask range packet");
   if (count != 3)
+  {
+    Tracker::getInstance().tcMsg(sock, RETURN_VALUE_ERROR
+                , std::string("Tracker : Bad number of attributes."));
     return RETURN_VALUE_ERROR;
+  }
   return RETURN_VALUE_GOOD;
 }
 
@@ -213,7 +269,11 @@ int Tracker::ctAskMove(sf::Packet& packet, sf::SocketTCP& sock)
   INCTEST(packet.EndOfPacket(), count)
   COUTDEBUG("Client --> Tracker : Ask move");
   if (count != 2)
+  {
+    Tracker::getInstance().tcMsg(sock, RETURN_VALUE_ERROR
+        , std::string("Tracker : Bad number of attributes."));
     return RETURN_VALUE_ERROR;
+  }
   return RETURN_VALUE_GOOD;
 }
 
@@ -225,7 +285,11 @@ int Tracker::ctAskDeficient(sf::Packet& packet, sf::SocketTCP& sock)
   INCTEST(packet.EndOfPacket(), count)
   COUTDEBUG("Client --> Tracker : Ask deficient");
   if (count != 1)
+  {
+    Tracker::getInstance().tcMsg(sock, RETURN_VALUE_ERROR
+        , std::string("Tracker : Bad number of attributes."));
     return RETURN_VALUE_ERROR;
+  }
   return RETURN_VALUE_GOOD;
 }
 
@@ -243,7 +307,11 @@ int Tracker::ctAskRem(sf::Packet& packet, sf::SocketTCP& sock)
   INCTEST(packet.EndOfPacket(), count)
   COUTDEBUG("Client --> Tracker : Ask remove");
   if (count != 3)
+  {
+    Tracker::getInstance().tcMsg(sock, RETURN_VALUE_ERROR
+        , std::string("Tracker : Bad number of attributes."));
     return RETURN_VALUE_ERROR;
+  }
   return RETURN_VALUE_GOOD;
 }
 
@@ -255,7 +323,11 @@ int Tracker::ctAskStop(sf::Packet& packet, sf::SocketTCP& sock)
   INCTEST(packet.EndOfPacket(), count)
   COUTDEBUG("Client --> Tracker : Ask stop");
   if (count != 1)
+  {
+    Tracker::getInstance().tcMsg(sock, RETURN_VALUE_ERROR
+        , std::string("Tracker : Bad number of attributes."));
     return RETURN_VALUE_ERROR;
+  }
   return RETURN_VALUE_GOOD;
 }
 
@@ -267,7 +339,11 @@ int Tracker::ctDec(sf::Packet& packet, sf::SocketTCP& sock)
   INCTEST(packet.EndOfPacket(), count)
   COUTDEBUG("Client --> Tracker : Deconnection");
   if (count != 1)
+  {
+    Tracker::getInstance().tcMsg(sock, RETURN_VALUE_ERROR
+        , std::string("Tracker : Bad number of attributes."));
     return RETURN_VALUE_ERROR;
+  }
   return RETURN_VALUE_GOOD;
 }
 
@@ -278,8 +354,12 @@ int Tracker::ctPing(sf::Packet& packet, sf::SocketTCP& sock)
   // Extract content of packet
   INCTEST(packet.EndOfPacket(), count)
   COUTDEBUG("Client --> Tracker : Ping");
-    if (count != 1)
-      return RETURN_VALUE_ERROR;
+  if (count != 1)
+  {
+    Tracker::getInstance().tcMsg(sock, RETURN_VALUE_ERROR
+        , std::string("Tracker : Bad number of attributes."));
+    return RETURN_VALUE_ERROR;
+  }
   return tcPing(sock);
 }
 
@@ -379,7 +459,7 @@ int Tracker::tcMsg(sf::SocketTCP& sender, sf::Int32 numMsg, std::string msg)
   packet << opcode;
   packet << numMsg;
   packet << msg;
-  COUTDEBUG("Tracker --> Client : send msg");
+  COUTDEBUG("Tracker --> Client : send msg : " << msg);
   return send(sender, packet);
 }
 

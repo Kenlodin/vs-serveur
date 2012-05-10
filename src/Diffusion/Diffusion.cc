@@ -31,16 +31,22 @@ int Diffusion::routing(unsigned int code, sf::Packet& packet,
 {
   int retVal = RETURN_VALUE_ERROR;
   COUTDEBUG(code);
-  if (code < CD::LENGTH
-      && (retVal = (this->*route_[code])(packet, sock)) == RETURN_VALUE_GOOD)
+  if (code < CD::LENGTH)
+  {
+      if ((retVal = (this->*route_[code])(packet, sock)) == RETURN_VALUE_ERROR)
+      {
+        COUTDEBUG("Diffusion : mauvais processing.");
+        ClientList::getInstance().addBadClient(sock, retVal);
+        return retVal;
+      }
     return RETURN_VALUE_GOOD;
+  }
   else
   {
     COUTDEBUG("Diffusion : mauvais routing.");
     ClientList::getInstance().addBadClient(sock, retVal);
-    if (code >= DD::LENGTH)
-          Tracker::getInstance().tcMsg(sock, retVal
-              , std::string("Bad command code."));
+    dcMsg(sock, retVal
+              , std::string("Diffusion : Bad command code."));
     return RETURN_VALUE_ERROR;
   }
 }
@@ -50,16 +56,22 @@ int Diffusion::routing_internal(unsigned int code, sf::Packet& packet,
 {
   int retVal = RETURN_VALUE_ERROR;
   COUTDEBUG(code);
-  if (code < DD::LENGTH
-      && (retVal = (this->*route_[code])(packet, sock)) == RETURN_VALUE_GOOD)
+  if (code < DD::LENGTH)
+  {
+      if ((retVal = (this->*route_[code])(packet, sock)) == RETURN_VALUE_ERROR)
+      {
+        COUTDEBUG("Diffusion : mauvais processing interne.");
+        ClientList::getInstance().addBadClient(sock, retVal);
+        return retVal;
+      }
     return RETURN_VALUE_GOOD;
+  }
   else
   {
     COUTDEBUG("Diffusion : mauvais routing interne.");
     ClientList::getInstance().addBadClient(sock, retVal);
-    if (code >= DD::LENGTH)
-      Tracker::getInstance().tcMsg(sock, retVal
-          , std::string("Bad command code."));
+    dcMsg(sock, retVal
+          , std::string("Diffusion : Bad command code."));
     return RETURN_VALUE_ERROR;
   }
 }
@@ -79,8 +91,8 @@ int Diffusion::ddVideoDemand(sf::Packet& packet, sf::SocketTCP& sock)
   COUTDEBUG("Diffusion --> Diffusion : Video Demand");
   if (count != 3)
   {
-    Tracker::getInstance().tcMsg(sock, RETURN_VALUE_ERROR
-              , std::string("Bad number of attributes."));
+    dcMsg(sock, RETURN_VALUE_ERROR
+              , std::string("Diffusion : Bad number of attributes."));
     return RETURN_VALUE_ERROR;
   }
   return RETURN_VALUE_SUPPRESS;
@@ -98,8 +110,8 @@ int Diffusion::ddPingPong(sf::Packet& packet, sf::SocketTCP& sock)
   COUTDEBUG("Diffusion --> Diffusion : Ping Pong");
   if (count != 2)
   {
-    Tracker::getInstance().tcMsg(sock, RETURN_VALUE_ERROR
-      , std::string("Bad number of attributes."));
+    dcMsg(sock, RETURN_VALUE_ERROR
+      , std::string("Diffusion : Bad number of attributes."));
     return RETURN_VALUE_ERROR;
   }
   return RETURN_VALUE_SUPPRESS;
@@ -119,14 +131,14 @@ int Diffusion::cdToken(sf::Packet& packet, sf::SocketTCP& sock)
   if (ClientList::getInstance().link(newSocket, token) == RETURN_VALUE_ERROR)
   {
     delete newSocket;
-    Tracker::getInstance().tcMsg(sock, RETURN_VALUE_ERROR
-              , std::string("Unknown client for connection to diffusion"));
+    dcMsg(sock, RETURN_VALUE_ERROR
+        , std::string("Diffusion : Unknown client for connection to diffusion"));
   }
   if (count != 2)
   {
     delete newSocket;
-    Tracker::getInstance().tcMsg(sock, RETURN_VALUE_ERROR
-          , std::string("Bad number of attributes."));
+    dcMsg(sock, RETURN_VALUE_ERROR
+          , std::string("Diffusion : Bad number of attributes."));
     return RETURN_VALUE_ERROR;
   }
   return RETURN_VALUE_SUPPRESS;
@@ -147,8 +159,8 @@ int Diffusion::ddLiveLink(sf::Packet& packet, sf::SocketTCP& sock)
   COUTDEBUG("Diffusion --> Diffusion : Live Link");
   if (count != 3)
   {
-    Tracker::getInstance().tcMsg(sock, RETURN_VALUE_ERROR
-          , std::string("Bad number of attributes."));
+    dcMsg(sock, RETURN_VALUE_ERROR
+          , std::string("Diffusion : Bad number of attributes."));
     return RETURN_VALUE_ERROR;
   }
   LiveHandler::getInstance().getLive(videoId)->addServer(sock);
@@ -177,6 +189,19 @@ int Diffusion::dcData(sf::SocketTCP& sender, int number, Chunk* chuck)
   return send(sender, packet);
 }
 
+int Diffusion::dcMsg(sf::SocketTCP& sender, sf::Int32 numMsg, std::string msg)
+{
+  sf::Packet packet;
+  sf::Uint16 opcode = MERGE_OPCODE(ConnexionType::DIFFUSION_CLIENT, DC::MSG);
+
+  // Create packet
+  packet << opcode;
+  packet << numMsg;
+  packet << msg;
+  COUTDEBUG("Diffusion --> Client : send msg : " << msg);
+  return send(sender, packet);
+}
+
 int Diffusion::ddLiveData(sf::Packet& packet, sf::SocketTCP& sock)
 {
   sf::Int32 videoId;
@@ -197,8 +222,8 @@ int Diffusion::ddLiveData(sf::Packet& packet, sf::SocketTCP& sock)
   memcpy(data->subChunk_->data, packet.GetData() + 8, data->subChunk_->size);
   if (count != 5)
   {
-    Tracker::getInstance().tcMsg(sock, RETURN_VALUE_ERROR
-          , std::string("Bad number of attributes."));
+    dcMsg(sock, RETURN_VALUE_ERROR
+          , std::string("Diffusion : Bad number of attributes."));
     return RETURN_VALUE_ERROR;
   }
   LiveHandler::getInstance().getLive(videoId)->addPacket(number, data);
@@ -225,8 +250,8 @@ int Diffusion::ddVodData(sf::Packet& packet, sf::SocketTCP& sock)
     memcpy(data->subChunk_->data, packet.GetData() + 8, data->subChunk_->size);
     if (count != 5)
     {
-      Tracker::getInstance().tcMsg(sock, RETURN_VALUE_ERROR
-            , std::string("Bad number of attributes."));
+      dcMsg(sock, RETURN_VALUE_ERROR
+            , std::string("Diffusion : Bad number of attributes."));
       return RETURN_VALUE_ERROR;
     }
     //VodHandler::getInstance().getVod(videoId)->addPacket(number, data);

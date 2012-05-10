@@ -93,11 +93,11 @@ class Tracker: public PacketHandler
     // Manage packet tracker->client : list new diffusion
     int tcListNDiff(sf::SocketTCP& sender, sql_result sqlResult);
 
-    // Send ping respond
-    int tcPing(sf::SocketTCP& sender);
-public:
     // Manage packet tracker->client : message
     int tcMsg(sf::SocketTCP& sender, sf::Int32 numMsg, std::string msg);
+
+    // Send ping respond
+    int tcPing(sf::SocketTCP& sender);
 };
 
 #endif /* TRACKER_HH_ */

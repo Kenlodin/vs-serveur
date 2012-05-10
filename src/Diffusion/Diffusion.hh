@@ -49,6 +49,9 @@ class Diffusion: public PacketHandler
     // Send packet with sender socket
     int send(sf::SocketTCP& sender, sf::Packet& packet);
 
+    // Send message on error
+    int dcMsg(sf::SocketTCP& sender, sf::Int32 numMsg, std::string msg);
+
     // Fonction handler //
     //Fonction which receive just token
     int cdToken(sf::Packet& packet, sf::SocketTCP& sock);
