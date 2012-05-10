@@ -105,6 +105,9 @@ void ClientList::removeClient(sf::SocketTCP& sock)
   }
   else if (sock.IsValid())
   {
+    privateIpMutex_.lock();
+    privateIpList_.erase(sock);
+    privateIpMutex_.unlock();
     sock.Close();
   }
   generalMutex_.unlock();

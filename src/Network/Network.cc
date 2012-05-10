@@ -116,14 +116,14 @@ void Network::run()
     {
       COUTDEBUG("Suppression d'un client.");
       std::pair<sf::SocketTCP, int>& badClient = toRemove.front();
+      selector.Remove(badClient.first);
       if (badClient.second == RETURN_VALUE_ERROR)
         ClientList::getInstance().removeClient(badClient.first);
-      selector.Remove(badClient.first);
       toRemove.pop_front();
     }
     ClientList::getInstance().getBadClientRelease();
 
-    unsigned int nb = selector.Wait(0.5);
+    unsigned int nb = selector.Wait(1);
     for (unsigned int i = 0; i < nb; i++)
     {
       sf::SocketTCP sock = selector.GetSocketReady(i);
