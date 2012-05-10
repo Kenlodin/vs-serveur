@@ -68,7 +68,7 @@ class Diffusion: public PacketHandler
     int ddVodData(sf::Packet& packet, sf::SocketTCP& sock);
   public:
     // Fonction which send data chuck for client
-    int dcData(sf::SocketTCP& sender, Chunk* chuck);
+    int dcData(sf::SocketTCP& sender, int number, Chunk* chuck);
 
     // Fonction which send data headers for client
     int dcData(sf::SocketTCP& sender, int code, avifile::s_chunk* headers);

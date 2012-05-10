@@ -69,15 +69,15 @@ void HandlingSender::Worker::run()
     {
       COUTDEBUG("Send header n° :" << begin << " to " + token);
       FileVideo* video = client->getTypeClient()->getFileVideo();
-      for (int i = avifile::e_opcode::OPCODE_RIFF_AVI; i < 5; i++)
+      for (int i = avifile::e_opcode::AVI_RIFF_AVI; i < 5; i++)
         Diffusion::getInstance().dcData(*(client->getDataSocket()), i,
             video->getFileHeader()[i]);
     }
     for (int nbPacket = begin; nbPacket < end; i++)
     {
-      COUTDEBUG("Send packet n° " << begin << " to " << token);
+      COUTDEBUG("Send packet n° " << nbPacket << " to " << token);
       Chunk* chuck = client->getTypeClient()->getElement(nbPacket);
-      Diffusion::getInstance().dcData(*(client->getDataSocket()), chuck);
+      Diffusion::getInstance().dcData(*(client->getDataSocket()), nbPacket, chuck);
     }
     client->unlock();
   }

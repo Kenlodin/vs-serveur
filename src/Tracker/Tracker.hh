@@ -74,6 +74,9 @@ class Tracker: public PacketHandler
 
     // Manage packet client->tracker : Deconnection
     int ctDec(sf::Packet& packet, sf::SocketTCP& sock);
+
+    // Send ping respond
+    int ctPing(sf::Packet& packet, sf::SocketTCP& sock);
   private:
     // Send a packet by sender
     int send(sf::SocketTCP& sender, sf::Packet& packet);
@@ -92,6 +95,9 @@ class Tracker: public PacketHandler
 
     // Manage packet tracker->client : message
     int tcMsg(sf::SocketTCP& sender, sf::Int32 numMsg, std::string msg);
+
+    // Send ping respond
+    int tcPing(sf::SocketTCP& sender);
 };
 
 #endif /* TRACKER_HH_ */

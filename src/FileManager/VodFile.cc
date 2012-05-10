@@ -30,11 +30,11 @@ VodFile::VodFile(int videoId)
   else
   {
     isValid_ = 1;
-    loadChunk(avifile::e_opcode::OPCODE_RIFF_AVI);
-    loadChunk(avifile::e_opcode::OPCODE_LIST_HDRL);
-    loadChunk(avifile::e_opcode::OPCODE_LIST_INFO);
-    loadChunk(avifile::e_opcode::OPCODE_JUNK);
-    loadChunk(avifile::e_opcode::OPCODE_LIST_MOVI);
+    loadChunk(avifile::e_opcode::AVI_RIFF_AVI);
+    loadChunk(avifile::e_opcode::AVI_LIST_HDRL);
+    loadChunk(avifile::e_opcode::AVI_LIST_INFO);
+    loadChunk(avifile::e_opcode::AVI_JUNK);
+    loadChunk(avifile::e_opcode::AVI_LIST_MOVI);
     loadSubChunk();
   }
   COUTDEBUG("Init Vod done n° :" << videoId);
@@ -99,8 +99,8 @@ void VodFile::loadChunk(avifile::e_opcode type)
   {
     videoLength_ = fileHeader_[type]->size;
   }
-  if (type != avifile::e_opcode::OPCODE_RIFF_AVI
-      & type != avifile::e_opcode::OPCODE_LIST_MOVI)
+  if (type != avifile::e_opcode::AVI_RIFF_AVI
+      && type != avifile::e_opcode::AVI_LIST_MOVI)
   {
     fileHeader_[type]->data = malloc(
         fileHeader_[type]->size - sizeof(avifile::u32));

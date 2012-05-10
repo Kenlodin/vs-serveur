@@ -25,12 +25,12 @@ namespace avifile
   typedef unsigned char u8;
   typedef enum
   {
-    OPCODE_RIFF_AVI,
-    OPCODE_LIST_HDRL,
-    OPCODE_LIST_INFO,
-    OPCODE_JUNK,
-    OPCODE_LIST_MOVI,
-    OPCODE_CHUNK
+    AVI_RIFF_AVI,
+    AVI_LIST_HDRL,
+    AVI_LIST_INFO,
+    AVI_JUNK,
+    AVI_LIST_MOVI,
+    AVI_CHUNK
   } e_opcode;
   typedef struct
   {
@@ -75,6 +75,7 @@ namespace CT
     ASK_REM,
     ASK_STOP,
     DEC,
+    PING,
     LENGTH
   };
 }
@@ -88,6 +89,7 @@ namespace TC
     LIST_DIFF,
     LIST_NDIFF,
     MSG,
+    PING,
     LENGTH
   };
 }

@@ -137,18 +137,19 @@ Diffusion& Diffusion::getInstance()
   return instance_;
 }
 
-int Diffusion::dcData(sf::SocketTCP& sender, Chunk* chuck)
+int Diffusion::dcData(sf::SocketTCP& sender, int number, Chunk* chuck)
 {
   sf::Packet packet;
   sf::Int16 opcode = MERGE_OPCODE(ConnexionType::DIFFUSION_CLIENT, DC::DATA);
-  sf::Uint8 type = avifile::e_opcode::OPCODE_CHUNK;
+  sf::Uint32 type = avifile::e_opcode::AVI_CHUNK;
 
   packet << opcode;
   packet << type;
+  packet << number;
   packet.Append(chuck->subChunk_, 8);
   packet.Append(chuck->subChunk_->data, chuck->subChunk_->size);
   COUTDEBUG("Diffusion --> Client : Data");
-  return RETURN_VALUE_GOOD;
+  return send(sender, packet);
 }
 
 int Diffusion::ddLiveData(sf::Packet& packet, sf::SocketTCP& sock)
@@ -213,7 +214,7 @@ int Diffusion::dcData(sf::SocketTCP& sender, int code,
   if (headers->data)
     packet.Append(headers->data, headers->size - sizeof(avifile::u32));
   COUTDEBUG("Diffusion --> Client : Data");
-  return RETURN_VALUE_GOOD;
+  return send(sender, packet);
 }
 
 int Diffusion::send(sf::SocketTCP& sender, sf::Packet& packet)

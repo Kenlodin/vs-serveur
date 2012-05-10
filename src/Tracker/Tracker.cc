@@ -24,7 +24,8 @@ Tracker::Tracker()
         &Tracker::ctAskDeficient,
         &Tracker::ctAskRem,
         &Tracker::ctAskStop,
-        &Tracker::ctDec, })
+        &Tracker::ctDec,
+        &Tracker::ctPing, })
 {
   // TODO Auto-generated constructor stub
 
@@ -270,6 +271,18 @@ int Tracker::ctDec(sf::Packet& packet, sf::SocketTCP& sock)
   return RETURN_VALUE_GOOD;
 }
 
+int Tracker::ctPing(sf::Packet& packet, sf::SocketTCP& sock)
+{
+  int count = 0;
+
+  // Extract content of packet
+  INCTEST(packet.EndOfPacket(), count)
+  COUTDEBUG("Client --> Tracker : Ping");
+    if (count != 1)
+      return RETURN_VALUE_ERROR;
+  return tcPing(sock);
+}
+
 int Tracker::tcToken(sf::SocketTCP& sender, std::string token)
 {
   sf::Packet packet;
@@ -370,6 +383,17 @@ int Tracker::tcMsg(sf::SocketTCP& sender, sf::Int32 numMsg, std::string msg)
   return send(sender, packet);
 }
 
+int Tracker::tcPing(sf::SocketTCP& sender)
+{
+  sf::Packet packet;
+  sf::Uint16 opcode = MERGE_OPCODE(ConnexionType::TRACKER_CLIENT, TC::PING);
+
+  // Create packet
+  packet << opcode;
+  COUTDEBUG("Tracker --> Client : send ping");
+  return send(sender, packet);
+}
+
 int Tracker::send(sf::SocketTCP& sender, sf::Packet& packet)
 {
   if (sender.Send(packet) == sf::Socket::Done)
@@ -378,3 +402,5 @@ int Tracker::send(sf::SocketTCP& sender, sf::Packet& packet)
   }
   return RETURN_VALUE_ERROR;
 }
+
+
