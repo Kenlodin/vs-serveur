@@ -13,6 +13,7 @@
 # include "../FileManager/Chuck.hh"
 # include "../fwd.hh"
 # include "../Log/Log.hh"
+# include "../Tracker/Tracker.hh"
 
 /*
  * Class which implement interface PacketHandler for the routing of packet
