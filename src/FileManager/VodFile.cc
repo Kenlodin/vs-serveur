@@ -16,6 +16,7 @@ VodFile::VodFile(int videoId)
   name_.push_back('a'); // TODO Degeux
   name_.push_back('v'); // TODO Degeux
   name_.push_back('i'); // TODO Degeux
+  currentPacket_->subChunk_ = nullptr;
   nbpacket_ = 0;
   maxnbpacket_ = 0;
   offset_ = 0;
@@ -81,7 +82,7 @@ void VodFile::loadSubChunk()
 
 void VodFile::loadChunk(avifile::e_opcode type)
 {
-  COUTDEBUG("LoadSubChuck : no:" << nbpacket_ << " offset:" << offset_);
+  COUTDEBUG("LoadChuck : no:" << type << " offset:" << offset_);
   if (isValid_ == 0)
   {
     COUTDEBUG("LoadChunk : BadFile");
