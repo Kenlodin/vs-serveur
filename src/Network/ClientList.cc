@@ -40,13 +40,17 @@ std::map<sf::SocketTCP, Client*> ClientList::getClientList() const
 
 int ClientList::link(sf::SocketTCP* data, std::string token)
 {
+  std::map<std::string, Client*>::iterator it;
+  Client* c = nullptr;
+
   generalMutex_.lock();
-  Client* c = clientLink_[token];
-  if (c == nullptr)
+  it = clientLink_.find(token);
+  if (it  == clientLink_.end())
   {
     generalMutex_.unlock();
     return RETURN_VALUE_ERROR;
   }
+  c = it->second;
   clientList_[*data] = c;
   c->setDataSocket(data);
   generalMutex_.unlock();
