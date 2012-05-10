@@ -55,6 +55,9 @@ class SqlManager
   sql_result getNextsHandlings (int server_id);
 
  public:
+  void disconnectServer (int server_id);
+  
+ public:
   static SqlManager&
   getInstance ();
 
