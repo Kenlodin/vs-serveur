@@ -88,9 +88,9 @@ SqlManager::addClient (std::string login, std::string password,
 sql_result
 SqlManager::saveClientServerConnection (std::string client_token, int server_id)
 {
-  std::string req = "INSERT INTO client_server (client_id, server_id, created) VALUES (";
+  std::string req = "INSERT INTO client_server (client_id, server_id, created) VALUES ('";
   req += client_token;
-  req += ", ";
+  req += "', ";
   req += tools::toString<int> (server_id);
   req += ", 0)";
   return execute (req);
