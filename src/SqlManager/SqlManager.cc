@@ -55,6 +55,7 @@ SqlManager::addServer (std::string ip, int port)
 {
   std::string req;
   int id;
+  execute ("DELETE FROM servers WHERE ip='"+ ip +"'");
   req = "INSERT INTO servers (ip, port) VALUES ('" + ip + "'," + tools::toString<int> (port) + ") RETURNING id";
   sql_result r = execute (req);
   r.at (0)["id"].to<int>(id);
@@ -169,4 +170,10 @@ SqlManager::setFileServer (std::string file_id)
   int server_id = Config::getInstance ().getInt ("server_id");
   req = "INSERT INTO file_server (server_id, file_id) VALUES(" + tools::toString<int> (server_id) + ", " + file_id + ")";
   return execute (req);
+}
+
+void
+SqlManager::disconnectServer (int server_id)
+{
+  execute ("DELETE FROM servers WHERE id='"+ tools::toString<int> (server_id) +"'");
 }
