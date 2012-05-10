@@ -37,9 +37,11 @@ void HandlingSender::Worker::run()
   int begin;
   int end;
   std::string token;
-  sql_result res = SqlManager::getInstance().getNextsHandlings(0); //TODO severId
+  sql_result res = SqlManager::getInstance().getNextsHandlings(
+      Config::getInstance ().getInt ("server_id"));
   for (unsigned int i = 0; i < res.size(); i++)
   {
+    COUTDEBUG(("Get Work to send data"));
     sql_tuple t = res.at(i);
     begin = atoi(t["packet_begin"].c_str());
     end = atoi(t["packet_end"].c_str());

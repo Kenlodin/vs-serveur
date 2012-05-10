@@ -15,6 +15,7 @@
 # include "../FileManager/Chuck.hh"
 # include "../fwd.hh"
 # include "Diffusion.hh"
+# include "../Config/Config.hh"
 
 /*
  * Pool of thread which send data for client
