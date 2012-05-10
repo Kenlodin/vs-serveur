@@ -100,33 +100,29 @@ SqlManager::saveClientServerConnection (std::string client_token, int server_id)
  * @todo : Transformer en procedure stocké
  * @param client_token
  * @param file_id
- * @return 
  */
-sql_result
+void
 SqlManager::setHandlings (std::string client_token, int file_id)
 {
+  int nb_packet;
+  int length;
+  std::string str_nb_packet;
   sql_result r = execute ("SELECT * FROM \"files\" WHERE id='" + tools::toString<int> (file_id) + "'");
   if (r.size () > 0)
-  {
-    int nb_packet;
-    int length;
-    
+  { 
     tools::fromString (r.at (0)["nb_packet"].c_str (), nb_packet);
     tools::fromString (r.at (0)["length"].c_str (), length);
+    str_nb_packet = std::string(r.at (0)["nb_packet"].c_str ());
     
     int coeff = ((float) nb_packet / (float)length) * 10;
     int date = static_cast<int> (time (0));
     
-    for (int i = 0; i < nb_packet; i += 10)
-    {
-      std::string req = "INSERT INTO client_handlings (client_token, file_id, date, packet_begin, packet_end) VALUES ('" +
-        client_token + "', " + tools::toString<int> (file_id) + ", " + tools::toString<int> (date) +
-        ", " + tools::toString<int> (i) + ", " + tools::toString<int> (i + 9) + ")";
-      date += coeff;
-      execute (req);
-    }
+    execute ("select set_handlings ("+ str_nb_packet + ", "
+                                     + tools::toString<int> (date) + ", "
+                                     + tools::toString<int> (coeff) + ", "
+                                     + tools::toString<int> (file_id) + ", '"
+                                     + client_token + "')");
   }
-  return r;
 }
 
 sql_result
