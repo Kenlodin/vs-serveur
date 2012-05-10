@@ -38,13 +38,13 @@ namespace avifile
       u32 size;
       char name[4];
       void* data;
-  } s_chunk;
+  }__attribute__((packed)) s_chunk;
   typedef struct
-      {
-          char fcc[4];
-          u32 size;
-          void *data;
-      }__attribute__((packed)) s_sub_chunk;
+  {
+      char fcc[4];
+      u32 size;
+      void *data;
+  }__attribute__((packed)) s_sub_chunk;
 }
 
 namespace ConnexionType
