@@ -11,7 +11,7 @@ VodFile::VodFile(int videoId)
 {
   // TODO Auto-generated constructor stub
   COUTDEBUG("Init Vod n° :" << videoId);
-  name_ = tools::toString(videoId);
+  name_ = "movie/" + tools::toString(videoId);
   name_.push_back('.'); // TODO Degeux
   name_.push_back('a'); // TODO Degeux
   name_.push_back('v'); // TODO Degeux
@@ -97,8 +97,8 @@ void VodFile::loadChunk(avifile::e_opcode type)
   {
     videoLength_ = fileHeader_[type]->size;
   }
-  if (type == avifile::e_opcode::OPCODE_RIFF_AVI
-      || type == avifile::e_opcode::OPCODE_LIST_MOVI)
+  if (type != avifile::e_opcode::OPCODE_RIFF_AVI
+      & type != avifile::e_opcode::OPCODE_LIST_MOVI)
   {
     fileHeader_[type]->data = malloc(
         fileHeader_[type]->size - sizeof(avifile::u32));
