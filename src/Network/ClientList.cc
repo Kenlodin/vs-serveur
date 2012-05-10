@@ -113,9 +113,16 @@ void ClientList::removeClient(sf::SocketTCP& sock)
 
 Client* ClientList::getClient(sf::SocketTCP* sock)
 {
+  std::map<sf::SocketTCP, Client*>::iterator it;
+  Client* c = nullptr;
+
   generalMutex_.lock();
-  Client* c = clientList_[*sock];
-  c->lock();
+  it = clientList_.find(*sock);
+  if (it != clientList_.end())
+  {
+    c = it->second;
+    c->lock();
+  }
   generalMutex_.unlock();
   return c;
 }
@@ -136,7 +143,7 @@ Client* ClientList::getClient(sf::SocketTCP& sock)
   return c;
 }
 
-void ClientList::addBadClient(sf::SocketTCP& sock, int errorNumber)
+void ClientList::addBadClient(sf::SocketTCP sock, int errorNumber)
 {
   badClientMutex_.lock();
   badClient_.insert(badClient_.begin(),
@@ -174,11 +181,11 @@ void ClientList::purgeClient()
   for (unsigned int i = 0; i < length; i++)
   {
     c = temporaryClient_.front();
-    temporaryClient_.pop_front();
     if (c->tryLock())
       delete c;
     else
       temporaryClient_.insert(temporaryClient_.end(), c);
+    temporaryClient_.pop_front();
   }
   temporaryMutex_.unlock();
 }

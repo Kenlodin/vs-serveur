@@ -16,6 +16,7 @@ VodFile::VodFile(int videoId)
   name_.push_back('a'); // TODO Degeux
   name_.push_back('v'); // TODO Degeux
   name_.push_back('i'); // TODO Degeux
+  currentPacket_ = new Chunk();
   currentPacket_->subChunk_ = nullptr;
   nbpacket_ = 0;
   maxnbpacket_ = 0;

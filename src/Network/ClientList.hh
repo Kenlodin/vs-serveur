@@ -64,7 +64,7 @@ class ClientList
     std::map<sf::SocketTCP, Client*> getClientList() const;
 
     // Add sock which create a problem
-    void addBadClient(sf::SocketTCP& sock, int errorNumber);
+    void addBadClient(sf::SocketTCP sock, int errorNumber);
 
     // get list of bad client and lock it
     std::list<std::pair<sf::SocketTCP, int>>& getBadClient();
