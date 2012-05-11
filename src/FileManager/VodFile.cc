@@ -59,9 +59,7 @@ void VodFile::loadSubChunk()
     COUTDEBUG("LoadSubChunk : BadFile");
     return;
   }
-  seekPos_[nbpacket_] = offset_;
   nbpacket_++;
-  maxnbpacket_ = MAX(nbpacket_, maxnbpacket_);
   currentPacket_->clear();
   currentPacket_->subChunk_ = reinterpret_cast<avifile::s_sub_chunk*>(malloc(
       sizeof(avifile::s_sub_chunk)));
@@ -74,6 +72,11 @@ void VodFile::loadSubChunk()
       MOD2(currentPacket_->subChunk_->size));
   offset_ += SIZE_SUBCHUNK_HEADER + currentPacket_->subChunk_->size;
   //+= MOD2(currentPacket_->subChunk->size) + 2 * sizeof(u32);
+  if (nbpacket_ > maxnbpacket_)
+  {
+    maxnbpacket_ = nbpacket_;
+    seekPos_[nbpacket_] = offset_;
+  }
 }
 
 void VodFile::loadChunk(avifile::e_opcode type)
@@ -104,6 +107,7 @@ void VodFile::loadChunk(avifile::e_opcode type)
     offset_ += fileHeader_[type]->size - sizeof(avifile::u32);
   }
   offset_ += SIZE_CHUNK_HEADER;
+  seekPos_[nbpacket_] = offset_;
 }
 
 Chunk* VodFile::getPacket(int number)
@@ -131,11 +135,11 @@ void VodFile::moveUp(int number)
       return;
     }
   COUTDEBUG("MoveUp : from : " << nbpacket_ - 1 << "to : " << number);
-  offset_ = seekPos_[maxnbpacket_ - 1]; // Maxnbpacket_ doesn't exist
-  nbpacket_ = maxnbpacket_ - 1;
-  int nbToLoad = number - maxnbpacket_ + 1;
+  offset_ = seekPos_[maxnbpacket_];
+  nbpacket_ = maxnbpacket_;
+  int nbToLoad = number - maxnbpacket_;
   lseek(fd_, offset_, SEEK_SET);
-  for (int i = 0; i < nbToLoad; i++)
+  for (int i = 0; i <= nbToLoad; i++)
   {
     loadSubChunk();
   }
