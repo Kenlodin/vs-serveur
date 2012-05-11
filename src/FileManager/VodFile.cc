@@ -115,9 +115,9 @@ Chunk* VodFile::getPacket(int number)
     return nullptr;
   }
   actionMutex_.lock();
-  if (number > nbpacket_)
+  if (number > nbpacket_ - 1)// Current_load = nbpacket_ - 1
     moveUp(number);
-  else if (number < nbpacket_)
+  else if (number < nbpacket_ - 1)// Current_load = nbpacket_ - 1
     moveDown(number);
   actionMutex_.unlock();
   return currentPacket_; // TODO GPb
@@ -130,9 +130,10 @@ void VodFile::moveUp(int number)
       COUTDEBUG("moveUp : BadFile");
       return;
     }
-  offset_ = seekPos_[maxnbpacket_];
-  nbpacket_ = maxnbpacket_;
-  int nbToLoad = number - maxnbpacket_;
+  COUTDEBUG("MoveUp : from : " << nbpacket_ - 1 << "to : " << number);
+  offset_ = seekPos_[maxnbpacket_ - 1]; // Maxnbpacket_ doesn't exist
+  nbpacket_ = maxnbpacket_ - 1;
+  int nbToLoad = number - maxnbpacket_ + 1;
   lseek(fd_, offset_, SEEK_SET);
   for (int i = 0; i < nbToLoad; i++)
   {
@@ -147,6 +148,7 @@ void VodFile::moveDown(int number)
       COUTDEBUG("moveDown : BadFile");
       return;
     }
+  COUTDEBUG("MoveUp : from : " << nbpacket_ - 1 << "to : " << number);
   offset_ = seekPos_[number];
   lseek(fd_, offset_, SEEK_SET);
   nbpacket_ = number;
