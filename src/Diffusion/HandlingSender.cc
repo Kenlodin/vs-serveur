@@ -34,58 +34,58 @@ HandlingSender::Worker::Worker()
 void HandlingSender::Worker::run()
 {
   while (true)
-{
-  Client* client;
-  int begin;
-  int end;
-  std::string token;
-  sql_result res = SqlManager::getInstance().getNextsHandlings(
-      Config::getInstance ().getInt ("server_id"));
-  for (unsigned int i = 0; i < res.size(); i++)
   {
-    COUTDEBUG(("Get Work to send data"));
-    sql_tuple t = res.at(i);
-    begin = atoi(t["packet_begin"].c_str());
-    end = atoi(t["packet_end"].c_str());
-    token = t["client_token"].c_str();
-    client = ClientList::getInstance().getClient(token);
-    if (client == nullptr)
+    Client* client;
+    int begin;
+    int end;
+    std::string token;
+    sql_result res = SqlManager::getInstance().getNextsHandlings(
+        Config::getInstance ().getInt ("server_id"));
+    for (unsigned int i = 0; i < res.size(); i++)
     {
-      COUTDEBUG(("No client with token = " + token));
-      continue;
-    }
-    if (client->getDataSocket() == nullptr)
-    {
-      COUTDEBUG(("No data socket on client : " + token));
+      COUTDEBUG(("Get Work to send data"));
+      sql_tuple t = res.at(i);
+      begin = atoi(t["packet_begin"].c_str());
+      end = atoi(t["packet_end"].c_str());
+      token = t["client_token"].c_str();
+      client = ClientList::getInstance().getClient(token);
+      if (client == nullptr)
+      {
+        COUTDEBUG(("No client with token = " + token));
+        continue;
+      }
+      if (client->getDataSocket() == nullptr)
+      {
+        COUTDEBUG(("No data socket on client : " + token));
+        client->unlock();
+        continue;
+      }
+  client->setTypeClient(new VodClient(4)); // TODO Fix degueu
+      if (client->getTypeClient() == nullptr
+          || client->getTypeClient()->getFileVideo() == nullptr)
+          {
+            COUTDEBUG(("No video type on client : " + token));
+            client->unlock();
+            continue;
+          }
+      if (begin == 0) // TODO Live problem
+      {
+        COUTDEBUG("Send header n° :" << begin << " to " + token);
+        FileVideo* video = client->getTypeClient()->getFileVideo();
+        for (int i = avifile::e_opcode::AVI_RIFF_AVI; i < 5; i++)
+          Diffusion::getInstance().dcData(*(client->getDataSocket()),i , i,
+              video->getFileHeader()[i]);
+      }
+      for (int nbPacket = begin; nbPacket < end; nbPacket++)
+      {
+        COUTDEBUG("Send packet n° " << nbPacket << " to " << token);
+        Chunk* chuck = client->getTypeClient()->getElement(nbPacket);
+        Diffusion::getInstance().dcData(*(client->getDataSocket()), nbPacket + 5, chuck);
+      }
       client->unlock();
-      continue;
     }
-client->setTypeClient(new VodClient(4)); // TODO Fix degueu
-    if (client->getTypeClient() == nullptr
-        || client->getTypeClient()->getFileVideo() == nullptr)
-        {
-          COUTDEBUG(("No video type on client : " + token));
-          client->unlock();
-          continue;
-        }
-    if (begin == 0) // TODO Live problem
-    {
-      COUTDEBUG("Send header n° :" << begin << " to " + token);
-      FileVideo* video = client->getTypeClient()->getFileVideo();
-      for (int i = avifile::e_opcode::AVI_RIFF_AVI; i < 5; i++)
-        Diffusion::getInstance().dcData(*(client->getDataSocket()), i,
-            video->getFileHeader()[i]);
-    }
-    for (int nbPacket = begin; nbPacket < end; nbPacket++)
-    {
-      COUTDEBUG("Send packet n° " << nbPacket << " to " << token);
-      Chunk* chuck = client->getTypeClient()->getElement(nbPacket);
-      Diffusion::getInstance().dcData(*(client->getDataSocket()), nbPacket, chuck);
-    }
-    client->unlock();
+  sleep(2);
   }
-sleep(2);
-}
 }
 
 void HandlingSender::join()

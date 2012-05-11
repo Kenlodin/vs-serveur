@@ -101,14 +101,14 @@ void VodFile::loadChunk(avifile::e_opcode type)
         fileHeader_[type]->size - sizeof(avifile::u32));
     read(fd_, fileHeader_[type]->data,
         fileHeader_[type]->size - sizeof(avifile::u32));
-    offset_ += fileHeader_[type]->size;
+    offset_ += fileHeader_[type]->size - sizeof(avifile::u32);
   }
   offset_ += SIZE_CHUNK_HEADER;
 }
 
 Chunk* VodFile::getPacket(int number)
 {
-  COUTDEBUG("GetPacket : no:" << videoId_ << " : no:" << nbpacket_);
+  COUTDEBUG("GetPacket : no:" << videoId_ << " : no:" << number);
   if (isValid_ == 0)
   {
     COUTDEBUG("getPacket : BadFile");

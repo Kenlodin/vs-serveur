@@ -258,7 +258,7 @@ int Diffusion::ddVodData(sf::Packet& packet, sf::SocketTCP& sock)
     return RETURN_VALUE_GOOD;
 }
 
-int Diffusion::dcData(sf::SocketTCP& sender, int code,
+int Diffusion::dcData(sf::SocketTCP& sender,int number, int code,
     avifile::s_chunk* headers)
 {
   sf::Packet packet;
@@ -267,6 +267,7 @@ int Diffusion::dcData(sf::SocketTCP& sender, int code,
 
   packet << opcode;
   packet << type;
+  packet << number;
   packet.Append(headers, 12);
   if (headers->data)
     packet.Append(headers->data, headers->size - sizeof(avifile::u32));
