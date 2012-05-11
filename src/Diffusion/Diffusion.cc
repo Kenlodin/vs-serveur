@@ -126,7 +126,7 @@ int Diffusion::cdToken(sf::Packet& packet, sf::SocketTCP& sock)
   INCTEST(packet.EndOfPacket(), count)
   sf::SocketTCP* newSocket = new sf::SocketTCP(sock);
   COUTDEBUG("Diffusion --> Diffusion : Token : " << token);
-  if (ClientList::getInstance().link(newSocket, token) == RETURN_VALUE_ERROR)
+  if (ClientList::getInstance().addClient(nullptr, newSocket, token) == RETURN_VALUE_ERROR)
   {
     delete newSocket;
     dcMsg(sock, RETURN_VALUE_ERROR
