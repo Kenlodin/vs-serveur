@@ -33,6 +33,8 @@ HandlingSender::Worker::Worker()
 
 void HandlingSender::Worker::run()
 {
+  while (true)
+{
   Client* client;
   int begin;
   int end;
@@ -58,6 +60,7 @@ void HandlingSender::Worker::run()
       client->unlock();
       continue;
     }
+client->setTypeClient(new VodClient(4)); // TODO Fix degueu
     if (client->getTypeClient() == nullptr
         || client->getTypeClient()->getFileVideo() == nullptr)
         {
@@ -73,7 +76,7 @@ void HandlingSender::Worker::run()
         Diffusion::getInstance().dcData(*(client->getDataSocket()), i,
             video->getFileHeader()[i]);
     }
-    for (int nbPacket = begin; nbPacket < end; i++)
+    for (int nbPacket = begin; nbPacket < end; nbPacket++)
     {
       COUTDEBUG("Send packet n° " << nbPacket << " to " << token);
       Chunk* chuck = client->getTypeClient()->getElement(nbPacket);
@@ -81,7 +84,8 @@ void HandlingSender::Worker::run()
     }
     client->unlock();
   }
-
+sleep(2);
+}
 }
 
 void HandlingSender::join()

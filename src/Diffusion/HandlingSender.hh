@@ -13,6 +13,7 @@
 # include "../Network/ClientList.hh"
 # include "../Thread/Thread.hh"
 # include "../FileManager/Chuck.hh"
+# include "../Client/VodClient.hh"
 # include "../fwd.hh"
 # include "Diffusion.hh"
 # include "../Config/Config.hh"

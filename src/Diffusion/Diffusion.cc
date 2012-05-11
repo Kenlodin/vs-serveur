@@ -263,7 +263,7 @@ int Diffusion::dcData(sf::SocketTCP& sender, int code,
 {
   sf::Packet packet;
   sf::Int16 opcode = MERGE_OPCODE(ConnexionType::DIFFUSION_CLIENT, DC::DATA);
-  sf::Uint8 type = code;
+  sf::Int32 type = code;
 
   packet << opcode;
   packet << type;

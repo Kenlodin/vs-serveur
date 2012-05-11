@@ -40,8 +40,8 @@ SqlManager::execute (std::string query)
   pqxx::result r = w.exec (query);
   w.commit ();
   mutex_.unlock ();
-  COUTDEBUG("\t SQL Query exexute : " + query);
-  COUTDEBUG("\t  => Nb result : " + tools::toString <int> (r.size ()));
+//  COUTDEBUG("\t SQL Query exexute : " + query);
+//  COUTDEBUG("\t  => Nb result : " + tools::toString <int> (r.size ()));
   return r;
   //}
 }
