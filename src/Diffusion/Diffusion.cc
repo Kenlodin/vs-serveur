@@ -31,9 +31,10 @@ int Diffusion::routing(unsigned int code, sf::Packet& packet,
   COUTDEBUG(code);
   if (code < CD::LENGTH)
   {
-      if ((retVal = (this->*route_[code])(packet, sock)) == RETURN_VALUE_ERROR)
+      if ((retVal = (this->*route_[code])(packet, sock)) != RETURN_VALUE_ERROR)
       {
-        COUTDEBUG("Diffusion : mauvais processing.");
+        if (retVal == RETURN_VALUE_ERROR)
+          COUTDEBUG("Diffusion : mauvais processing.");
         ClientList::getInstance().addBadClient(sock, retVal);
         return retVal;
       }
