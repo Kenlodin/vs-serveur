@@ -112,7 +112,8 @@ void ClientList::removeClient(sf::SocketTCP& sock)
   if (it != clientList_.end())
   {
     c = it->second;
-    clientList_.erase(*(c->getControlSocket()));
+    if (c->getControlSocket() != nullptr)
+      clientList_.erase(*(c->getControlSocket()));
     if (c->getDataSocket() != nullptr)
       clientList_.erase(*(c->getDataSocket()));
     clientLink_.erase(c->getToken());
