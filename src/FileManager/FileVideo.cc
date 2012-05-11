@@ -10,8 +10,6 @@
 FileVideo::FileVideo(int videoId)
  : videoId_ (videoId)
 {
-  // TODO Auto-generated constructor stub
-
 }
 
 FileVideo::FileVideo()
@@ -21,5 +19,4 @@ FileVideo::FileVideo()
 
 FileVideo::~FileVideo()
 {
-  // TODO Auto-generated destructor stub
 }

@@ -12,13 +12,11 @@
 LiveClient::LiveClient(int videoId)
  : TypeClient(videoId)
 {
-  // TODO Auto-generated constructor stub
   setFileVideo(LiveHandler::getInstance().getLive(videoId));
 }
 
 LiveClient::~LiveClient()
 {
-  // TODO Auto-generated destructor stub
   LiveHandler::getInstance().leaveLive(getVideoId());
 }
 

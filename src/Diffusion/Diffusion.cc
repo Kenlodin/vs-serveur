@@ -18,12 +18,10 @@ Diffusion::Diffusion()
     { &Diffusion::ddVideoDemand, &Diffusion::ddPingPong, &Diffusion::ddLiveLink
       , &Diffusion::ddLiveData, &Diffusion::ddVodData})
 {
-  // TODO Auto-generated constructor stub
 }
 
 Diffusion::~Diffusion()
 {
-  // TODO Auto-generated destructor stub
 }
 
 int Diffusion::routing(unsigned int code, sf::Packet& packet,
@@ -255,7 +253,7 @@ int Diffusion::ddVodData(sf::Packet& packet, sf::SocketTCP& sock)
       return RETURN_VALUE_ERROR;
     }
     //VodHandler::getInstance().getVod(videoId)->addPacket(number, data);
-    // TODO
+    // TODO Reception of data
     return RETURN_VALUE_GOOD;
 }
 

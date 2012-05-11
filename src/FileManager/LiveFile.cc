@@ -11,13 +11,10 @@
 LiveFile::LiveFile(int videoId)
     : FileVideo(videoId)
 {
-  // TODO Auto-generated constructor stub
-
 }
 
 LiveFile::~LiveFile()
 {
-  // TODO Auto-generated destructor stub
 }
 
 Chunk* LiveFile::getPacket(int number)
@@ -64,7 +61,7 @@ void LiveFile::forwardPacket(int number, Chunk* data)
   packet << number;
   packet.Append(data->subChunk_, 8);
   packet.Append(data->subChunk_->data, data->subChunk_->size);
-  for (sf::SocketTCP& sock : linkedServer_) //Todo dec
+  for (sf::SocketTCP& sock : linkedServer_) //Todo deco
   {
     sock.Send(packet);
   }

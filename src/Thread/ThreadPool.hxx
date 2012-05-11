@@ -41,7 +41,6 @@ void ThreadPool<T>::Worker::run()
 template<class T>
 ThreadPool<T>::ThreadPool(int number)
 {
-// TODO Auto-generated constructor stub
   number_ = number;
   threadPool_ = new ThreadPool::Worker[number];
 }
@@ -49,7 +48,6 @@ ThreadPool<T>::ThreadPool(int number)
 template<class T>
 ThreadPool<T>::~ThreadPool()
 {
-// TODO Auto-generated destructor stub
 }
 
 template<class T>

@@ -8,8 +8,8 @@
 #include "PacketHandler.hh"
 #include "fwd.hh"
 
-PacketHandler::~PacketHandler() {
-	// TODO Auto-generated destructor stub
+PacketHandler::~PacketHandler()
+{
 }
 
 int PacketHandler::routing_internal(unsigned int code, sf::Packet* packet)

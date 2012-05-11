@@ -9,20 +9,15 @@
 
 VodFile::VodFile(int videoId)
 {
-  // TODO Auto-generated constructor stub
   COUTDEBUG("Init Vod n° :" << videoId);
-  name_ = "movie/" + tools::toString(videoId);
-  name_.push_back('.'); // TODO Degeux
-  name_.push_back('a'); // TODO Degeux
-  name_.push_back('v'); // TODO Degeux
-  name_.push_back('i'); // TODO Degeux
+  name_ = "movie/" + tools::toString(videoId) + ".avi"; // TODO Filetype
   currentPacket_ = new Chunk();
   currentPacket_->subChunk_ = nullptr;
   nbpacket_ = 0;
   maxnbpacket_ = 0;
   offset_ = 0;
-  fd_ = open(name_.c_str(), O_RDONLY); //TODO Name
-  if (fd_ == -1) //TODO Error
+  fd_ = open(name_.c_str(), O_RDONLY);
+  if (fd_ == -1)
   {
     isValid_ = 0;
     COUTDEBUG("Unable to open : " << name_);
@@ -42,7 +37,6 @@ VodFile::VodFile(int videoId)
 
 VodFile::~VodFile()
 {
-  // TODO Auto-generated destructor stub
   if (fd_ > 0)
     close(fd_);
   for (int i = 0; i < 5; i++)
@@ -54,6 +48,7 @@ VodFile::~VodFile()
       free(fileHeader_[i]);
     }
   }
+  delete currentPacket_;
 }
 
 void VodFile::loadSubChunk()

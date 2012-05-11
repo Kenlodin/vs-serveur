@@ -24,13 +24,13 @@ class Client
 {
   public:
     // Constructor
-    Client(sf::SocketTCP control, sf::SocketTCP*& data, std::string token);
+    Client(sf::SocketTCP* control, sf::SocketTCP*& data, std::string token);
 
     // Destructor
     virtual ~Client();
 
     // Get controlSocket
-    sf::SocketTCP getControlSocket() const;
+    sf::SocketTCP* getControlSocket() const;
 
     // Get dataSocket
     sf::SocketTCP* getDataSocket() const;
@@ -40,6 +40,9 @@ class Client
 
     // Use dataSocket to send a packet
     int sendData(sf::Packet& packet);
+
+    // Set control socket
+    void setControlSocket(sf::SocketTCP* controlSocket);
 
     // Set data socket
     void setDataSocket(sf::SocketTCP* dataSocket);
@@ -66,7 +69,7 @@ class Client
     void unlock();
 private:
     // Socket for tracker dialog
-    sf::SocketTCP controlSocket_;
+    sf::SocketTCP* controlSocket_;
 
     // Socket for diffusion data transfert
     sf::SocketTCP* dataSocket_;

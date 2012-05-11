@@ -10,13 +10,12 @@
 VodClient::VodClient(int videoId)
 : TypeClient(videoId)
 {
-  // TODO Auto-generated constructor stub
   setFileVideo(VodHandler::getInstance().getVod(videoId));
 }
 
 VodClient::~VodClient()
 {
-  // TODO Auto-generated destructor stub
+  VodHandler::getInstance().leaveVod(getVideoId());
 
 }
 

@@ -38,7 +38,6 @@ Network::~Network()
     controlSocket_->Close();
   delete dataSocket_;
   delete controlSocket_;
-  // TODO Auto-generated destructor stub
 }
 
 void Network::routing(sf::Packet& packet, sf::SocketTCP& sock)
@@ -140,7 +139,7 @@ void Network::run()
       {
         sf::Packet packet;
         sf::Socket::Status status;
-        if ((status = sock.Receive(packet)) != sf::Socket::Done) // TODO Dec Client
+        if ((status = sock.Receive(packet)) != sf::Socket::Done)
         {
           COUTDEBUG("Deconnection d'un client.");
           ClientList::getInstance().addBadClient(sock, RETURN_VALUE_ERROR);

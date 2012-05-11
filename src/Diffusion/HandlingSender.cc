@@ -52,20 +52,20 @@ void HandlingSender::Worker::run()
       COUTDEBUG(("No client with token = " + token));
       continue;
     }
-    if (client->getDataSocket() == nullptr) // TODO Error
+    if (client->getDataSocket() == nullptr)
     {
       COUTDEBUG(("No data socket on client : " + token));
       client->unlock();
       continue;
     }
     if (client->getTypeClient() == nullptr
-        || client->getTypeClient()->getFileVideo() == nullptr) // TODO Error
+        || client->getTypeClient()->getFileVideo() == nullptr)
         {
           COUTDEBUG(("No video type on client : " + token));
           client->unlock();
           continue;
         }
-    if (begin == 0) // TODO Live
+    if (begin == 0) // TODO Live problem
     {
       COUTDEBUG("Send header n° :" << begin << " to " + token);
       FileVideo* video = client->getTypeClient()->getFileVideo();

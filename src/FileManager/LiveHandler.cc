@@ -11,13 +11,10 @@
 
 LiveHandler::LiveHandler()
 {
-  // TODO Auto-generated constructor stub
-
 }
 
 LiveHandler::~LiveHandler()
 {
-  // TODO Auto-generated destructor stub
 }
 
 LiveHandler& LiveHandler::getInstance()
@@ -60,13 +57,13 @@ void LiveHandler::leaveLive(int videoId)
       COUTDEBUG("End of live deconnection n° :" << videoId);
       lives_.erase(it);
     }
-  } // TODO else error
+  }
   livesMutex.unlock();
 }
 
 LiveFile* LiveHandler::addLive(int videoId)
 {
-  //TODO
+  //TODO Complete function
   return nullptr;
 }
 

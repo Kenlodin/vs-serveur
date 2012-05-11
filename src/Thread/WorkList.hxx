@@ -65,8 +65,8 @@ template<class T>
 void WorkList<T>::putWorks(ListFun works, ListArgs args)
 {
   mutex_.lock();
-  work_.splice(work_.begin(), works);
-  args_.splice(args_.begin(), args);
+  work_.splice(work_.end(), works);
+  args_.splice(args_.end(), args);
   mutex_.unlock();
 }
 

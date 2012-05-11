@@ -11,9 +11,16 @@
 # include "Client.hh"
 
 inline
-sf::SocketTCP Client::getControlSocket() const
+sf::SocketTCP* Client::getControlSocket() const
 {
   return controlSocket_;
+}
+
+inline
+void Client::setControlSocket(sf::SocketTCP* controlSocket)
+{
+  delete controlSocket_;
+  controlSocket_ = controlSocket;
 }
 
 inline
@@ -25,6 +32,7 @@ sf::SocketTCP* Client::getDataSocket() const
 inline
 void Client::setDataSocket(sf::SocketTCP* dataSocket)
 {
+  delete dataSocket_;
   dataSocket_ = dataSocket;
 }
 

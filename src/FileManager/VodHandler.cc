@@ -55,7 +55,7 @@ void VodHandler::leaveVod(int videoId)
       COUTDEBUG("Close VOD n° :" << videoId);
       vods_.erase(it);
     }
-  } // TODO else error
+  }
   vodsMutex.unlock();
 }
 

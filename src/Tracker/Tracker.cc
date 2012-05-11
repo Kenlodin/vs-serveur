@@ -27,13 +27,10 @@ Tracker::Tracker()
         &Tracker::ctDec,
         &Tracker::ctPing, })
 {
-  // TODO Auto-generated constructor stub
-
 }
 
 Tracker::~Tracker()
 {
-  // TODO Auto-generated destructor stub
 }
 
 int Tracker::routing(unsigned int code, sf::Packet& packet, sf::SocketTCP& sock)
@@ -96,12 +93,14 @@ int Tracker::ctConnMaster(sf::Packet& packet, sf::SocketTCP& sock)
               , std::string("Tracker : Empty token."));
     return RETURN_VALUE_ERROR;
   }
-  if (ClientList::getInstance().addClient(sock, nullptr, token)
+  sf::SocketTCP* control = new sf::SocketTCP(sock);
+  if (ClientList::getInstance().addClient(control, nullptr, token)
       == RETURN_VALUE_ERROR)
   {
     Tracker::getInstance().tcMsg(sock, RETURN_VALUE_ERROR
               , std::string("Tracker : Client with this token"
                   " already connected."));
+    delete control;
     return RETURN_VALUE_ERROR;
   }
   return tcToken(sock, token);
@@ -123,15 +122,16 @@ int Tracker::ctConnSlave(sf::Packet& packet, sf::SocketTCP& sock)
             , std::string("Tracker : Bad number of attributes."));
     return RETURN_VALUE_ERROR;
   }
-  //TODO serverId and return value.
   SqlManager::getInstance().saveClientServerConnection(token
       , Config::getInstance().getInstance().getInt("server_id"));
-  if (ClientList::getInstance().addClient(sock, nullptr, token)
+  sf::SocketTCP* control = new sf::SocketTCP(sock);
+  if (ClientList::getInstance().addClient(control, nullptr, token)
       == RETURN_VALUE_ERROR)
   {
     Tracker::getInstance().tcMsg(sock, RETURN_VALUE_ERROR
                   , std::string("Tracker : Client with this token"
                       " already connected."));
+    delete control;
     return RETURN_VALUE_ERROR;
   }
   return RETURN_VALUE_GOOD; // We keep control socket in selector
@@ -188,7 +188,7 @@ int Tracker::ctAskFlux(sf::Packet& packet, sf::SocketTCP& sock)
   SqlManager::getInstance().setHandlings(client->getToken(), videoId);
   client->unlock();
   sql_result res = SqlManager::getInstance().getThreeServers(); //TODO videoId
-  client->setTypeClient(new VodClient(videoId)); // TODO
+  client->setTypeClient(new VodClient(videoId)); // TODO put different type
   return tcListDiff(sock, res);
 }
 
