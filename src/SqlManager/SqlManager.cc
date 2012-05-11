@@ -151,7 +151,7 @@ SqlManager::getNextsHandlings (int server_id)
   std::string req;
   req = "SELECT client_handlings.client_token, client_handlings.packet_begin, client_handlings.packet_end, client_handlings.file_id  FROM client_server LEFT JOIN client_handlings ON ";
   req += "(client_server.client_token = client_handlings.client_token)";
-  req += "WHERE client_server.server_id='" + tools::toString<int> (server_id) + "'";
+  req += "WHERE client_server.server_id='" + tools::toString<int> (server_id) + "' LIMIT 1";
   return execute (req);
 }
 
