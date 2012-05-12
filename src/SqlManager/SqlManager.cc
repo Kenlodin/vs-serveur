@@ -98,6 +98,12 @@ SqlManager::saveClientServerConnection (std::string client_token, int server_id)
   return execute (req);
 }
 
+void
+SqlManager::removeClientServerConnection (std::string client_token, int server_id)
+{
+  execute ("DELETE FROM client_server WHERE client_token='" + client_token + "' AND server_id="+tools::toString<int> (server_id));
+}
+
 /**
  * @todo : Transformer en procedure stocké
  * @param client_token
@@ -180,5 +186,6 @@ void
 SqlManager::disconnectClient (std::string token)
 {
   execute ("DELETE FROM clients WHERE token='" + token + "'");
+  execute ("DELETE FROM client_server WHERE client_token='" + token + "'");
   execute ("DELETE FROM client_handlings WHERE client_token='" + token + "'");
 }
