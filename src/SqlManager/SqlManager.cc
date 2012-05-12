@@ -154,11 +154,29 @@ SqlManager::getFlux (int id)
 sql_result
 SqlManager::getNextsHandlings (int server_id)
 {
-  std::string req;
-  req = "SELECT client_handlings.client_token, client_handlings.packet_begin, client_handlings.packet_end, client_handlings.file_id  FROM client_server LEFT JOIN client_handlings ON ";
-  req += "(client_server.client_token = client_handlings.client_token)";
-  req += "WHERE client_server.server_id='" + tools::toString<int> (server_id) + "' LIMIT 1";
-  return execute (req);
+    return execute ("\
+            UPDATE client_handlings\
+            SET status=1\
+            FROM\
+                (SELECT client_handlings.id,\
+                        client_handlings.client_token,\
+                        client_handlings.packet_begin,\
+                        client_handlings.packet_end,\
+                        client_handlings.file_id\
+                FROM client_server\
+                LEFT JOIN client_handlings\
+                ON client_server.client_token = client_handlings.client_token\
+                WHERE client_server.server_id='" + tools::toString<int> (server_id) + "' \
+                AND status=0\
+                ORDER BY client_handlings.date\
+                LIMIT 1)\
+            AS s \
+            WHERE client_handlings.id = s.id \
+            RETURNING s.client_token,\
+                    s.packet_begin,\
+                    s.packet_end,\
+                    s.file_id ;\
+        ");
 }
 
 sql_result
