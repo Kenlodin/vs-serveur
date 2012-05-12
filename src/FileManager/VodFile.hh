@@ -21,9 +21,6 @@
 # include "../Log/Log.hh"
 # include "../Tools/Tools.hh"
 
-# define SIZE_CHUNK_HEADER (sizeof(avifile::s_chunk) - sizeof(void*))
-# define SIZE_SUBCHUNK_HEADER (sizeof(avifile::s_sub_chunk) - sizeof(void*))
-# define MOD2(X) ((X) + (X % 2))
 # define MAX(X, Y) (X > Y) ? X : Y
 
 /*

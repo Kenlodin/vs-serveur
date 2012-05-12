@@ -19,6 +19,10 @@
 
 namespace avifile
 {
+# define SIZE_CHUNK_HEADER (sizeof(avifile::s_chunk) - sizeof(void*))
+# define SIZE_SUBCHUNK_HEADER (sizeof(avifile::s_sub_chunk) - sizeof(void*))
+# define MOD2(X) ((X) + (X % 2))
+
   typedef unsigned long long u64;
   typedef unsigned int u32;
   typedef unsigned short u16;
