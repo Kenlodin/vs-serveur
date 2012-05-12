@@ -56,6 +56,7 @@ class SqlManager
 
  public:
   void disconnectServer (int server_id);
+  void disconnectClient (std::string token);
   
  public:
   static SqlManager&
