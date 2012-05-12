@@ -123,9 +123,9 @@ Chunk* VodFile::getPacket(int number)
     return nullptr;
   }
   actionMutex_.lock();
-  if (number > nbpacket_ - 1)// Current_load = nbpacket_ - 1
+  if (number > maxnbpacket_ - 1)// Current_load = nbpacket_ - 1
     moveUp(number);
-  else if (number < nbpacket_ - 1)// Current_load = nbpacket_ - 1
+  else // Already parse
     moveDown(number);
   actionMutex_.unlock();
   return currentPacket_; // TODO GPb
