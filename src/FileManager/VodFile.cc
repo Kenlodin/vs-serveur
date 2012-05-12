@@ -64,7 +64,8 @@ void VodFile::loadSubChunk()
   currentPacket_->subChunk_ = reinterpret_cast<avifile::s_sub_chunk*>(malloc(
       sizeof(avifile::s_sub_chunk)));
   read(fd_, currentPacket_->subChunk_, SIZE_SUBCHUNK_HEADER);
-  //printf("type:%.4s name:%.4s size:%u\n", chunk->fcc, chunk->name, chunk->size);
+  printf("type:%.4s size:%u\n", currentPacket_->subChunk_->fcc
+      , MOD2(currentPacket_->subChunk_->size));
   COUTDEBUG("Read:" << currentPacket_->subChunk_->size);
   currentPacket_->subChunk_->data = malloc(
       MOD2(currentPacket_->subChunk_->size));
@@ -90,12 +91,15 @@ void VodFile::loadChunk(avifile::e_opcode type)
   fileHeader_[type] = reinterpret_cast<avifile::s_chunk*>(malloc(
       sizeof(avifile::s_chunk)));
   read(fd_, fileHeader_[type], SIZE_CHUNK_HEADER);
+  printf("type:%.4s name:%.4s size:%u\n", fileHeader_[type]->fcc
+      , fileHeader_[type]->name, fileHeader_[type]->size);
   fileHeader_[type]->data = NULL;
 
   if (fileHeader_[type]->fcc[0] == 'm' && fileHeader_[type]->fcc[1] == 'o'
       && fileHeader_[type]->fcc[1] == 'v' && fileHeader_[type]->fcc[1] == 'i')
   {
     videoLength_ = fileHeader_[type]->size;
+    printf("Set movi size at %d\n", videoLength_);
   }
   if (type != avifile::e_opcode::AVI_RIFF_AVI
       && type != avifile::e_opcode::AVI_LIST_MOVI)
