@@ -71,7 +71,7 @@ void VodFile::loadSubChunk()
       MOD2(currentPacket_->subChunk_->size));
   read(fd_, currentPacket_->subChunk_->data,
       MOD2(currentPacket_->subChunk_->size));
-  offset_ += SIZE_SUBCHUNK_HEADER + currentPacket_->subChunk_->size;
+  offset_ += SIZE_SUBCHUNK_HEADER + MOD2(currentPacket_->subChunk_->size);
   //+= MOD2(currentPacket_->subChunk->size) + 2 * sizeof(u32);
   if (nbpacket_ > maxnbpacket_)
   {

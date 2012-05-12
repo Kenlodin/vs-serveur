@@ -177,7 +177,7 @@ int Diffusion::dcData(sf::SocketTCP& sender, int number, Chunk* chuck)
 {
   sf::Packet packet;
   sf::Int16 opcode = MERGE_OPCODE(ConnexionType::DIFFUSION_CLIENT, DC::DATA);
-  sf::Uint32 type = avifile::e_opcode::AVI_CHUNK;
+  sf::Int32 type = avifile::e_opcode::AVI_CHUNK;
 
   packet << opcode;
   packet << type;
