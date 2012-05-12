@@ -40,8 +40,8 @@ SqlManager::execute (std::string query)
   pqxx::result r = w.exec (query);
   w.commit ();
   mutex_.unlock ();
-//  COUTDEBUG("\t SQL Query exexute : " + query);
-//  COUTDEBUG("\t  => Nb result : " + tools::toString <int> (r.size ()));
+  //  COUTDEBUG("\t SQL Query exexute : " + query);
+  //  COUTDEBUG("\t  => Nb result : " + tools::toString <int> (r.size ()));
   return r;
   //}
 }
@@ -57,7 +57,7 @@ SqlManager::addServer (std::string ip, int port)
 {
   std::string req;
   int id;
-  execute ("DELETE FROM servers WHERE ip='"+ ip +"'");
+  execute ("DELETE FROM servers WHERE ip='" + ip + "'");
   req = "INSERT INTO servers (ip, port) VALUES ('" + ip + "'," + tools::toString<int> (port) + ") RETURNING id";
   sql_result r = execute (req);
   r.at (0)["id"].to<int>(id);
@@ -98,6 +98,12 @@ SqlManager::saveClientServerConnection (std::string client_token, int server_id)
   return execute (req);
 }
 
+void
+SqlManager::removeClientServerConnection (std::string client_token, int server_id)
+{
+  execute ("DELETE FROM client_server WHERE client_token='" + client_token + "' AND server_id="+tools::toString<int> (server_id));
+}
+
 /**
  * @todo : Transformer en procedure stocké
  * @param client_token
@@ -111,19 +117,19 @@ SqlManager::setHandlings (std::string client_token, int file_id)
   std::string str_nb_packet;
   sql_result r = execute ("SELECT * FROM \"files\" WHERE id='" + tools::toString<int> (file_id) + "'");
   if (r.size () > 0)
-  { 
+  {
     tools::fromString (r.at (0)["nb_packet"].c_str (), nb_packet);
     tools::fromString (r.at (0)["length"].c_str (), length);
-    str_nb_packet = std::string(r.at (0)["nb_packet"].c_str ());
-    
-    int coeff = ((float) nb_packet / (float)length) * 10;
+    str_nb_packet = std::string (r.at (0)["nb_packet"].c_str ());
+
+    int coeff = ((float) nb_packet / (float) length) * 10;
     int date = static_cast<int> (time (0));
-    
-    execute ("select set_handlings ("+ str_nb_packet + ", "
-                                     + tools::toString<int> (date) + ", "
-                                     + tools::toString<int> (coeff) + ", "
-                                     + tools::toString<int> (file_id) + ", '"
-                                     + client_token + "')");
+
+    execute ("select set_handlings (" + str_nb_packet + ", "
+             + tools::toString<int> (date) + ", "
+             + tools::toString<int> (coeff) + ", "
+             + tools::toString<int> (file_id) + ", '"
+             + client_token + "')");
   }
 }
 
@@ -173,5 +179,13 @@ SqlManager::setFileServer (std::string file_id)
 void
 SqlManager::disconnectServer (int server_id)
 {
-  execute ("DELETE FROM servers WHERE id='"+ tools::toString<int> (server_id) +"'");
+  execute ("DELETE FROM servers WHERE id='" + tools::toString<int> (server_id) + "'");
+}
+
+void
+SqlManager::disconnectClient (std::string token)
+{
+  execute ("DELETE FROM clients WHERE token='" + token + "'");
+  execute ("DELETE FROM client_server WHERE client_token='" + token + "'");
+  execute ("DELETE FROM client_handlings WHERE client_token='" + token + "'");
 }
