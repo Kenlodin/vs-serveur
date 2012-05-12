@@ -76,7 +76,7 @@ void HandlingSender::Worker::run()
           Diffusion::getInstance().dcData(*(client->getDataSocket()),i , i,
               video->getFileHeader()[i]);
       }
-      for (int nbPacket = begin; nbPacket < end; nbPacket++)
+      for (int nbPacket = begin; nbPacket <= end; nbPacket++)
       {
         COUTDEBUG("Send packet n° " << nbPacket << " to " << token);
         Chunk* chuck = client->getTypeClient()->getElement(nbPacket);
