@@ -14,6 +14,7 @@
 #include "Thread/ThreadPool.hh"
 #include "SqlManager/SqlManager.hh"
 #include "Diffusion/HandlingSender.hh"
+#include "AdminServer/AdminServer.hh"
 
 int
 main ()
@@ -33,10 +34,12 @@ main ()
   Config::getInstance ().loadFiles ();
   ThreadPool<Diffusion> diffusionWorker (1);
   ThreadPool<Tracker> trackerWorker (1);
+  ThreadPool<AdminServer> adminWorker (1);
   HandlingSender handlingSender (1);
   Network networkManager (36000, 36001); // TODO Port
   diffusionWorker.start ();
   trackerWorker.start ();
+  adminWorker.start ();
   handlingSender.start ();
   networkManager.run ();
 

@@ -20,7 +20,8 @@ Network::Network(int control_port, int data_port)
         &Network::trackerClient,
         &Network::clientDiffusion,
         &Network::diffusionClient,
-        &Network::diffusionDiffusion })
+        &Network::diffusionDiffusion,
+        &Network::adminServer})
 {
   controlPort_ = control_port;
   controlSocket_ = new sf::SocketTCP();
