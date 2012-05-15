@@ -117,7 +117,7 @@ void Network::run()
   selector.Add(*dataSocket_);
   selector.Add(*controlSocket_);
   COUTDEBUG("Serveur démarré");
-  while (true)
+  while (Config::getInstance ().isOnline ())
   {
     std::list<std::pair<sf::SocketTCP, int>>& toRemove =
         ClientList::getInstance().getBadClient();

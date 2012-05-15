@@ -117,3 +117,17 @@ Config::getString (std::string key)
   mutex_.unlock ();
   return value;
 }
+
+void
+Config::setIsOnline (bool isOnline_)
+{
+  mutex_.lock ();
+  this->isOnline_ = isOnline_;
+  mutex_.unlock ();
+}
+
+bool
+Config::isOnline () const
+{
+  return isOnline_;
+}

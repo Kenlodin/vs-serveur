@@ -59,7 +59,8 @@ AdminServer::asShutdown (sf::Packet& packet, sf::SocketTCP& sock)
 {
   packet = packet;
   sock = sock;
-  return 1;
+  Config::getInstance ().setIsOnline (false);
+  return RETURN_VALUE_GOOD;
 }
 
 int

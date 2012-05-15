@@ -43,6 +43,12 @@ main ()
   handlingSender.start ();
   networkManager.run ();
 
+  COUTDEBUG("Attente de la fin des threads.");
+  diffusionWorker.join ();
+  trackerWorker.join ();
+  adminWorker.join ();
+  COUTDEBUG("Tous les threads sont terminés, le serveur va s'éteindre ...");
+  
   //  SqlManager::getInstance ().getThreeServers ();
   //  SqlManager::getInstance ().addServer ("55.22.33.44", 1234);
   //  SqlManager::getInstance ().getThreeServers ();

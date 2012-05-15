@@ -22,7 +22,7 @@ void ThreadPool<T>::Worker::run()
   {
     typename WorkList<T>::OneWork work;
     COUTDEBUG("ThreadPool");
-    while (true)
+    while (Config::getInstance().isOnline())
     {
       if (WorkList<T>::getInstance().getOneWork(work))
       {
