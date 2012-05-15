@@ -34,13 +34,18 @@ namespace tools
     CURLcode res;
     if (curl)
     {
-      fp = fopen (file.c_str (), "wb");
-      curl_easy_setopt (curl, CURLOPT_URL, url.c_str ());
-      curl_easy_setopt (curl, CURLOPT_WRITEFUNCTION, Http::writeFile);
-      curl_easy_setopt (curl, CURLOPT_WRITEDATA, fp);
-      curl_easy_cleanup (curl);
-      fclose (fp);
-      return 0;
+      fp = fopen ("movie/toto.avi", "wb");
+      if (fp != NULL)
+      {
+        curl_easy_setopt (curl, CURLOPT_URL, url.c_str ());
+        curl_easy_setopt (curl, CURLOPT_WRITEFUNCTION, Http::writeFile);
+        curl_easy_setopt (curl, CURLOPT_WRITEDATA, fp);
+        curl_easy_perform (curl);
+        curl_easy_cleanup (curl);
+        fclose (fp);
+        COUTDEBUG( " => Fichier " + file + " écrit");
+        return 0;
+      }
     }
     return -1;
   }

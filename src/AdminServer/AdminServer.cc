@@ -31,9 +31,8 @@ int
 AdminServer::routing (unsigned int code, sf::Packet& packet, sf::SocketTCP& sock)
 {
   int retVal = RETURN_VALUE_ERROR;
-  COUTDEBUG ("[AdminServer] routing() : " + tools::toString<unsigned int> (code));
+  COUTDEBUG ("[AdminServer] routing() code : " + tools::toString<unsigned int> (code));
   sock = sock;
-  return 1;
   if (code < AS::MAX_VALUE)
   {
     if ((retVal = (this->*route_[code])(packet, sock)) != RETURN_VALUE_GOOD)
@@ -96,8 +95,8 @@ AdminServer::asDownloadOrig (sf::Packet& packet, sf::SocketTCP& sock)
   std::string url;
   packet >> token >> video_id >> url;
   COUTDEBUG("[AdminServer] asDownloadOrig : ");
+  COUTDEBUG("\t video_id : " + tools::toString<sf::Int32> (video_id));
   COUTDEBUG("\t url : " + url);
-  COUTDEBUG("\t video_id : " + video_id);
   if (tools::Http::download (url, "movie/" + tools::toString<int> (video_id) + ".avi") == 0)
     return RETURN_VALUE_GOOD;
   else
