@@ -10,6 +10,7 @@
 # include "../Diffusion/Diffusion.hh"
 # include "../Tracker/Tracker.hh"
 # include "../Thread/WorkList.hh"
+# include "../AdminServer/AdminServer.hh"
 # include "ClientList.hh"
 
 Network::Network(int control_port, int data_port)
@@ -98,6 +99,13 @@ void Network::diffusionDiffusion(unsigned int route, sf::Packet& packet,
   COUTDEBUG("Diffusion --> Diffusion");
   WorkList<Diffusion>::getInstance().putWorks(&Diffusion::routing_internal,
       route, packet, sock);
+}
+
+void Network::adminServer(unsigned int route, sf::Packet& packet
+        , sf::SocketTCP& sock)
+{
+  WorkList<AdminServer>::getInstance ().putWorks (&AdminServer::routing,
+                                                  route, packet, sock);
 }
 
 void Network::run()

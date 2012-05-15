@@ -60,6 +60,8 @@ namespace ConnexionType
     CLIENT_DIFFUSION,
     DIFFUSION_CLIENT,
     DIFFUSION_DIFFUSION,
+    ALL,
+    ADMIN_SERVER,
     LENGTH
   };
 }
@@ -128,6 +130,19 @@ namespace DD
     VOD_DATA,
     LENGTH
   };
+}
+
+namespace AS
+{
+    enum AS
+    {
+        SHUTDOWN,
+        CLEAR,
+        DOWNLOAD_ORIG,
+        DOWNLOAD,
+        REMOVE,
+        MAX_VALUE
+    };
 }
 
 #endif /* FWD_HH_ */

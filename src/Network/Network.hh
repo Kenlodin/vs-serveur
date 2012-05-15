@@ -64,6 +64,9 @@ class Network : public tools::Thread
     // Route a packet from diffusion to diffusion
     void diffusionDiffusion(unsigned int route, sf::Packet& packet
         , sf::SocketTCP& sock);
+    
+    void adminServer(unsigned int route, sf::Packet& packet
+        , sf::SocketTCP& sock);
   private:
     // Variables of tracker
     sf::SocketTCP* controlSocket_;

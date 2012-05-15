@@ -15,8 +15,8 @@
 #include "SqlManager/SqlManager.hh"
 #include "Diffusion/HandlingSender.hh"
 
-
-int main()
+int
+main ()
 {
   //	Network* network = new Network(36000, 36001);
   //	Diffusion* diffusion = new Diffusion();
@@ -28,15 +28,16 @@ int main()
   SqlManager::getInstance ().connect ();
   Config::getInstance ().load ("config.xml");
   Config::getInstance ().loadConfig ();
-  SqlManager::getInstance().addServer("37.59.85.217", 36001);//TODO port
+  SqlManager::getInstance ().addServer (Config::getInstance ().getString ("ip"),
+                                        36001); //TODO port
   Config::getInstance ().loadFiles ();
   ThreadPool<Diffusion> diffusionWorker (1);
-  ThreadPool<Tracker> trackerWorker(1);
+  ThreadPool<Tracker> trackerWorker (1);
   HandlingSender handlingSender (1);
   Network networkManager (36000, 36001); // TODO Port
-  diffusionWorker.start();
-  trackerWorker.start();
-  handlingSender.start();
+  diffusionWorker.start ();
+  trackerWorker.start ();
+  handlingSender.start ();
   networkManager.run ();
 
   //  SqlManager::getInstance ().getThreeServers ();
