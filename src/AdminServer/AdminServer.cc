@@ -98,7 +98,13 @@ AdminServer::asDownloadOrig (sf::Packet& packet, sf::SocketTCP& sock)
   COUTDEBUG("\t video_id : " + tools::toString<sf::Int32> (video_id));
   COUTDEBUG("\t url : " + url);
   if (tools::Http::download (url, "movie/" + tools::toString<int> (video_id) + ".avi") == 0)
+  {
+    SqlManager::getInstance ().setFileServer (video_id);
+//    struct ChunckCounter::result r;
+//    SqlManager::getInstance ().updateFileInfos (video_id, r.size, r.length, r.nb_packet);
+    COUTDEBUG("\t Téléchargement de la vidéo terminée !");
     return RETURN_VALUE_GOOD;
+  }
   else
   {
     COUTDEBUG("\t Impossible de télécharger la vidéo ...");

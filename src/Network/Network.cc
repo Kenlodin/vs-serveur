@@ -50,12 +50,8 @@ void Network::routing(sf::Packet& packet, sf::SocketTCP& sock)
   unsigned int code;
 
   packet >> opcode;
-  COUTDEBUG("* Opcode : " + tools::toString<sf::Uint16> (opcode));
-  COUTDEBUG("  Needed : " + tools::toString<int> ((6 << 12) + 2));
   code = EXTRACT_CODE(opcode);
   type = EXTRACT_TYPE(opcode);
-  COUTDEBUG("   Type : " + tools::toString<unsigned int> (type));
-  COUTDEBUG("   Code : " + tools::toString<unsigned int> (code));
   if (type < ConnexionType::LENGTH)
     (this->*route_[type])(code, packet, sock);
   else

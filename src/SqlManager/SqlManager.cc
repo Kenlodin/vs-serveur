@@ -105,7 +105,6 @@ SqlManager::removeClientServerConnection (std::string client_token, int server_i
 }
 
 /**
- * @todo : Transformer en procedure stocké
  * @param client_token
  * @param file_id
  */
@@ -192,6 +191,17 @@ SqlManager::setFileServer (std::string file_id)
   int server_id = Config::getInstance ().getInt ("server_id");
   req = "INSERT INTO file_server (server_id, file_id) VALUES(" + tools::toString<int> (server_id) + ", " + file_id + ")";
   return execute (req);
+}
+
+void SqlManager::updateFileInfos (int id, int size, int length, int nb_packet)
+{
+  execute(""
+          "UPDATE files"
+          "SET size=" + tools::toString<int> (size) +
+          "    length=" + tools::toString<int> (length) +
+          "    nb_packet=" + tools::toString<int> (nb_packet) +
+          "WHERE id=" + tools::toString<int> (id) +
+          "");
 }
 
 void

@@ -14,6 +14,8 @@
 #include "../Tools/Tools.hh"
 #include "../Tools/Http/Http.hh"
 #include "../Network/ClientList.hh"
+#include "../SqlManager/SqlManager.hh"
+#include "../Tools/ChunkCounter/ChunckCounter.hh"
 
 class AdminServer : public PacketHandler
 {

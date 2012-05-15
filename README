@@ -19,3 +19,9 @@ Boost.thread
 
 # PostgreSql
 libpqxx
+
+#XmlReader
+libtinyXml
+
+#curl
+libcurl

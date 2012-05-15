@@ -46,7 +46,7 @@ class SqlManager
   void setHandlings (std::string client_token, int file_id);
   sql_result setFileServer (int file_id);
   sql_result setFileServer (std::string file_id);
-
+  void updateFileInfos(int id, int size, int length, int nb_packet);
 
  public:
   sql_result getThreeServers ();
@@ -58,6 +58,7 @@ class SqlManager
   void disconnectServer (int server_id);
   void disconnectClient (std::string token);
   void removeClientServerConnection (std::string client_token, int server_id);
+
  public:
   static SqlManager&
   getInstance ();

@@ -31,10 +31,10 @@ namespace tools
   {
     CURL* curl = curl_easy_init ();
     FILE* fp;
-    CURLcode res;
     if (curl)
     {
-      fp = fopen ("movie/toto.avi", "wb");
+      file = "movie/" + file;
+      fp = fopen (file.c_str (), "wb");
       if (fp != NULL)
       {
         curl_easy_setopt (curl, CURLOPT_URL, url.c_str ());
@@ -43,7 +43,6 @@ namespace tools
         curl_easy_perform (curl);
         curl_easy_cleanup (curl);
         fclose (fp);
-        COUTDEBUG( " => Fichier " + file + " écrit");
         return 0;
       }
     }
