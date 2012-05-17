@@ -60,6 +60,7 @@ AdminServer::asShutdown (sf::Packet& packet, sf::SocketTCP& sock)
   packet = packet;
   sock = sock;
   Config::getInstance ().setIsOnline (false);
+  ClientList::getInstance ().disconnectAllClient ();
   return RETURN_VALUE_GOOD;
 }
 
@@ -68,7 +69,8 @@ AdminServer::asClear (sf::Packet& packet, sf::SocketTCP& sock)
 {
   packet = packet;
   sock = sock;
-  return 1;
+  ClientList::getInstance ().disconnectAllClient ();
+  return RETURN_VALUE_GOOD;
 }
 
 int
@@ -94,15 +96,20 @@ AdminServer::asDownloadOrig (sf::Packet& packet, sf::SocketTCP& sock)
   std::string token;
   sf::Int32 video_id;
   std::string url;
+  std::string file;
+  
   packet >> token >> video_id >> url;
+  file =  "movie/" + tools::toString<int> (video_id) + ".avi";
+  
   COUTDEBUG("[AdminServer] asDownloadOrig : ");
   COUTDEBUG("\t video_id : " + tools::toString<sf::Int32> (video_id));
   COUTDEBUG("\t url : " + url);
-  if (tools::Http::download (url, "movie/" + tools::toString<int> (video_id) + ".avi") == 0)
+  
+  if (tools::Http::download (url, file) == 0)
   {
     SqlManager::getInstance ().setFileServer (video_id);
-//    struct ChunckCounter::result r;
-//    SqlManager::getInstance ().updateFileInfos (video_id, r.size, r.length, r.nb_packet);
+    struct tools::ChunckCounter::result r = tools::ChunckCounter::avi (file);
+    SqlManager::getInstance ().updateFileInfos (video_id, r.size, r.length, r.nb_packet);
     COUTDEBUG("\t Téléchargement de la vidéo terminée !");
     return RETURN_VALUE_GOOD;
   }
@@ -118,7 +125,7 @@ AdminServer::asRemove (sf::Packet& packet, sf::SocketTCP& sock)
 {
   packet = packet;
   sock = sock;
-  return 1;
+  return RETURN_VALUE_ERROR;
 }
 
 int 

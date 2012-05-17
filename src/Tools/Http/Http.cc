@@ -33,7 +33,6 @@ namespace tools
     FILE* fp;
     if (curl)
     {
-      file = "movie/" + file;
       fp = fopen (file.c_str (), "wb");
       if (fp != NULL)
       {
@@ -44,6 +43,10 @@ namespace tools
         curl_easy_cleanup (curl);
         fclose (fp);
         return 0;
+      }
+      else
+      {
+        COUTDEBUG("\t Impossible d'ouvrir le fichier pour écrire");
       }
     }
     return -1;

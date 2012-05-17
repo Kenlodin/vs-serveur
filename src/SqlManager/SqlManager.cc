@@ -196,11 +196,11 @@ SqlManager::setFileServer (std::string file_id)
 void SqlManager::updateFileInfos (int id, int size, int length, int nb_packet)
 {
   execute(""
-          "UPDATE files"
-          "SET size=" + tools::toString<int> (size) +
-          "    length=" + tools::toString<int> (length) +
-          "    nb_packet=" + tools::toString<int> (nb_packet) +
-          "WHERE id=" + tools::toString<int> (id) +
+          " UPDATE files"
+          " SET size=" + tools::toString<int> (size) + ","
+          "    length=" + tools::toString<int> (length) + ","
+          "    nb_packet=" + tools::toString<int> (nb_packet) + 
+          " WHERE id=" + tools::toString<int> (id) +
           "");
 }
 

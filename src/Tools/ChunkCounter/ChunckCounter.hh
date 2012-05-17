@@ -8,26 +8,29 @@
 #ifndef CHUNCKCOUNTER_HH
 #define	CHUNCKCOUNTER_HH
 
-# include "../../fwd.hh"
-
-class ChunckCounter
+#include "../../fwd.hh"
+#include "../../Log/Log.hh"
+namespace tools
 {
-  
-public:
-  struct result
-  {
-    int size;
-    int length;
-    int nb_packet;
-  };
-  
-private:
-  ChunckCounter();
-  virtual ~ChunckCounter();
-  
-public:
-  static struct result avi (std::string file);
-};
 
+  class ChunckCounter
+  {
+  public:
+
+    struct result
+    {
+      int size;
+      int length;
+      int nb_packet;
+    };
+
+  private:
+    ChunckCounter();
+    virtual ~ChunckCounter();
+
+  public:
+    static struct result avi(std::string file);
+  };
+}
 #endif	/* CHUNCKCOUNTER_HH */
 

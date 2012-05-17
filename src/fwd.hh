@@ -43,12 +43,22 @@ namespace avifile
       char name[4];
       void* data;
   }__attribute__((packed)) s_chunk;
+  
   typedef struct
   {
       char fcc[4];
       u32 size;
       void *data;
   }__attribute__((packed)) s_sub_chunk;
+  
+  typedef struct
+  {
+    u32  res4, res5;
+    u32  MicroSecPerFrame;
+    u32  res0, res1, res2;
+    u32  TotalFrame;
+  } __attribute__((packed)) s_hdrl;
+  
 }
 
 namespace ConnexionType
