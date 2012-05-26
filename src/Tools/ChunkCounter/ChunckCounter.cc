@@ -92,7 +92,7 @@ namespace tools
       count += chunk.size + 2 * sizeof (uint32_t);
       chunk_nbr++;
     }
-    r.length = (hdrl.MicroSecPerFrame * hdrl.TotalFrame) / 60000000;
+    r.length = (hdrl.MicroSecPerFrame * hdrl.TotalFrame) / 1000000;
     r.size = size;
     r.nb_packet = chunk_nbr;
     close (fd);
