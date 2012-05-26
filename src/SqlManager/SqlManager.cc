@@ -46,12 +46,6 @@ SqlManager::execute (std::string query)
   //}
 }
 
-/**
- * 
- * @param ip
- * @param port
- * 
- */
 void
 SqlManager::addServer (std::string ip, int port)
 {
@@ -104,10 +98,6 @@ SqlManager::removeClientServerConnection (std::string client_token, int server_i
   execute ("DELETE FROM client_server WHERE client_token='" + client_token + "' AND server_id="+tools::toString<int> (server_id));
 }
 
-/**
- * @param client_token
- * @param file_id
- */
 void
 SqlManager::setHandlings (std::string client_token, int file_id)
 {
