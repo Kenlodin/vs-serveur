@@ -12,6 +12,32 @@
 #include <stdlib.h>
 
 #include "ChunckCounter.hh"
+
+void dump_chunk_cont(avifile::s_chunk *chunk)
+{
+  printf("cont %c%c%c%c ",
+         chunk->fcc[0],
+         chunk->fcc[1],
+         chunk->fcc[2],
+         chunk->fcc[3]);
+  printf("'%c%c%c%c'\n",
+         chunk->name[0],
+         chunk->name[1],
+         chunk->name[2],
+         chunk->name[3]);
+  printf("size: %d\n", chunk->size);
+}
+
+void dump_chunk(avifile::s_sub_chunk *chunk)
+{
+  printf("fcc: '%c%c%c%c'\n",
+         chunk->fcc[0],
+         chunk->fcc[1],
+         chunk->fcc[2],
+         chunk->fcc[3]);
+  printf("size: %d\n", chunk->size);
+}
+
 namespace tools
 {
 
@@ -41,27 +67,32 @@ namespace tools
       return r;
     }
     read (fd, &chunk_cont, sizeof (avifile::s_chunk) - sizeof (void*) );
+    dump_chunk_cont (&chunk_cont);
     size = chunk_cont.size;
 
     read (fd, &chunk_cont, sizeof (avifile::s_chunk) - sizeof (void*) );
+    dump_chunk_cont (&chunk_cont);
     read (fd, &hdrl, sizeof (avifile::s_hdrl));
-    lseek (fd, chunk_cont.size - sizeof (void*) - sizeof (avifile::s_hdrl), SEEK_CUR);
+    lseek (fd, chunk_cont.size - sizeof (avifile::s_hdrl) - 4, SEEK_CUR);
 
     read (fd, &chunk_cont, sizeof (avifile::s_chunk) - sizeof (void*) );
-    lseek (fd, chunk_cont.size - sizeof (void*) , SEEK_CUR);
+    dump_chunk_cont (&chunk_cont);
+    lseek (fd, chunk_cont.size - 4 , SEEK_CUR);
     read (fd, &chunk_cont, sizeof (avifile::s_chunk) - sizeof (void*) );
-    lseek (fd, chunk_cont.size - sizeof (void*) , SEEK_CUR);
+    dump_chunk_cont (&chunk_cont);
+    lseek (fd, chunk_cont.size - 4 , SEEK_CUR);
     read (fd, &chunk_cont, sizeof (chunk_cont) - sizeof (void*) );
+    dump_chunk_cont (&chunk_cont);
 
     for (count = 0; count < size; )
     {
-      read (fd, &chunk, sizeof (chunk));
+      read (fd, &chunk, sizeof (chunk) - sizeof(void*));
       chunk.size += chunk.size % 2;
       lseek (fd, chunk.size, SEEK_CUR);
       count += chunk.size + 2 * sizeof (uint32_t);
       chunk_nbr++;
     }
-    r.length = (hdrl.MicroSecPerFrame * hdrl.TotalFrame) / 60000000;
+    r.length = (hdrl.MicroSecPerFrame * hdrl.TotalFrame) / 1000000;
     r.size = size;
     r.nb_packet = chunk_nbr;
     close (fd);
