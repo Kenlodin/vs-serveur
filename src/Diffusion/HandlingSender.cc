@@ -60,7 +60,7 @@ void HandlingSender::Worker::run()
         client->unlock();
         continue;
       }
-  client->setTypeClient(new VodClient(4)); // TODO Fix degueu
+  client->setTypeClient(new VodClient(atoi(t["video_id"].c_str())));
       if (client->getTypeClient() == nullptr
           || client->getTypeClient()->getFileVideo() == nullptr)
           {
@@ -84,6 +84,7 @@ void HandlingSender::Worker::run()
       }
       client->unlock();
     }
+  if (res.size() == 0)
   sleep(2);
   }
 }
