@@ -7,6 +7,9 @@
 
 #include <iostream>
 
+# include <SFML/System.hpp>
+# include <SFML/Network.hpp>
+
 #include "Network/Network.hh"
 #include "Tracker/Tracker.hh"
 #include "Diffusion/Diffusion.hh"
@@ -26,9 +29,16 @@ main ()
 
   //  tools::Thread t();
   //  t.run ();
+  
   SqlManager::getInstance ().connect ();
   Config::getInstance ().load ("config.xml");
   Config::getInstance ().loadConfig ();
+  sf::IPAddress address (Config::getInstance ().getString ("ip"));
+  if (!address.IsValid())
+  {
+    std::cerr << "L'adresse ip indiquée dans config.xml n'est pas bonne" << std::endl;
+    exit(2);
+  }
   SqlManager::getInstance ().addServer (Config::getInstance ().getString ("ip"),
                                         36001); //TODO port
   Config::getInstance ().loadFiles ();
@@ -48,7 +58,7 @@ main ()
   trackerWorker.join ();
   adminWorker.join ();
   COUTDEBUG("Tous les threads sont terminés, le serveur va s'éteindre ...");
-  
+
   //  SqlManager::getInstance ().getThreeServers ();
   //  SqlManager::getInstance ().addServer ("55.22.33.44", 1234);
   //  SqlManager::getInstance ().getThreeServers ();

@@ -1,11 +1,14 @@
-/* 
+/*
  * File:   Config.cc
  * Author: Aymeric
- * 
+ *
  * Created on 19 avril 2012, 16:41
  */
 
 #include "Config.hh"
+#include <boost/filesystem/operations.hpp>
+#include <boost/filesystem/path.hpp>
+
 
 Config&
 Config::getInstance ()
@@ -36,7 +39,11 @@ Config::loadConfig ()
   {
     if (elt->ValueStr () != "files")
     {
-      std::string text = std::string (elt->GetText ());
+      std::string text;
+      if (elt->GetText () == NULL)
+        text = std::string ("");
+      else
+        text = std::string (elt->GetText ());
       config_.insert (std::pair<std::string, std::string > (elt->ValueStr (), text));
     }
     elt = elt->NextSiblingElement ();
@@ -46,23 +53,27 @@ Config::loadConfig ()
 void
 Config::loadFiles ()
 {
-  TiXmlElement *elt = c_.RootElement ();
-  if (elt != nullptr)
-    elt = elt->FirstChildElement ();
-  while (elt != nullptr)
+  namespace fs = boost::filesystem;
+  fs::path p ("movie/");
+  if (!fs::exists (p))
   {
-    if (elt->ValueStr () == "files")
+    COUTDEBUG ("The folder \"movie\" n'exite pas !!!");
+    std::exit(2);
+  }
+  if (fs::is_directory (p))
+  {
+    fs::directory_iterator end_itr;
+    for (fs::directory_iterator itr (p); itr != end_itr; ++itr)
     {
-      elt = elt->FirstChildElement ();
-      while (elt != nullptr)
-      {
-        std::string id = std::string (elt->GetText ());
-        SqlManager::getInstance ().setFileServer (id);
-        elt = elt->NextSiblingElement ();
-      }
-      return;
+      if (fs::is_directory (*itr))
+        continue;
+      //  On récupère le nom du fichier sans l'extension (qui est l'id du fichier)
+      std::string file = itr->path().filename().string();
+      std::size_t pos = file.rfind(".");
+      file.resize (pos);
+      SqlManager::getInstance ().setFileServer (file);
+
     }
-    elt = elt->NextSiblingElement ();
   }
 }
 
