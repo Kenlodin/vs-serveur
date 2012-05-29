@@ -169,6 +169,18 @@ SqlManager::getNextsHandlings (int server_id)
 }
 
 sql_result
+SqlManager::getServerForDD (int video_id)
+{
+  return execute ("\
+          SELECT * FROM servers, file_server \
+          WHERE servers.id = file_server.server_id \
+           AND file_server.file_id = " + tools::toString<int> (video_id) + " \
+          ORDER BY nb_client \
+          LIMIT 1 \
+          ");
+}
+
+sql_result
 SqlManager::setFileServer (int file_id)
 {
   return setFileServer (tools::toString<int> (file_id));

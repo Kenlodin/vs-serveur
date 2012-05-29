@@ -141,6 +141,14 @@ class SqlManager
    * @return Le traitement a effectuer
    */
   sql_result getNextsHandlings (int server_id);
+  
+  /**
+   * Retourne un serveur ayant le fichier video_id.
+   * 
+   * @param video_id
+   * @return 
+   */
+  sql_result getServerForDD (int video_id);
 
  public:
    /**
