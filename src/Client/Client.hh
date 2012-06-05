@@ -15,7 +15,7 @@
 // Internal include
 # include "../fwd.hh"
 # include "../Log/Log.hh"
-# include "TypeClient.hh"
+# include "../FileManager/FileVideo.hh"
 
 /*
  * This class keep information of a connecting client in tracker or diffusion
@@ -54,10 +54,10 @@ class Client
     void setToken(std::string token);
 
     // Get client type
-    TypeClient* getTypeClient() const;
+    FileVideo* getTypeClient() const;
 
     // Set client type
-    void setTypeClient(TypeClient* typeClient);
+    void setTypeClient(FileVideo* typeClient);
 
     // Try to lock this client
     bool tryLock();
@@ -75,7 +75,7 @@ private:
     sf::SocketTCP* dataSocket_;
 
     // Interface which represent a VOD or Live connection
-    TypeClient* typeClient_;
+    FileVideo* typeClient_;
 
     // Token of connection
     std::string token_;

@@ -57,6 +57,7 @@ main ()
   diffusionWorker.join ();
   trackerWorker.join ();
   adminWorker.join ();
+  handlingSender.join ();
   COUTDEBUG("Tous les threads sont terminés, le serveur va s'éteindre ...");
 
   //  SqlManager::getInstance ().getThreeServers ();

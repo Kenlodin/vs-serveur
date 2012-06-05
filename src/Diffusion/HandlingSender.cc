@@ -33,7 +33,7 @@ HandlingSender::Worker::Worker()
 
 void HandlingSender::Worker::run()
 {
-  while (true)
+  while (Config::getInstance ().isOnline ())
   {
     Client* client;
     int begin;
@@ -60,27 +60,27 @@ void HandlingSender::Worker::run()
         client->unlock();
         continue;
       }
-  client->setTypeClient(new VodClient(atoi(t["video_id"].c_str())));
-      if (client->getTypeClient() == nullptr
-          || client->getTypeClient()->getFileVideo() == nullptr)
+      if (client->getTypeClient() == nullptr)
           {
             COUTDEBUG(("No video type on client : " + token));
+            client->setTypeClient(new VodFile(atoi(t["file_id"].c_str()))); //TODO Live OUTPUT
             client->unlock();
             continue;
           }
       if (begin == 0) // TODO Live problem
       {
-        COUTDEBUG("Send header n° :" << begin << " to " + token);
-        FileVideo* video = client->getTypeClient()->getFileVideo();
+        COUTDEBUG("Send header no :" << begin << " to " + token);
+        FileVideo* video = client->getTypeClient();
         for (int i = avifile::e_opcode::AVI_RIFF_AVI; i < 5; i++)
           Diffusion::getInstance().dcData(*(client->getDataSocket()),i , i,
               video->getFileHeader()[i]);
       }
       for (int nbPacket = begin; nbPacket <= end; nbPacket++)
       {
-        COUTDEBUG("Send packet n° " << nbPacket << " to " << token);
-        Chunk* chuck = client->getTypeClient()->getElement(nbPacket);
-        Diffusion::getInstance().dcData(*(client->getDataSocket()), nbPacket + 5, chuck);
+        COUTDEBUG("Send packet no " << nbPacket << " to " << token);
+        Chunk* chunk = client->getTypeClient()->getElement(nbPacket);
+        Diffusion::getInstance().dcData(*(client->getDataSocket()), nbPacket + 5, chunk);
+	delete chunk;
       }
       client->unlock();
     }

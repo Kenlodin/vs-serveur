@@ -226,7 +226,7 @@ int Diffusion::ddLiveData(sf::Packet& packet, sf::SocketTCP& sock)
           , std::string("Diffusion : Bad number of attributes."));
     return RETURN_VALUE_ERROR;
   }
-  LiveHandler::getInstance().getLive(videoId)->addPacket(number, data);
+  LiveHandler::getInstance().getLive(videoId)->setElement(number, data);
   return RETURN_VALUE_GOOD;
 }
 
@@ -254,7 +254,7 @@ int Diffusion::ddVodData(sf::Packet& packet, sf::SocketTCP& sock)
             , std::string("Diffusion : Bad number of attributes."));
       return RETURN_VALUE_ERROR;
     }
-    //VodHandler::getInstance().getVod(videoId)->addPacket(number, data);
+    //VodHandler::getInstance().getVod(videoId)->setElement(number, data);
     // TODO Reception of data
     return RETURN_VALUE_GOOD;
 }

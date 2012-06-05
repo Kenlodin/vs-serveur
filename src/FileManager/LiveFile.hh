@@ -29,10 +29,10 @@ class LiveFile : public FileVideo
     virtual ~LiveFile();
 
     // Get packet
-    Chunk* getPacket(int number);
+    Chunk* getElement(int number);
 
     // Insert a new packet
-    void addPacket(int number, Chunk* data);
+    void setElement(int number, Chunk* data);
 
     // Add linkedServer
     void addServer(sf::SocketTCP);

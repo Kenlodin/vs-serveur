@@ -52,7 +52,11 @@ class VodFile : public FileVideo
     void loadChunk(avifile::e_opcode type);
   public:
     // Get a chunk
-    Chunk* getPacket(int number);
+    Chunk* getElement(int number);
+
+
+    // Get a chunk
+    void setElement(int number, Chunk* element);
 
     // Get chunk header
     avifile::s_chunk* const* getFileHeader() const;

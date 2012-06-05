@@ -49,13 +49,13 @@ void Client::setToken(std::string token)
 }
 
 inline
-TypeClient* Client::getTypeClient() const
+FileVideo* Client::getTypeClient() const
 {
   return typeClient_;
 }
 
 inline
-void Client::setTypeClient(TypeClient* typeClient)
+void Client::setTypeClient(FileVideo* typeClient)
 {
   typeClient_ = typeClient;
 }
