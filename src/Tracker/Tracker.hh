@@ -77,6 +77,9 @@ class Tracker: public PacketHandler
 
     // Send ping respond
     int ctPing(sf::Packet& packet, sf::SocketTCP& sock);
+
+    // Send url of video
+    int ctUrl(sf::Packet& packet, sf::SocketTCP& sock);
   private:
     // Send a packet by sender
     int send(sf::SocketTCP& sender, sf::Packet& packet);
@@ -98,6 +101,9 @@ class Tracker: public PacketHandler
 
     // Send ping respond
     int tcPing(sf::SocketTCP& sender);
+
+    // Send url of video
+    int tcUrl(sf::SocketTCP& sender, std::string& ip, std::string& url);
 };
 
 #endif /* TRACKER_HH_ */

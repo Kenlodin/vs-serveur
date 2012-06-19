@@ -66,8 +66,8 @@ void Network::clientTracker(unsigned int route, sf::Packet& packet,
       sock);
 }
 
-void Network::trackerClient(unsigned int route, sf::Packet& packet,
-    sf::SocketTCP& sock)
+void Network::trackerClient(unsigned int route __attribute__((unused))
+  , sf::Packet& packet __attribute__((unused)), sf::SocketTCP& sock)
 {
   COUTDEBUG("Tracker --> Client");
   COUTDEBUG("Client : mauvais routing.");
@@ -83,8 +83,8 @@ void Network::clientDiffusion(unsigned int route, sf::Packet& packet,
       packet, sock);
 }
 
-void Network::diffusionClient(unsigned int route, sf::Packet& packet,
-    sf::SocketTCP& sock)
+void Network::diffusionClient(unsigned int route __attribute__((unused))
+  , sf::Packet& packet __attribute__((unused)), sf::SocketTCP& sock)
 {
   COUTDEBUG("Diffusion --> Client");
   COUTDEBUG("Client : mauvais routing.");

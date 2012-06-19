@@ -25,7 +25,8 @@ Tracker::Tracker()
         &Tracker::ctAskRem,
         &Tracker::ctAskStop,
         &Tracker::ctDec,
-        &Tracker::ctPing, })
+        &Tracker::ctPing,
+        &Tracker::ctUrl, })
 {
 }
 
@@ -363,6 +364,30 @@ int Tracker::ctPing(sf::Packet& packet, sf::SocketTCP& sock)
   return tcPing(sock);
 }
 
+int Tracker::ctUrl(sf::Packet& packet, sf::SocketTCP& sock)
+{
+  int count = 0;
+  int videoId = 0;
+  std::string url = "";
+  std::string ip = "";
+
+  // Extract content of packet
+  INCTEST(!packet.EndOfPacket(), count)
+  packet >> videoId;
+  INCTEST(packet.EndOfPacket(), count)
+  COUTDEBUG("Client --> Tracker : Url");
+  if (count != 2)
+  {
+    Tracker::getInstance().tcMsg(sock, RETURN_VALUE_ERROR
+        , std::string("Tracker : Bad number of attributes."));
+    return RETURN_VALUE_ERROR;
+  }
+  url = "/media/" + tools::toString(videoId);
+  // Get free server
+  ip = "37.59.85.217";
+  return tcUrl(sock, ip, url);
+}
+
 int Tracker::tcToken(sf::SocketTCP& sender, std::string token)
 {
   sf::Packet packet;
@@ -471,6 +496,19 @@ int Tracker::tcPing(sf::SocketTCP& sender)
   // Create packet
   packet << opcode;
   COUTDEBUG("Tracker --> Client : send ping");
+  return send(sender, packet);
+}
+
+int Tracker::tcUrl(sf::SocketTCP& sender, std::string& ip, std::string& url)
+{
+  sf::Packet packet;
+  sf::Uint16 opcode = MERGE_OPCODE(ConnexionType::TRACKER_CLIENT, TC::URL);
+
+  // Create packet
+  packet << opcode;
+  packet << ip;
+  packet << url;
+  COUTDEBUG("Tracker --> Client : send url");
   return send(sender, packet);
 }
 

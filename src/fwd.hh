@@ -80,6 +80,7 @@ namespace CT
     ASK_STOP,
     DEC,
     PING,
+    URL,
     LENGTH
   };
 }
@@ -94,6 +95,7 @@ namespace TC
     LIST_NDIFF,
     MSG,
     PING,
+    URL,
     LENGTH
   };
 }
