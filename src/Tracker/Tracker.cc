@@ -379,7 +379,7 @@ int Tracker::ctUrl(sf::Packet& packet, sf::SocketTCP& sock)
         , std::string("Tracker : Bad number of attributes."));
     return RETURN_VALUE_ERROR;
   }
-  url = "/media/" + tools::toString(videoId);
+  url = "/movie/" + tools::toString(videoId) + ".flv";
   // Get free server
   ip = "37.59.85.217";
   return tcUrl(sock, ip, url);
@@ -401,7 +401,7 @@ int Tracker::tcList(sf::SocketTCP& sender, sql_result sqlResult)
 {
   sf::Packet packet;
   sf::Uint16 opcode = MERGE_OPCODE(ConnexionType::TRACKER_CLIENT, TC::LIST);
-  sf::Int32 length;
+  sf::Int32 length = 0;
 
   // Create packet
   packet << opcode;
@@ -414,6 +414,7 @@ int Tracker::tcList(sf::SocketTCP& sender, sql_result sqlResult)
     packet << t["name"].c_str();
     id = atoi(t["id"].c_str());
     packet << id;
+    packet << t["description"].c_str();
   }
   COUTDEBUG("Tracker --> Client : list");
   return send(sender, packet);
