@@ -26,7 +26,10 @@ class FileVideo
     virtual ~FileVideo();
 
     //  Get a chunck
-    virtual Chunk* getPacket(int number) = 0;
+    virtual Chunk* getElement(int number) = 0;
+
+    //  Set a chunk
+    virtual void setElement(int number, Chunk* packet) = 0;
 
     // Get header of avi
     virtual avifile::s_chunk* const* getFileHeader() const = 0;

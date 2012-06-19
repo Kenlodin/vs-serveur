@@ -1,8 +1,4 @@
 <configuration>
-    <ip>192.168.0.1</ip>
-		<port>1234</port>
-		<files>
-			<id>5</id>
-			<id>9</id>
-		</files>
+    <ip>37.59.85.217</ip>
+    <port>1234</port>
 </configuration>

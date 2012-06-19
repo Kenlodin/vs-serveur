@@ -72,6 +72,9 @@ class ClientList
     // unlock bad client list
     void getBadClientRelease();
 
+    // Disconnect All client
+    void disconnectAllClient ();
+    
   private:
     // Mutex of clientList_
     boost::mutex generalMutex_;

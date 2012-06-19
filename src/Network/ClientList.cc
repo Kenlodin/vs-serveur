@@ -221,3 +221,17 @@ void ClientList::getBadClientRelease()
   badClientMutex_.unlock();
 }
 
+void ClientList::disconnectAllClient ()
+{
+  generalMutex_.lock ();
+  for (std::pair<std::string, Client*> c : clientLink_)
+  {
+    delete c.second;
+  }
+  clientLink_.clear ();
+  clientList_.clear ();
+  privateIpList_.clear ();
+  temporaryClient_.clear ();
+  badClient_.clear ();
+  generalMutex_.unlock ();
+}

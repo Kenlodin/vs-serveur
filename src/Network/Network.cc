@@ -10,6 +10,7 @@
 # include "../Diffusion/Diffusion.hh"
 # include "../Tracker/Tracker.hh"
 # include "../Thread/WorkList.hh"
+# include "../AdminServer/AdminServer.hh"
 # include "ClientList.hh"
 
 Network::Network(int control_port, int data_port)
@@ -19,7 +20,9 @@ Network::Network(int control_port, int data_port)
         &Network::trackerClient,
         &Network::clientDiffusion,
         &Network::diffusionClient,
-        &Network::diffusionDiffusion })
+        &Network::diffusionDiffusion,
+        NULL,
+        &Network::adminServer})
 {
   controlPort_ = control_port;
   controlSocket_ = new sf::SocketTCP();
@@ -100,6 +103,13 @@ void Network::diffusionDiffusion(unsigned int route, sf::Packet& packet,
       route, packet, sock);
 }
 
+void Network::adminServer(unsigned int route, sf::Packet& packet
+        , sf::SocketTCP& sock)
+{
+  WorkList<AdminServer>::getInstance ().putWorks (&AdminServer::routing,
+                                                  route, packet, sock);
+}
+
 void Network::run()
 {
   COUTDEBUG("Démarrage du serveur.");
@@ -107,7 +117,7 @@ void Network::run()
   selector.Add(*dataSocket_);
   selector.Add(*controlSocket_);
   COUTDEBUG("Serveur démarré");
-  while (true)
+  while (Config::getInstance ().isOnline ())
   {
     std::list<std::pair<sf::SocketTCP, int>>& toRemove =
         ClientList::getInstance().getBadClient();

@@ -114,7 +114,7 @@ void VodFile::loadChunk(avifile::e_opcode type)
   seekPos_[nbpacket_] = offset_;
 }
 
-Chunk* VodFile::getPacket(int number)
+Chunk* VodFile::getElement(int number)
 {
   COUTDEBUG("GetPacket : no:" << videoId_ << " : no:" << number);
   if (isValid_ == 0)
@@ -122,13 +122,15 @@ Chunk* VodFile::getPacket(int number)
     COUTDEBUG("getPacket : BadFile");
     return nullptr;
   }
+  Chunk *result;
   actionMutex_.lock();
   if (number > maxnbpacket_ - 1)// Current_load = nbpacket_ - 1
     moveUp(number);
   else // Already parse
     moveDown(number);
   actionMutex_.unlock();
-  return currentPacket_; // TODO GPb
+  result = new Chunk(*currentPacket_);
+  return result;
 }
 
 void VodFile::moveUp(int number)
@@ -164,4 +166,7 @@ void VodFile::moveDown(int number)
 }
 
 
-
+void VodFile::setElement(int number, Chunk* element)
+{
+  return; // TODO
+}

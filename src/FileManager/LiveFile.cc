@@ -17,7 +17,7 @@ LiveFile::~LiveFile()
 {
 }
 
-Chunk* LiveFile::getPacket(int number)
+Chunk* LiveFile::getElement(int number)
 {
   packetsMutex_.lock();
   std::map<int, Chunk*>::iterator it = packets_.find(number);
@@ -28,7 +28,7 @@ Chunk* LiveFile::getPacket(int number)
   return chuck;
 }
 
-void LiveFile::addPacket(int number, Chunk* data)
+void LiveFile::setElement(int number, Chunk* data)
 {
   packetsMutex_.lock();
   packets_[number] = data;

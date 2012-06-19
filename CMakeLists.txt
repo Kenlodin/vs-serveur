@@ -2,7 +2,7 @@ cmake_minimum_required(VERSION 2.6)
 
 # List of libraries
 set(LIBRARIES)
-set(EXTERN_LIBRARIES sfml-system sfml-network boost_thread-mt pqxx tinyxml)
+set(EXTERN_LIBRARIES sfml-system sfml-network boost_thread-mt boost_filesystem-mt boost_system-mt pqxx tinyxml curl)
 set(EXTERN_LINK_DIRECTORIES /usr/lib64/ /usr/lib64/pgsql)
 set(EXTERN_INCLUDE_DIRECTORIES /usr/include/SFML /usr/include/boost /usr/include/pgsql /usr/include)
 

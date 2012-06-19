@@ -10,6 +10,7 @@
 
 //External include
 # include <SFML/System.hpp>
+# include <string.h>
 
 // Internal include
 # include "../fwd.hh"
@@ -22,6 +23,7 @@ class Chunk
   public:
     // Constructor
     Chunk();
+    Chunk(Chunk& copy);
 
     // Destructor
     virtual ~Chunk();

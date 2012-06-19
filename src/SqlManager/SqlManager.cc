@@ -46,12 +46,6 @@ SqlManager::execute (std::string query)
   //}
 }
 
-/**
- * 
- * @param ip
- * @param port
- * 
- */
 void
 SqlManager::addServer (std::string ip, int port)
 {
@@ -104,11 +98,6 @@ SqlManager::removeClientServerConnection (std::string client_token, int server_i
   execute ("DELETE FROM client_server WHERE client_token='" + client_token + "' AND server_id="+tools::toString<int> (server_id));
 }
 
-/**
- * @todo : Transformer en procedure stocké
- * @param client_token
- * @param file_id
- */
 void
 SqlManager::setHandlings (std::string client_token, int file_id)
 {
@@ -180,6 +169,18 @@ SqlManager::getNextsHandlings (int server_id)
 }
 
 sql_result
+SqlManager::getServerForDD (int video_id)
+{
+  return execute ("\
+          SELECT * FROM servers, file_server \
+          WHERE servers.id = file_server.server_id \
+           AND file_server.file_id = " + tools::toString<int> (video_id) + " \
+          ORDER BY nb_client \
+          LIMIT 1 \
+          ");
+}
+
+sql_result
 SqlManager::setFileServer (int file_id)
 {
   return setFileServer (tools::toString<int> (file_id));
@@ -192,6 +193,17 @@ SqlManager::setFileServer (std::string file_id)
   int server_id = Config::getInstance ().getInt ("server_id");
   req = "INSERT INTO file_server (server_id, file_id) VALUES(" + tools::toString<int> (server_id) + ", " + file_id + ")";
   return execute (req);
+}
+
+void SqlManager::updateFileInfos (int id, int size, int length, int nb_packet)
+{
+  execute(""
+          " UPDATE files"
+          " SET size=" + tools::toString<int> (size) + ","
+          "    length=" + tools::toString<int> (length) + ","
+          "    nb_packet=" + tools::toString<int> (nb_packet) + 
+          " WHERE id=" + tools::toString<int> (id) +
+          "");
 }
 
 void

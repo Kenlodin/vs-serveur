@@ -7,8 +7,6 @@
 
 #include "Tracker.hh"
 #include "../Network/ClientList.hh"
-#include "../Client/LiveClient.hh"
-#include "../Client/VodClient.hh"
 
 Tracker::Tracker()
     : route_(
@@ -189,7 +187,6 @@ int Tracker::ctAskFlux(sf::Packet& packet, sf::SocketTCP& sock)
   SqlManager::getInstance().setHandlings(client->getToken(), videoId);
   client->unlock();
   sql_result res = SqlManager::getInstance().getThreeServers(); //TODO videoId
-  client->setTypeClient(new VodClient(videoId)); // TODO put different type
   return tcListDiff(sock, res);
 }
 
