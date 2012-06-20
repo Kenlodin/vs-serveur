@@ -512,9 +512,16 @@ int Tracker::tcUrl(sf::SocketTCP& sender, std::string& ip, std::string& url)
 
 int Tracker::send(sf::SocketTCP& sender, sf::Packet& packet)
 {
-  if (sender.Send(packet) == sf::Socket::Done)
+  try
   {
-    return RETURN_VALUE_GOOD;
+    if (sender.IsValid() && sender.Send(packet) == sf::Socket::Done)
+    {
+      return RETURN_VALUE_GOOD;
+    }
+  }
+  catch (...)
+  {
+    return RETURN_VALUE_ERROR;
   }
   return RETURN_VALUE_ERROR;
 }

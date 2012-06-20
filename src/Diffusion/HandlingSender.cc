@@ -61,12 +61,10 @@ void HandlingSender::Worker::run()
         continue;
       }
       if (client->getTypeClient() == nullptr)
-          {
-            COUTDEBUG(("No video type on client : " + token));
-            client->setTypeClient(new VodFile(atoi(t["file_id"].c_str()))); //TODO Live OUTPUT
-            client->unlock();
-            continue;
-          }
+      {
+        COUTDEBUG(("No video type on client : " + token));
+        client->setTypeClient(new VodFile(atoi(t["file_id"].c_str()))); //TODO Live OUTPUT
+      }
       if (begin == 0) // TODO Live problem
       {
         COUTDEBUG("Send header no :" << begin << " to " + token);

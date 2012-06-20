@@ -9,6 +9,7 @@
 
 # include <SFML/System.hpp>
 # include <SFML/Network.hpp>
+# include <signal.h>
 
 #include "Network/Network.hh"
 #include "Tracker/Tracker.hh"
@@ -18,6 +19,13 @@
 #include "SqlManager/SqlManager.hh"
 #include "Diffusion/HandlingSender.hh"
 #include "AdminServer/AdminServer.hh"
+
+
+void sig_pipe(int num __attribute__((unused)))
+{
+  signal(SIGPIPE, sig_pipe);
+  return;
+}
 
 int
 main ()
@@ -29,7 +37,7 @@ main ()
 
   //  tools::Thread t();
   //  t.run ();
-  
+  signal(SIGPIPE, sig_pipe);
   SqlManager::getInstance ().connect ();
   Config::getInstance ().load ("config.xml");
   Config::getInstance ().loadConfig ();

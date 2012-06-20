@@ -13,6 +13,7 @@ VodFile::VodFile(int videoId)
   name_ = "movie/" + tools::toString(videoId) + ".avi"; // TODO Filetype
   currentPacket_ = new Chunk();
   currentPacket_->subChunk_ = nullptr;
+  videoId_ = videoId;
   nbpacket_ = 0;
   maxnbpacket_ = 0;
   offset_ = 0;

@@ -35,12 +35,12 @@ SqlManager::execute (std::string query)
 {
   //if (connection_->is_open ())
   //{
+  //COUTDEBUG("\t SQL Query exexute : " + query);
   mutex_.lock ();
   pqxx::work w (*connection_);
   pqxx::result r = w.exec (query);
   w.commit ();
   mutex_.unlock ();
-  //  COUTDEBUG("\t SQL Query exexute : " + query);
   //  COUTDEBUG("\t  => Nb result : " + tools::toString <int> (r.size ()));
   return r;
   //}

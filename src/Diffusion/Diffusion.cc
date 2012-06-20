@@ -278,7 +278,14 @@ int Diffusion::dcData(sf::SocketTCP& sender,int number, int code,
 
 int Diffusion::send(sf::SocketTCP& sender, sf::Packet& packet)
 {
-  if (sender.Send(packet) == sf::Socket::Done)
-    return RETURN_VALUE_GOOD;
+  try
+  {
+    if (sender.IsValid() && sender.Send(packet) == sf::Socket::Done)
+      return RETURN_VALUE_GOOD;
+  }
+  catch (...)
+  {
+    return RETURN_VALUE_ERROR;
+  }
   return RETURN_VALUE_ERROR;
 }
