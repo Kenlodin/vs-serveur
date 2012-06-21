@@ -92,7 +92,7 @@ int ClientList::addClient(sf::SocketTCP* control, sf::SocketTCP* data,
       if (c->getControlSocket())
       {
         clientList_.erase(*(c->getControlSocket()));
-        c->getControlSocket()->Close();
+        //c->getControlSocket()->Close();
       }
       c->setControlSocket(control);
     }
@@ -105,7 +105,7 @@ int ClientList::addClient(sf::SocketTCP* control, sf::SocketTCP* data,
       if (c->getDataSocket())
       {
         clientList_.erase(*(c->getDataSocket()));
-        c->getDataSocket()->Close();
+        //c->getDataSocket()->Close();
       }
       c->setDataSocket(data);
     }

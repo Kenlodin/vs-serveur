@@ -146,6 +146,7 @@ int Tracker::ctConnSlave(sf::Packet& packet, sf::SocketTCP& sock)
   COUTDEBUG(8);
     return RETURN_VALUE_ERROR;
   }
+  COUTDEBUG(7.5);
   return RETURN_VALUE_GOOD; // We keep control socket in selector
 }
 
