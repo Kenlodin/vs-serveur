@@ -48,7 +48,7 @@ class Client
     void setDataSocket(sf::SocketTCP* dataSocket);
 
     // Get token client
-    std::string getToken() const;
+    std::string& getToken();
 
     // Set token client
     void setToken(std::string token);

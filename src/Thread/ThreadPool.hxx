@@ -30,6 +30,8 @@ void ThreadPool<T>::Worker::run()
               (work.args.first, work.args.second.first,
                   work.args.second.second);
       }
+      else
+        sleep(1);
     }
   }
   catch (std::exception& e)

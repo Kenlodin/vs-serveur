@@ -87,15 +87,29 @@ int ClientList::addClient(sf::SocketTCP* control, sf::SocketTCP* data,
     c = new Client(control, data, token);
   if (control != nullptr)
   {
-    clientList_[*control] = c;
     if (it != clientLink_.end())
+    {
+      if (c->getControlSocket())
+      {
+        clientList_.erase(*(c->getControlSocket()));
+        c->getControlSocket()->Close();
+      }
       c->setControlSocket(control);
+    }
+    clientList_[*control] = c;
   }
   if (data != nullptr)
   {
-    clientList_[*data] = c;
     if (it != clientLink_.end())
-          c->setDataSocket(data);
+    {
+      if (c->getDataSocket())
+      {
+        clientList_.erase(*(c->getDataSocket()));
+        c->getDataSocket()->Close();
+      }
+      c->setDataSocket(data);
+    }
+    clientList_[*data] = c;
   }
   if (it == clientLink_.end())
     clientLink_[token] = c;
@@ -105,22 +119,29 @@ int ClientList::addClient(sf::SocketTCP* control, sf::SocketTCP* data,
 
 void ClientList::removeClient(sf::SocketTCP& sock)
 {
-  purgeClient();
   generalMutex_.lock();
+  purgeClient();
   std::map<sf::SocketTCP, Client*>::iterator it = clientList_.find(sock);
   Client* c;
   if (it != clientList_.end())
   {
+    COUTDEBUG("FIND !!");
+    if (c->getControlSocket() != nullptr)
+      COUTDEBUG("TEST  1 : " << (sock == *(c->getControlSocket())));
+    if (c->getDataSocket() != nullptr)
+      COUTDEBUG("TEST  2 : " << (sock == *(c->getDataSocket())));
     c = it->second;
     if (c->getControlSocket() != nullptr)
       clientList_.erase(*(c->getControlSocket()));
     if (c->getDataSocket() != nullptr)
       clientList_.erase(*(c->getDataSocket()));
     clientLink_.erase(c->getToken());
+    clientList_.erase(sock);
     if (c->tryLock())
       delete c;
     else
     {
+      COUTDEBUG("Can't delete now");
       temporaryMutex_.lock();
       temporaryClient_.insert(temporaryClient_.end(), c);
       temporaryMutex_.unlock();
@@ -128,6 +149,7 @@ void ClientList::removeClient(sf::SocketTCP& sock)
   }
   else if (sock.IsValid())
   {
+    COUTDEBUG("NOT FIND !!");
     privateIpMutex_.lock();
     privateIpList_.erase(sock);
     privateIpMutex_.unlock();

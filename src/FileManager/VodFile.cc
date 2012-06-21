@@ -33,7 +33,7 @@ VodFile::VodFile(int videoId)
     loadChunk(avifile::e_opcode::AVI_LIST_MOVI);
     loadSubChunk();
   }
-  COUTDEBUG("Init Vod done n° :" << videoId);
+  //COUTDEBUG("Init Vod done n° :" << videoId);
 }
 
 VodFile::~VodFile()
@@ -54,7 +54,7 @@ VodFile::~VodFile()
 
 void VodFile::loadSubChunk()
 {
-  COUTDEBUG("LoadSubChuck : no:" << nbpacket_ << " offset:" << offset_);
+  //COUTDEBUG("LoadSubChuck : no:" << nbpacket_ << " offset:" << offset_);
   if (isValid_ == 0)
   {
     COUTDEBUG("LoadSubChunk : BadFile");
@@ -65,9 +65,9 @@ void VodFile::loadSubChunk()
   currentPacket_->subChunk_ = reinterpret_cast<avifile::s_sub_chunk*>(malloc(
       sizeof(avifile::s_sub_chunk)));
   read(fd_, currentPacket_->subChunk_, SIZE_SUBCHUNK_HEADER);
-  printf("type:%.4s size:%u\n", currentPacket_->subChunk_->fcc
-      , MOD2(currentPacket_->subChunk_->size));
-  COUTDEBUG("Read:" << currentPacket_->subChunk_->size);
+  //printf("type:%.4s size:%u\n", currentPacket_->subChunk_->fcc
+  //    , MOD2(currentPacket_->subChunk_->size));
+  //COUTDEBUG("Read:" << currentPacket_->subChunk_->size);
   currentPacket_->subChunk_->data = malloc(
       MOD2(currentPacket_->subChunk_->size));
   read(fd_, currentPacket_->subChunk_->data,
@@ -83,7 +83,7 @@ void VodFile::loadSubChunk()
 
 void VodFile::loadChunk(avifile::e_opcode type)
 {
-  COUTDEBUG("LoadChuck : no:" << type << " offset:" << offset_);
+  //COUTDEBUG("LoadChuck : no:" << type << " offset:" << offset_);
   if (isValid_ == 0)
   {
     COUTDEBUG("LoadChunk : BadFile");
@@ -92,15 +92,15 @@ void VodFile::loadChunk(avifile::e_opcode type)
   fileHeader_[type] = reinterpret_cast<avifile::s_chunk*>(malloc(
       sizeof(avifile::s_chunk)));
   read(fd_, fileHeader_[type], SIZE_CHUNK_HEADER);
-  printf("type:%.4s name:%.4s size:%u\n", fileHeader_[type]->fcc
-      , fileHeader_[type]->name, fileHeader_[type]->size);
+  //printf("type:%.4s name:%.4s size:%u\n", fileHeader_[type]->fcc
+  //    , fileHeader_[type]->name, fileHeader_[type]->size);
   fileHeader_[type]->data = NULL;
 
   if (fileHeader_[type]->fcc[0] == 'm' && fileHeader_[type]->fcc[1] == 'o'
       && fileHeader_[type]->fcc[1] == 'v' && fileHeader_[type]->fcc[1] == 'i')
   {
     videoLength_ = fileHeader_[type]->size;
-    printf("Set movi size at %d\n", videoLength_);
+    //printf("Set movi size at %d\n", videoLength_);
   }
   if (type != avifile::e_opcode::AVI_RIFF_AVI
       && type != avifile::e_opcode::AVI_LIST_MOVI)
@@ -117,7 +117,7 @@ void VodFile::loadChunk(avifile::e_opcode type)
 
 Chunk* VodFile::getElement(int number)
 {
-  COUTDEBUG("GetPacket : no:" << videoId_ << " : no:" << number);
+  //COUTDEBUG("GetPacket : no:" << videoId_ << " : no:" << number);
   if (isValid_ == 0)
   {
     COUTDEBUG("getPacket : BadFile");
@@ -141,7 +141,7 @@ void VodFile::moveUp(int number)
       COUTDEBUG("moveUp : BadFile");
       return;
     }
-  COUTDEBUG("MoveUp : from : " << nbpacket_ - 1 << "to : " << number);
+  //COUTDEBUG("MoveUp : from : " << nbpacket_ - 1 << "to : " << number);
   offset_ = seekPos_[maxnbpacket_];
   nbpacket_ = maxnbpacket_;
   int nbToLoad = number - maxnbpacket_;
@@ -159,7 +159,7 @@ void VodFile::moveDown(int number)
       COUTDEBUG("moveDown : BadFile");
       return;
     }
-  COUTDEBUG("MoveUp : from : " << nbpacket_ - 1 << "to : " << number);
+  //COUTDEBUG("MoveUp : from : " << nbpacket_ - 1 << "to : " << number);
   offset_ = seekPos_[number];
   lseek(fd_, offset_, SEEK_SET);
   nbpacket_ = number;

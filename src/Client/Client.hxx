@@ -37,7 +37,7 @@ void Client::setDataSocket(sf::SocketTCP* dataSocket)
 }
 
 inline
-std::string Client::getToken() const
+std::string& Client::getToken()
 {
   return token_;
 }
