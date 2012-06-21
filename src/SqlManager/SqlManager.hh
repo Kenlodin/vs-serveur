@@ -176,6 +176,8 @@ class SqlManager
    */
   void removeClientServerConnection (std::string client_token, int server_id);
 
+  void deleteHandlings (std::string token);
+
  public:
   static SqlManager&
   

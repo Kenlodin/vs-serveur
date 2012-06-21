@@ -185,7 +185,7 @@ int Diffusion::dcData(sf::SocketTCP& sender, int number, Chunk* chuck)
   packet.Append(chuck->subChunk_, sizeof(avifile::s_sub_chunk) - sizeof(void*));
   if (chuck->subChunk_->data)
     packet.Append(chuck->subChunk_->data, MOD2(chuck->subChunk_->size));
-  COUTDEBUG("Diffusion --> Client : Data");
+  //COUTDEBUG("Diffusion --> Client : Data");
   return send(sender, packet);
 }
 

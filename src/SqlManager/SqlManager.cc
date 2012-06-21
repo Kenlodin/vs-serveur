@@ -219,3 +219,8 @@ SqlManager::disconnectClient (std::string token)
   execute ("DELETE FROM client_server WHERE client_token='" + token + "'");
   execute ("DELETE FROM client_handlings WHERE client_token='" + token + "'");
 }
+
+void SqlManager::deleteHandlings (std::string token)
+{
+  execute ("DELETE FROM client_handlings WHERE client_token='" + token + "'");
+}

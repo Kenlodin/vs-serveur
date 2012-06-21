@@ -43,7 +43,7 @@ void HandlingSender::Worker::run()
         Config::getInstance ().getInt ("server_id"));
     for (unsigned int i = 0; i < res.size(); i++)
     {
-      COUTDEBUG(("Get Work to send data"));
+      //COUTDEBUG(("Get Work to send data"));
       sql_tuple t = res.at(i);
       begin = atoi(t["packet_begin"].c_str());
       end = atoi(t["packet_end"].c_str());
@@ -67,7 +67,7 @@ void HandlingSender::Worker::run()
       }
       if (begin == 0) // TODO Live problem
       {
-        COUTDEBUG("Send header no :" << begin << " to " + token);
+        //COUTDEBUG("Send header no :" << begin << " to " + token);
         FileVideo* video = client->getTypeClient();
         for (int i = avifile::e_opcode::AVI_RIFF_AVI; i < 5; i++)
           Diffusion::getInstance().dcData(*(client->getDataSocket()),i , i,
@@ -75,7 +75,7 @@ void HandlingSender::Worker::run()
       }
       for (int nbPacket = begin; nbPacket <= end; nbPacket++)
       {
-        COUTDEBUG("Send packet no " << nbPacket << " to " << token);
+        //COUTDEBUG("Send packet no " << nbPacket << " to " << token);
         Chunk* chunk = client->getTypeClient()->getElement(nbPacket);
         Diffusion::getInstance().dcData(*(client->getDataSocket()), nbPacket + 5, chunk);
 	delete chunk;

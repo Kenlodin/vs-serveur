@@ -16,6 +16,7 @@
 // Internal include
 # include "../Client/Client.hh"
 # include "../Log/Log.hh"
+# include "../SqlManager/SqlManager.hh"
 
 /*
  * Manage client of this server

@@ -125,12 +125,14 @@ void ClientList::removeClient(sf::SocketTCP& sock)
   Client* c;
   if (it != clientList_.end())
   {
+    c = it->second;
+    SqlManager::getInstance().removeClientServerConnection(c->getToken()
+      , Config::getInstance().getInt("server_id")); 
     COUTDEBUG("FIND !!");
     if (c->getControlSocket() != nullptr)
       COUTDEBUG("TEST  1 : " << (sock == *(c->getControlSocket())));
     if (c->getDataSocket() != nullptr)
       COUTDEBUG("TEST  2 : " << (sock == *(c->getDataSocket())));
-    c = it->second;
     if (c->getControlSocket() != nullptr)
       clientList_.erase(*(c->getControlSocket()));
     if (c->getDataSocket() != nullptr)
