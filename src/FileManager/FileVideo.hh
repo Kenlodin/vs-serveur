@@ -12,32 +12,57 @@
 # include "../fwd.hh"
 # include "Chuck.hh"
 
-/*
+/**
  * Abstract class which represent a virtual file
  */
 class FileVideo
 {
   public:
-    // Constructors
+    /**
+     *  Constructors
+     *  @param videoId id of this video file
+     */
     FileVideo(int videoId);
+    /**
+     * Constructor
+     */
     FileVideo();
 
-    // Destructor
+    /**
+     *  Destructor
+     */
     virtual ~FileVideo();
 
-    //  Get a chunck
+    /**
+     *   Get a chunck
+     *   @param number number of chunk needed
+     *   @return Chunk need to be delete
+     */
     virtual Chunk* getElement(int number) = 0;
 
-    //  Set a chunk
+    /*
+     *   Set a chunk
+     *   @param number number of chunk received
+     *   @param packet chunk received
+     */
     virtual void setElement(int number, Chunk* packet) = 0;
 
-    // Get header of avi
+    /**
+     *  Get header of avi
+     *  @return array of avi header
+     */
     virtual avifile::s_chunk* const* getFileHeader() const = 0;
 
-    // Get video ID
+    /**
+     *  Get video ID
+     *  @return id of this video
+     */
     int getVideoId() const;
 
-    // Set video ID
+    /**
+     *  Set video ID
+     *  @param videoId set videoId of this file
+     */
     void setVideoId(int videoId);
   protected:
     // Video ID

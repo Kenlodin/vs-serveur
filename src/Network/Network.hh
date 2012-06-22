@@ -25,16 +25,28 @@
 class Network : public tools::Thread
 {
   public:
-    // Constructor
+    /**
+     *  Constructor
+     *  @param control_port of the server
+     *  @param data_port of the server
+     */
     Network(int control_port, int data_port);
 
-    // Destructor
+    /**
+     *  Destructor
+     */
     virtual ~Network();
   public:
-    // Run accepting and routing process
+    /**
+     *  Run accepting and routing process
+     */
     void run ();
 
-    // Function which route packet
+    /**
+     *  Function which route packet
+     *  @param packet received
+     *  @param sock that send this packet
+     */
     void routing(sf::Packet& packet, sf::SocketTCP& sock);
   private:
     // typedef of fonction handler
@@ -45,26 +57,57 @@ class Network : public tools::Thread
     const handler route_[ConnexionType::LENGTH];
   private:
     // Fonction handlers //
-    // Route a packet from client to tracker
+    /**
+     *  Route a packet from client to tracker
+     *  @param route second part of opcode
+     *  @param packet received without opcode
+     *  @param sock that send this message
+     */
     void clientTracker(unsigned int route, sf::Packet& packet
         , sf::SocketTCP& sock);
 
-    // Route a packet from tracker to client
+    /**
+     *  Route a packet from tracker to client
+     *  @param route second part of opcode
+     *  @param packet received without opcode
+     *  @param sock that send this message
+     */
     void trackerClient(unsigned int route, sf::Packet& packet
         , sf::SocketTCP& sock);
 
-    // Route a packet from client to diffusion
+    /**
+     *  Route a packet from client to diffusion
+     *  @param route second part of opcode
+     *  @param packet received without opcode
+     *  @param sock that send this message
+     */
     void clientDiffusion(unsigned int route, sf::Packet& packet
         , sf::SocketTCP& sock);
 
-    // Route a packet from diffusion to client
+    /**
+     *  Route a packet from diffusion to client
+     *  @param route second part of opcode
+     *  @param packet received without opcode
+     *  @param sock that send this message
+     */
     void diffusionClient(unsigned int route, sf::Packet& packet
         , sf::SocketTCP& sock);
 
-    // Route a packet from diffusion to diffusion
+    /**
+     *  Route a packet from diffusion to diffusion
+     *  @param route second part of opcode
+     *  @param packet received without opcode
+     *  @param sock that send this message
+     */
     void diffusionDiffusion(unsigned int route, sf::Packet& packet
         , sf::SocketTCP& sock);
     
+    /**
+     *  Route a packet from administrator to server
+     *  @param route second part of opcode
+     *  @param packet received without opcode
+     *  @param sock that send this message
+     */
     void adminServer(unsigned int route, sf::Packet& packet
         , sf::SocketTCP& sock);
   private:

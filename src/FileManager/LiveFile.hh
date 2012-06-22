@@ -17,30 +17,54 @@
 // Internal include
 # include "FileVideo.hh"
 
-/*
+/**
  * Virtual file that represent a live
  */
 class LiveFile : public FileVideo
 {
   public:
+    /**
+     * Constructor
+     * @param videoId live id of this file
+     */
     LiveFile(int videoId);
 
-    // Destructor
+    /**
+     *  Destructor
+     */
     virtual ~LiveFile();
 
-    // Get packet
+    /**
+     *  Get packet
+     *  @param number of chunk needed
+     *  @return chunk of this live
+     */
     Chunk* getElement(int number);
 
-    // Insert a new packet
+    /**
+     *  Insert a new packet
+     *  @param number number of chunk received
+     *  @param data chunk received
+     */
     void setElement(int number, Chunk* data);
 
-    // Add linkedServer
+    /**
+     *  Add linkedServer
+     *  @param link server request
+     */
     void addServer(sf::SocketTCP);
 
-    // Remove linkedServer
+    /**
+     *  Remove linkedServer
+     *  @param remove linked server
+     */
     void suppServer(sf::SocketTCP);
   private:
-    // Forward a packet to linked server
+    /**
+     *  Forward a packet to linked server
+     *  @param number number of live chunk received
+     *  @param data chunk of live received
+     */
     void forwardPacket(int number, Chunk* data);
   private:
     // Contain every live packet.

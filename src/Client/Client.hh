@@ -17,70 +17,126 @@
 # include "../Log/Log.hh"
 # include "../FileManager/FileVideo.hh"
 
-/*
+/**
  * This class keep information of a connecting client in tracker or diffusion
  */
 class Client
 {
   public:
-    // Constructor
+    /**
+     *  Constructor
+     *  @param control Traqueur socket of client can be null
+     *  @param data Diffusion socket of client can be null
+     *  @param token Connexion token of client
+     */
     Client(sf::SocketTCP* control, sf::SocketTCP*& data, std::string token);
 
-    // Destructor
+    /**
+     * Destructor
+     */
     virtual ~Client();
 
-    // Get controlSocket
+    /**
+     * Get controlSocket
+     *  @return pointer of SocketTCP can be null
+     */
     sf::SocketTCP* getControlSocket() const;
 
-    // Get dataSocket
+    /**
+     *  Get dataSocket
+     *  @return pointer of SocketTCP can be null
+     */
     sf::SocketTCP* getDataSocket() const;
 
-    // Use controlSocket to send a packet
+    /**
+     *  Use controlSocket to send a packet
+     *  @param packet packet to be send
+     *  @return RETURN_VALUE_GOOD on success and RETURN_VALUE_ERROR on error
+     */
     int sendControl(sf::Packet& packet);
 
-    // Use dataSocket to send a packet
+    /**
+     *  Use dataSocket to send a packet
+     *  @param packet packet to be send
+     *  @return RETURN_VALUE_GOOD on success and RETURN_VALUE_ERROR on error
+     */
     int sendData(sf::Packet& packet);
 
-    // Set control socket
+    /**
+     *  Set control socket
+     *  @param controlSocket new ControlSocket for this client can be null
+     */
     void setControlSocket(sf::SocketTCP* controlSocket);
 
-    // Set data socket
+    /**
+     *  Set data socket
+     *  @param dataSocket new DataSocket for this client can be null
+     */
     void setDataSocket(sf::SocketTCP* dataSocket);
 
-    // Get token client
+    /**
+     *  Get token client
+     *  @return token of this client
+     */
     std::string& getToken();
 
-    // Set token client
+    /**
+     *  Set token client
+     *  @param token new token for this client
+     */
     void setToken(std::string token);
 
-    // Get client type
+    /**
+     *  Get client type
+     *  @return File that represent the current file readed by this client
+     */
     FileVideo* getTypeClient() const;
 
-    // Set client type
+    /**
+     *  Set client type
+     *  @param typeClient new typeClient for this client can be null
+     */
     void setTypeClient(FileVideo* typeClient);
 
-    // Try to lock this client
+    /**
+     *  Try to lock this client
+     *  @return true on success false if this client is already lock
+     */
     bool tryLock();
 
-    // Lock this client
+    /**
+     *  Lock this client
+     */
     void lock();
 
-    // Unlock this client
+    /**
+     *  Unlock this client
+     */
     void unlock();
 private:
-    // Socket for tracker dialog
+    /**
+     *  Socket for tracker dialog
+     */
     sf::SocketTCP* controlSocket_;
 
-    // Socket for diffusion data transfert
+    /**
+     *  Socket for diffusion data transfert
+     */
     sf::SocketTCP* dataSocket_;
 
-    // Interface which represent a VOD or Live connection
+    /**
+     *  Interface which represent a VOD or Live connection
+     */
     FileVideo* typeClient_;
 
-    // Token of connection
+    /**
+     *  Token of connection
+     */
     std::string token_;
 
-    // Mutex of this instance of client
+    /**
+     *  Mutex of this instance of client
+     */
     boost::mutex using_;
 };
 

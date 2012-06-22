@@ -15,20 +15,30 @@
 // Internal include
 # include "../fwd.hh"
 
-/*
+/**
  * Class which represent a chuck of avi
  */
 class Chunk
 {
   public:
-    // Constructor
+    /**
+     *  Constructor
+     */
     Chunk();
+    /**
+     * Constructor for copy
+     * @param copy Chunk for the copy
+     */
     Chunk(Chunk& copy);
 
-    // Destructor
+    /**
+     *  Destructor
+     */
     virtual ~Chunk();
 
-    // Empting the chunck
+    /**
+     *  Empting the chunck
+     */
     void clear();
   public:
     avifile::s_sub_chunk *subChunk_;

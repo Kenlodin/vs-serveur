@@ -20,89 +20,214 @@
 class Tracker: public PacketHandler
 {
   private: // Private because of singleton
-    // Constructor
+    /**
+     *  Constructor
+     */
     Tracker();
 
-    // Destructor
+    /**
+     *  Destructor
+     */
     virtual ~Tracker();
   public:
-    // Get instance of tracker
+    /**
+     *  Get instance of tracker
+     *  @return instance of Tracker class
+     */
     static Tracker& getInstance();
 
-    // Routing handler for packet of tracker
+    /**
+     *  Routing handler for packet of tracker
+     *  @param code second part of opcode
+     *  @param packet received
+     *  @param sock that send this packet
+     */
     int routing(unsigned int code, sf::Packet& packet, sf::SocketTCP& sock);
   private:
-    // typedef of funtion handler
+    /**
+     *  typedef of funtion handler
+     */
     typedef int (Tracker::*handler)(sf::Packet& packet, sf::SocketTCP& sock);
 
     // Array of function of routing
     const handler route_[CT::LENGTH];
   private:
     // Receiver handling //
-    // Manage packet client->tracker : Connection master
+    /**
+     *  Manage packet client->tracker : Connection master
+     *  @param packet received
+     *  @param sock that send this message
+     *  @return RETURN_VALUE_GOOD on success
+     */
     int ctConnMaster(sf::Packet& packet, sf::SocketTCP& sock);
 
-    // Manage packet client->tracker : Connection slave
+    /**
+     *  Manage packet client->tracker : Connection slave
+     *  @param packet received
+     *  @param sock that send this message
+     *  @return RETURN_VALUE_GOOD on success
+     */
     int ctConnSlave(sf::Packet& packet, sf::SocketTCP& sock);
 
-    // Manage packet client->tracker : Ask list
+    /**
+     *  Manage packet client->tracker : Ask list
+     *  @param packet received
+     *  @param sock that send this message
+     *  @return RETURN_VALUE_GOOD on success
+     */
     int ctAskList(sf::Packet& packet, sf::SocketTCP& sock);
 
-    // Manage packet client->tracker : Ask flux
+    /**
+     *  Manage packet client->tracker : Ask flux
+     *  @param packet received
+     *  @param sock that send this message
+     *  @return RETURN_VALUE_GOOD on success
+     */
     int ctAskFlux(sf::Packet& packet, sf::SocketTCP& sock);
 
-    // Manage packet client->tracker : Ask Check
+    /**
+     *  Manage packet client->tracker : Ask Check
+     *  @param packet received
+     *  @param sock that send this message
+     *  @return RETURN_VALUE_GOOD on success
+     */
     int ctAskCheck(sf::Packet& packet, sf::SocketTCP& sock);
 
-    // Manage packet client->tracker : Ask Packet
+    /**
+     *  Manage packet client->tracker : Ask Packet
+     *  @param packet received
+     *  @param sock that send this message
+     *  @return RETURN_VALUE_GOOD on success
+     */
     int ctAskPacket(sf::Packet& packet, sf::SocketTCP& sock);
 
-    // Manage packet client->tracker : Ask Range Packer
+    /**
+     *  Manage packet client->tracker : Ask Range Packer
+     *  @param packet received
+     *  @param sock that send this message
+     *  @return RETURN_VALUE_GOOD on success
+     */
     int ctAskRpacket(sf::Packet& packet, sf::SocketTCP& sock);
 
-    // Manage packet client->tracker : Ask Move
+    /**
+     *  Manage packet client->tracker : Ask Move
+     *  @param packet received
+     *  @param sock that send this message
+     *  @return RETURN_VALUE_GOOD on success
+     */
     int ctAskMove(sf::Packet& packet, sf::SocketTCP& sock);
 
-    // Manage packet client->tracker : Ask deficient
+    /**
+     *  Manage packet client->tracker : Ask deficient
+     *  @param packet received
+     *  @param sock that send this message
+     *  @return RETURN_VALUE_GOOD on success
+     */
     int ctAskDeficient(sf::Packet& packet, sf::SocketTCP& sock);
 
-    // Manage packet client->tracker : Ask remove frame of video
+    /**
+     *  Manage packet client->tracker : Ask remove frame of video
+     *  @param packet received
+     *  @param sock that send this message
+     *  @return RETURN_VALUE_GOOD on success
+     */
     int ctAskRem(sf::Packet& packet, sf::SocketTCP& sock);
 
-    // Manage packet client->tracker : Ask stop video
+    /**
+     *  Manage packet client->tracker : Ask stop video
+     *  @param packet received
+     *  @param sock that send this message
+     *  @return RETURN_VALUE_GOOD on success
+     */
     int ctAskStop(sf::Packet& packet, sf::SocketTCP& sock);
 
-    // Manage packet client->tracker : Deconnection
+    /**
+     *  Manage packet client->tracker : Deconnection
+     *  @param packet received
+     *  @param sock that send this message
+     *  @return RETURN_VALUE_GOOD on success
+     */
     int ctDec(sf::Packet& packet, sf::SocketTCP& sock);
 
-    // Send ping respond
+    /**
+     *  Send ping respond
+     *  @param packet received
+     *  @param sock that send this message
+     *  @return RETURN_VALUE_GOOD on success
+     */
     int ctPing(sf::Packet& packet, sf::SocketTCP& sock);
 
-    // Send url of video
+    /**
+     *  Send url of video
+     *  @param packet received
+     *  @param sock that send this message
+     *  @return RETURN_VALUE_GOOD on success
+     */
     int ctUrl(sf::Packet& packet, sf::SocketTCP& sock);
   private:
-    // Send a packet by sender
+    /**
+     *  Send a packet by sender
+     *  @param sender socket where send this packet
+     *  @param packet to send
+     *  @return RETURN_VALUE_GOOD on success
+     */
     int send(sf::SocketTCP& sender, sf::Packet& packet);
     // Sender handling //
-    // Manage packet tracker->client : Token
+    /**
+     *  Manage packet tracker->client : Token
+     *  @param sender socket where send this packet
+     *  @param token of new client
+     *  @return RETURN_VALUE_GOOD on success
+     */
     int tcToken(sf::SocketTCP& sender, std::string token);
 
-    // Manage packet tracker->client : List
+    /**
+     *  Manage packet tracker->client : List
+     *  @param sender socket where send this packet
+     *  @param sqlResult sqlMap that contain list of file
+     *  @return RETURN_VALUE_GOOD on success
+     */
     int tcList(sf::SocketTCP& sender, sql_result sqlResult);
 
-    // Manage packet tracker->client : list diffusion
+    /**
+     *  Manage packet tracker->client : list diffusion
+     *  @param sender socket where send this packet
+     *  @param sqlResult that contain list of server
+     *  @return RETURN_VALUE_GOOD on success
+     */
     int tcListDiff(sf::SocketTCP& sender, sql_result sqlResult);
 
-    // Manage packet tracker->client : list new diffusion
+    /**
+     *  Manage packet tracker->client : list new diffusion
+     *  @param sender socket where send this packet
+     *  @param sqlResult that contain list of server
+     *  @return RETURN_VALUE_GOOD on success
+     */
     int tcListNDiff(sf::SocketTCP& sender, sql_result sqlResult);
 
-    // Manage packet tracker->client : message
+    /**
+     *  Manage packet tracker->client : message
+     *  @param sender socket where send this packet
+     *  @param numMsg message code
+     *  @param msg text message
+     *  @return RETURN_VALUE_GOOD on success
+     */
     int tcMsg(sf::SocketTCP& sender, sf::Int32 numMsg, std::string msg);
 
-    // Send ping respond
+    /**
+     *  Send ping respond
+     *  @param sender socket where send this packet
+     *  @return RETURN_VALUE_GOOD on success
+     */
     int tcPing(sf::SocketTCP& sender);
 
-    // Send url of video
+    /**
+     *  Send url of video
+     *  @param sender socket where send this packet
+     *  @param ip of server
+     *  @param url of video
+     *  @return RETURN_VALUE_GOOD on success
+     */
     int tcUrl(sf::SocketTCP& sender, std::string& ip, std::string& url);
 };
 

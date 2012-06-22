@@ -18,25 +18,38 @@ template <class T>
 class ThreadPool
 {
   public:
-    // Constructor
+    /**
+     *  Constructor
+     *  @param number of thread created
+     */
     ThreadPool(int number);
 
-    // Destructor
+    /**
+     *  Destructor
+     */
     virtual ~ThreadPool();
 
-    // Start every thread
+    /**
+     *  Start every thread
+     */
     void start();
 
-    // Join every thread
+    /**
+     *  Join every thread
+     */
     void join();
   private:
-    // Represent a thread
+    /**
+     *  Represent a thread
+     */
     class Worker: public tools::Thread
     {
       public:
         Worker();
 
-        //Overloading of function of thread
+        /**
+         * Overloading of function of thread
+         */
         void run();
     };
   private:

@@ -29,39 +29,75 @@
 class VodFile : public FileVideo
 {
   public:
-    // Constructor
+    /**
+     *  Constructor
+     */
     VodFile();
+    /**
+     * Constructor
+     * @param videoId id of this video
+     */
     VodFile(int videoId);
 
-    // Destructor
+    /**
+     *  Destructor
+     */
     virtual ~VodFile();
 
-    // Get name of file
+    /**
+     *  Get name of file
+     *  @return the name of this file
+     */
     std::string getName() const;
   private:
-    // Move up to forward packet
+    /**
+     *  Move up to forward packet
+     *  @param number of chunk needed
+     */
     void moveUp(int number);
 
-    // Move down to a previous packet
+    /**
+     *  Move down to a previous packet
+     *  @param number of chunk needed
+     */
     void moveDown(int number);
 
-    // Initialise First packet
+    /**
+     *  Initialise First packet
+     */
     void loadSubChunk();
 
-    // Initialise headers
+    /**
+     *  Initialise headers
+     *  @param type type identifier of this header
+     */
     void loadChunk(avifile::e_opcode type);
   public:
-    // Get a chunk
+    /**
+     *  Get a chunk
+     *  @param number of chunk needed
+     *  @return chunk readed
+     */
     Chunk* getElement(int number);
 
 
-    // Get a chunk
+    /**
+     *  Get a chunk
+     *  @param number of chunk to write
+     *  @param element chunk to write
+     */
     void setElement(int number, Chunk* element);
 
-    // Get chunk header
+    /**
+     *  Get chunk header
+     *  @return array of header
+     */
     avifile::s_chunk* const* getFileHeader() const;
 
-    // Return the attribute isValid
+    /**
+     *  Return the attribute isValid
+     *  @return RETURN_VALUE_GOOD if this file is valid
+     */
     int getIsValid() const;
   private:
     // Check is this VodFile is valid

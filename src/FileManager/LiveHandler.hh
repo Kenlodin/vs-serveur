@@ -21,22 +21,40 @@
 class LiveHandler
 {
   private: // Private because of singleton
-    //Constructor
+    /**
+     * Constructor
+     */
     LiveHandler();
 
-    // Destructor
+    /**
+     *  Destructor
+     */
     virtual ~LiveHandler();
   public:
-    // Get instance of LiveHandler
+    /**
+     *  Get instance of LiveHandler
+     *  @return instance of this class
+     */
     static LiveHandler& getInstance();
 
-    // Get a live
+    /**
+     *  Get a live
+     *  @param videoId id of live needed
+     *  @return LiveFile that represent the live
+     */
     LiveFile* getLive (int videoId);
 
-    // Leave a live
+    /**
+     *  Leave a live
+     *  @param videoId of live got
+     */
     void leaveLive (int videoId);
   private:
-    // Link this server with a live server
+    /**
+     *  Link this server with a live server
+     *  @param videoId that represent the live
+     *  @return LiveFile created and linked
+     */
     LiveFile* addLive (int videoId);
   private:
     // Reference every live

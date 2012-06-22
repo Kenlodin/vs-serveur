@@ -24,56 +24,114 @@
 class ClientList
 {
   private: // Private because of singleton
-    // Constructor
+    /**
+     *  Constructor
+     */
     ClientList();
 
-    //Destructor
+    /**
+     * Destructor
+     */
     virtual ~ClientList();
 
   public:
-    // Get instance of Clientlist
+    /**
+     *  Get instance of Clientlist
+     *  @return instance of Clientlist
+     */
     static ClientList& getInstance();
 
-    // Add Client in list
+    /**
+     *  Add Client in list
+     *  @param control socket of this new client can be null
+     *  @param data socket of this new client can be null
+     *  @param token of this new client
+     *  @return RETURN_VALUE_GOOD on success
+     */
     int addClient(sf::SocketTCP* control, sf::SocketTCP* data
         , std::string token);
 
-    // Link dataSocket to a client
+    /**
+     *  Link dataSocket to a client
+     *  @param data data socket of client
+     *  @param token of the client
+     *  @return RETURN_VALUE_GOOD on success
+     */
     int link(sf::SocketTCP* data, std::string token);
 
-    // Remove client if possible
+    /**
+     *  Remove client if possible
+     *  @param sock that represent one client
+     */
     void removeClient(sf::SocketTCP& sock);
 
-    // Purge temporary client if possible
+    /**
+     *  Purge temporary client if possible
+     */
     void purgeClient();
 
-    // Get client from a socket !!! Take care of lock
+    /**
+     *  Get client from a socket !!! Take care of lock
+     *  @param sock that represent one client
+     *  @return client represented by this socket
+     */
     Client* getClient(sf::SocketTCP& sock);
+    /**
+     *  Get client from a socket !!! Take care of lock
+     *  @param sock that represent one client
+     *  @return client represented by this socket
+     */
     Client* getClient(sf::SocketTCP* sock);
 
-    // Get client from token !!! Take care of lock
+    /**
+     *  Get client from token !!! Take care of lock
+     *  @param token that represent one client
+     *  @return client represented by this token
+     */
     Client* getClient(std::string token);
 
 
-    // Get private IP of this socket
+    /**
+     *  Get private IP of this socket
+     *  @param sock of a new client
+     *  @return private ip represented by this socket
+     */
     std::string getPrivateIp(sf::SocketTCP sock);
 
-    // Set private IP of a socket
+    /**
+     *  Set private IP of a socket
+     *  @param sock of new connection
+     *  @param ip of this socket
+     */
     void setPrivateIp(sf::SocketTCP& sock, std::string ip);
 
-    // Get list of client
+    /**
+     *  Get list of client
+     *  @return the list of client list
+     */
     std::map<sf::SocketTCP, Client*> getClientList() const;
 
-    // Add sock which create a problem
+    /**
+     *  Add sock which create a problem
+     *  @param sock that send a bad packet
+     *  @param errorNumber of this bad packet
+     */
     void addBadClient(sf::SocketTCP sock, int errorNumber);
 
-    // get list of bad client and lock it
+    /**
+     *  get list of bad client and lock it
+     *  @return list of bad client
+     */
     std::list<std::pair<sf::SocketTCP, int>>& getBadClient();
 
-    // unlock bad client list
+    /**
+     *  unlock bad client list
+     */
     void getBadClientRelease();
 
-    // Disconnect All client
+    /**
+     *  Disconnect All client
+     */
     void disconnectAllClient ();
     
   private:

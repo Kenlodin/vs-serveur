@@ -19,31 +19,44 @@
 # include "Diffusion.hh"
 # include "../Config/Config.hh"
 
-/*
+/**
  * Pool of thread which send data for client
  */
 class HandlingSender
 {
   public:
-    // Constructor
+    /**
+     *  Constructor
+     *  @param number number of thread that will be create
+     */
     HandlingSender(int number);
 
-    // Destructor
+    /**
+     *  Destructor
+     */
     virtual ~HandlingSender();
   public:
-    // Start every thread in thread pool
+    /**
+     *  Start every thread in thread pool
+     */
     void start();
 
-    // Join every thread in thread pool
+    /**
+     *  Join every thread in thread pool
+     */
     void join();
 
-    // Represent a thread
+    /**
+     *  Represent a thread
+     */
     class Worker: public tools::Thread
         {
           public:
             Worker();
 
-            // Overload of function run
+            /*
+             *  Overload of function run
+             */
             void run();
         };
   private:
