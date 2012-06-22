@@ -18,6 +18,7 @@
 # else
 #  define COUTDEBUG(MSG) void
 # endif
+
 /**
  * La classe log permet de mettre en place un systeme de log. C'est un singleton
  * qui ne nécessite pas d'être thread-safe puisqu'il doit être appellé pour être

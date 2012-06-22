@@ -32,7 +32,12 @@ namespace tools
     return (iss >> dest) != 0;
   }
 
-
+  /**
+   * Generate au Token
+   * @param private_ip
+   * @param public_ip
+   * @return 
+   */
   std::string token (std::string private_ip, std::string public_ip);
 }
 

@@ -29,6 +29,11 @@ namespace tools
     virtual ~ChunckCounter();
 
   public:
+    /**
+     * Return some informations about a avi file
+     * @param file
+     * @return 
+     */
     static struct result avi(std::string file);
   };
 }

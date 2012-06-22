@@ -15,7 +15,22 @@ namespace tools
   class Http
   {
   public:
+    /**
+     * Write a file on disk
+     * @param ptr
+     * @param size
+     * @param nmemb
+     * @param stream
+     * @return 
+     */
     static size_t writeFile (void *ptr, size_t size, size_t nmemb, FILE *stream);
+    
+    /**
+     * Download a file from an HTTP server
+     * @param url
+     * @param file
+     * @return 
+     */
     static int download(std::string url, std::string file);
   
   private:
