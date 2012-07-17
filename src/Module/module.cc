@@ -5,6 +5,7 @@ Module::Module(std::string filename)
   infos_["filename"] = filename;
   loaded_ = false;
   load_infos();
+  load_module();
 }
 
 std::string
