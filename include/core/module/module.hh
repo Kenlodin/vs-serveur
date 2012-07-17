@@ -31,9 +31,6 @@
 # define MODULE_AUTHORS(AUT)  __MODULE_INFO(authors, AUT)
 # define MODULE_VERSION(VER)  __MODULE_INFO(version, VER)
 # define MODULE_DESC(DESC)    __MODULE_INFO(desc, DESC)
-# define MODULE_INIT(INIT)    __MODULE_INFO(init_fun, INIT)
-# define MODULE_EXIT(EXIT)    __MODULE_INFO(exit_fun, EXIT)
-
 
 /*
  * Type to describ infos conteneur
