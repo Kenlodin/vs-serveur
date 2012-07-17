@@ -1,4 +1,4 @@
-#include "module.hh"
+#include <core/module/module.hh>
 
 Module::Module(std::string filename)
 {
