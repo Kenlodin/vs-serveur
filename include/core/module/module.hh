@@ -17,6 +17,9 @@
 // Librairie Includes
 # include <dlfcn.h>
 
+// Core Includes
+# include <core/module/baseModule.hh>
+
 
 # define SECTION_INFO_STR ".modinfo"
 
@@ -45,6 +48,8 @@
  * Type to describ infos conteneur
  */
 typedef std::map<std::string, std::string> map_infos;
+
+typedef BaseModule *(*fun_maker)(void);
 
 class Module
 {
@@ -100,6 +105,7 @@ class Module
     void                  *module_ptr_;
     map_infos             infos_;
     bool                  loaded_;
+    BaseModule            *module_;
 
 };
 

@@ -6,6 +6,7 @@ Module::Module(std::string filename)
   loaded_ = false;
   load_infos();
   load_module();
+  module_ = NULL;
 }
 
 std::string
@@ -134,9 +135,15 @@ Module::load_infos_128(int fd __attribute__((unused)))
 void
 Module::load_module()
 {
+  fun_maker fun = NULL;
+
   module_ptr_ = dlopen(infos_["filename"].c_str(), RTLD_LAZY | RTLD_GLOBAL);
   if (module_ptr_ == NULL)
     std::cerr << "error in load module named " << infos_["filename"] << std::endl;
+  
+  fun = (fun_maker)dlsym(module_ptr_, "makeModule");
+  if (fun)
+    module_ = fun();
 }
 
 void
