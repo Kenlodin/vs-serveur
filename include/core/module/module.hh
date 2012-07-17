@@ -32,6 +32,15 @@
 # define MODULE_VERSION(VER)  __MODULE_INFO(version, VER)
 # define MODULE_DESC(DESC)    __MODULE_INFO(desc, DESC)
 
+# define MAIN_CLASS(CLASS)                                          \
+  extern "C"                                                        \
+  {                                                                 \
+    static CLASS *makeModule()                                      \
+    {                                                               \
+      return new CLASS();                                           \
+    }                                                               \
+  }
+
 /*
  * Type to describ infos conteneur
  */
