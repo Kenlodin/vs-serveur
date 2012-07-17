@@ -15,10 +15,10 @@ set(MY_PROJECT_NAME "p2pserver")
 
 project(${MY_PROJECT_NAME} CXX)
 
-set(CMAKE_CXX_FLAGS_RELEASE "-Wall -Wextra -std=c++0x -pedantic -g") #Werror
-set(CMAKE_CXX_FLAGS_DEBUG "-Wall -Wextra -std=c++0x -pedantic -g") #Werror
-set(LINK_FLAGS_RELEASE "-Wall -Wextra -std=c++0x -pedantic -g") #Werror
-set(LINK_FLAGS_DEBUG "-Wall -Wextra -std=c++0x -pedantic -g") # Werror
+set(CMAKE_CXX_FLAGS_RELEASE "-ldl -Wall -Wextra -std=c++0x -pedantic -g") #Werror
+set(CMAKE_CXX_FLAGS_DEBUG "-ldl -Wall -Wextra -std=c++0x -pedantic -g") #Werror
+set(LINK_FLAGS_RELEASE "-ldl -Wall -Wextra -std=c++0x -pedantic -g") #Werror
+set(LINK_FLAGS_DEBUG "-ldl -Wall -Wextra -std=c++0x -pedantic -g") # Werror
 
 # Compilation of the lib
 foreach(f ${LIBRARIES})
