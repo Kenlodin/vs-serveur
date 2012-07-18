@@ -6,8 +6,8 @@
  */
 
 // Internal include
-#include "HandlingSender.hh"
-#include "../SqlManager/SqlManager.hh"
+#include <core/diffusion/HandlingSender.hh>
+#include <core/sqlManager/SqlManager.hh>
 
 
 HandlingSender::HandlingSender(int number)

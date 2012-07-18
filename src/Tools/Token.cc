@@ -1,4 +1,4 @@
-#include "Tools.hh"
+#include <core/tools/Tools.hh>
 
 std::string
 tools::token (std::string private_ip, std::string public_ip)

@@ -9,7 +9,7 @@
 #define VODFILE_HXX_
 
 // Internal include
-# include "VodFile.hh"
+# include <core/fileManager/VodFile.hh>
 
 inline
 std::string VodFile::getName() const

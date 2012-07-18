@@ -7,7 +7,7 @@
 
 #include <fstream>
 
-#include "Log.hh"
+#include <core/log/Log.hh>
 
 Log&
 Log::getInstance ()

@@ -9,8 +9,8 @@
 # define FILEVIDEO_HH_
 
 // Internal include
-# include "../fwd.hh"
-# include "Chuck.hh"
+# include <core/fwd.hh>
+# include <core/fileManager/Chuck.hh>
 
 /**
  * Abstract class which represent a virtual file
@@ -70,6 +70,6 @@ class FileVideo
 };
 
 // Inline Get/Set
-# include "FileVideo.hxx"
+# include <core/fileManager/FileVideo.hxx>
 
 #endif /* FILEVIDEO_HH_ */

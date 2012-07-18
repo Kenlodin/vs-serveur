@@ -8,7 +8,7 @@
 #ifndef CLIENT_HXX_
 # define CLIENT_HXX_
 
-# include "Client.hh"
+# include <core/client/Client.hh>
 
 inline
 sf::SocketTCP* Client::getControlSocket() const

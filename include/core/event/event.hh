@@ -7,7 +7,7 @@
 class BaseEvent
 {
   public:
-    virtual void launch(std::vector<boost::any> params) = 0;
+    virtual int launch(std::vector<boost::any> params) = 0;
 };
 
 #endif /* !EVENT_HH_ */

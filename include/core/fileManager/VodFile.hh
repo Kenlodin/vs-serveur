@@ -15,11 +15,11 @@
 # include <boost/thread/mutex.hpp>
 
 // Internal include
-# include "../fwd.hh"
-# include "Chuck.hh"
-# include "FileVideo.hh"
-# include "../Log/Log.hh"
-# include "../Tools/Tools.hh"
+# include <core/fwd.hh>
+# include <core/fileManager/Chuck.hh>
+# include <core/fileManager/FileVideo.hh>
+# include <core/log/Log.hh>
+# include <core/tools/Tools.hh>
 
 # define MAX(X, Y) (X > Y) ? X : Y
 
@@ -138,6 +138,6 @@ class VodFile : public FileVideo
 };
 
 // Inline get/set
-# include "VodFile.hxx"
+# include <core/fileManager/VodFile.hxx>
 
 #endif /* FILE_HH_ */

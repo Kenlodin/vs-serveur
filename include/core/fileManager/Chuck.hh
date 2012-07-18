@@ -13,7 +13,7 @@
 # include <string.h>
 
 // Internal include
-# include "../fwd.hh"
+# include <core/fwd.hh>
 
 /**
  * Class which represent a chuck of avi

@@ -8,8 +8,8 @@
 #ifndef CHUNCKCOUNTER_HH
 #define	CHUNCKCOUNTER_HH
 
-#include "../../fwd.hh"
-#include "../../Log/Log.hh"
+#include <core/fwd.hh>
+#include <core/log/Log.hh>
 namespace tools
 {
 

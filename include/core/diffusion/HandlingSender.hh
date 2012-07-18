@@ -9,15 +9,15 @@
 # define HANDLINGSENDER_HH_
 
 // Internal include
-# include "../Thread/Thread.hh"
-# include "../Network/ClientList.hh"
-# include "../Thread/Thread.hh"
-# include "../FileManager/Chuck.hh"
-# include "../FileManager/VodFile.hh"
-# include "../FileManager/LiveFile.hh"
-# include "../fwd.hh"
-# include "Diffusion.hh"
-# include "../Config/Config.hh"
+# include <core/thread/Thread.hh>
+# include <core/network/ClientList.hh>
+# include <core/thread/Thread.hh>
+# include <core/fileManager/Chuck.hh>
+# include <core/fileManager/VodFile.hh>
+# include <core/fileManager/LiveFile.hh>
+# include <core/fwd.hh>
+# include <core/diffusion/Diffusion.hh>
+# include <core/config/Config.hh>
 
 /**
  * Pool of thread which send data for client

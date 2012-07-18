@@ -11,9 +11,9 @@
 #include <pqxx/pqxx>
 #include <iostream>
 #include <boost/thread/mutex.hpp>
-#include "../Tools/Tools.hh"
-#include "../Log/Log.hh"
-#include "../Config/Config.hh"
+#include <core/tools/Tools.hh>
+#include <core/log/Log.hh>
+#include <core/config/Config.hh>
 
 typedef pqxx::result sql_result;
 typedef pqxx::result::tuple sql_tuple;

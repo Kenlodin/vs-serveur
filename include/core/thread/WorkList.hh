@@ -101,6 +101,6 @@ class WorkList
     ListArgs args_;
 };
 
-# include "WorkList.hxx"
+# include <core/thread/WorkList.hxx>
 
 #endif /* WORKLIST_HH_ */

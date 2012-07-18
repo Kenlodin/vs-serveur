@@ -5,7 +5,7 @@
  * Created on 19 avril 2012, 16:41
  */
 
-#include "Config.hh"
+#include <core/config/Config.hh>
 #include <boost/filesystem/operations.hpp>
 #include <boost/filesystem/path.hpp>
 

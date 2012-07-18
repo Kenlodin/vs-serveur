@@ -12,8 +12,8 @@
 #include <iostream>
 #include <boost/thread/mutex.hpp>
 #include <tinyxml.h>
-#include "../Tools/Tools.hh"
-#include "../SqlManager/SqlManager.hh"
+#include <core/tools/Tools.hh>
+#include <core/sqlManager/SqlManager.hh>
 
 class Config
 {

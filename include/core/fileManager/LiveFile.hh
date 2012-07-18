@@ -15,7 +15,7 @@
 # include <SFML/Network.hpp>
 
 // Internal include
-# include "FileVideo.hh"
+# include <core/fileManager/FileVideo.hh>
 
 /**
  * Virtual file that represent a live

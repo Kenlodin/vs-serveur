@@ -13,11 +13,11 @@
 # include <SFML/Network.hpp>
 
 //Internal include
-# include "../Thread/Thread.hh"
-# include "../fwd.hh"
-# include "../Diffusion/Diffusion.hh"
-# include "../Tracker/Tracker.hh"
-# include "../Log/Log.hh"
+# include <core/thread/Thread.hh>
+# include <core/fwd.hh>
+# include <core/diffusion/Diffusion.hh>
+# include <core/tracker/Tracker.hh>
+# include <core/log/Log.hh>
 
 /*
  * Class which manager input connection and routing

@@ -8,14 +8,14 @@
 #ifndef ADMINSERVER_HH
 #define	ADMINSERVER_HH
 
-#include "../Log/Log.hh"
-#include "../PacketHandler.hh"
-#include "../fwd.hh"
-#include "../Tools/Tools.hh"
-#include "../Tools/Http/Http.hh"
-#include "../Network/ClientList.hh"
-#include "../SqlManager/SqlManager.hh"
-#include "../Tools/ChunkCounter/ChunckCounter.hh"
+#include <core/log/Log.hh>
+#include <core/PacketHandler.hh>
+#include <core/fwd.hh>
+#include <core/tools/Tools.hh>
+#include <core/tools/http/Http.hh>
+#include <core/network/ClientList.hh>
+#include <core/sqlManager/SqlManager.hh>
+#include <core/tools/chunkCounter/ChunckCounter.hh>
 
 class AdminServer : public PacketHandler
 {

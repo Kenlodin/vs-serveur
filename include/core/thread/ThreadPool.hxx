@@ -6,8 +6,8 @@
  */
 
 // Internal include
-#include "ThreadPool.hh"
-#include "WorkList.hh"
+#include <core/thread/ThreadPool.hh>
+#include <core/thread/WorkList.hh>
 
 template<class T>
 ThreadPool<T>::Worker::Worker()

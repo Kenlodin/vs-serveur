@@ -6,12 +6,12 @@
  */
 
 //Internal include
-# include "Network.hh"
-# include "../Diffusion/Diffusion.hh"
-# include "../Tracker/Tracker.hh"
-# include "../Thread/WorkList.hh"
-# include "../AdminServer/AdminServer.hh"
-# include "ClientList.hh"
+# include <core/network/Network.hh>
+# include <core/diffusion/Diffusion.hh>
+# include <core/tracker/Tracker.hh>
+# include <core/thread/WorkList.hh>
+# include <core/adminServer/AdminServer.hh>
+# include <core/network/ClientList.hh>
 
 Network::Network(int control_port, int data_port)
     : route_(

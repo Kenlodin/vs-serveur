@@ -9,11 +9,11 @@
 # define DIFFUSION_HH_
 
 // Internal include
-# include "../PacketHandler.hh"
-# include "../FileManager/Chuck.hh"
-# include "../fwd.hh"
-# include "../Log/Log.hh"
-# include "../Tracker/Tracker.hh"
+# include <core/PacketHandler.hh>
+# include <core/fileManager/Chuck.hh>
+# include <core/fwd.hh>
+# include <core/log/Log.hh>
+# include <core/tracker/Tracker.hh>
 
 /**
  * Class which implement interface PacketHandler for the routing of packet

@@ -5,8 +5,8 @@
  *      Author: nagriar
  */
 
-#include "Tracker.hh"
-#include "../Network/ClientList.hh"
+#include <core/tracker/Tracker.hh>
+#include <core/network/ClientList.hh>
 
 #include <sys/types.h>
 #include <sys/stat.h>

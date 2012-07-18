@@ -13,7 +13,7 @@
 # include <boost/thread/mutex.hpp>
 
 //Internal include
-# include "LiveFile.hh"
+# include <core/fileManager/LiveFile.hh>
 
 /*
  * Manage live in/output

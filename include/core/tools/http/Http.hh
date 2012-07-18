@@ -8,7 +8,7 @@
 #ifndef HTTP_HH
 #define	HTTP_HH
 #include <curl/curl.h>
-#include "../../Log/Log.hh"
+#include <core/log/Log.hh>
 namespace tools
 {
 

@@ -5,7 +5,7 @@
  *      Author: nagriar
  */
 
-#include "VodFile.hh"
+#include <core/fileManager/VodFile.hh>
 
 VodFile::VodFile(int videoId)
 {

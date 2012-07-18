@@ -5,7 +5,7 @@
  *      Author: nagriar
  */
 
-#include "Client.hh"
+#include <core/client/Client.hh>
 
 Client::Client(sf::SocketTCP* control, sf::SocketTCP*& data, std::string token)
     : controlSocket_(control), dataSocket_(data), token_(token)

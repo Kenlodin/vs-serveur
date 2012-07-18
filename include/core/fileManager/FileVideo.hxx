@@ -9,7 +9,7 @@
 # define FILEVIDEO_HXX_
 
 // Internal include
-# include "FileVideo.hh"
+# include <core/fileManager/FileVideo.hh>
 
 inline
 int FileVideo::getVideoId() const

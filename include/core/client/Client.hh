@@ -13,9 +13,9 @@
 # include <boost/thread/mutex.hpp>
 
 // Internal include
-# include "../fwd.hh"
-# include "../Log/Log.hh"
-# include "../FileManager/FileVideo.hh"
+# include <core/fwd.hh>
+# include <core/log/Log.hh>
+# include <core/fileManager/FileVideo.hh>
 
 /**
  * This class keep information of a connecting client in tracker or diffusion
@@ -141,6 +141,6 @@ private:
 };
 
 //Inline Get/Set
-# include "Client.hxx"
+# include <core/client/Client.hxx>
 
 #endif /* CLIENT_H_ */

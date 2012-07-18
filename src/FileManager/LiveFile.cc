@@ -6,7 +6,7 @@
  */
 
 // Internal include
-#include "LiveFile.hh"
+#include <core/fileManager/LiveFile.hh>
 
 LiveFile::LiveFile(int videoId)
     : FileVideo(videoId)

@@ -14,9 +14,9 @@
 # include <boost/thread/mutex.hpp>
 
 // Internal include
-# include "../Client/Client.hh"
-# include "../Log/Log.hh"
-# include "../SqlManager/SqlManager.hh"
+# include <core/client/Client.hh>
+# include <core/log/Log.hh>
+# include <core/sqlManager/SqlManager.hh>
 
 /*
  * Manage client of this server

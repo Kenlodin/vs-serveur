@@ -9,10 +9,10 @@
 #define TRACKER_HH_
 
 //Internal include
-# include "../fwd.hh"
-# include "../PacketHandler.hh"
-# include "../SqlManager/SqlManager.hh"
-# include "../Log/Log.hh"
+# include <core/fwd.hh>
+# include <core/PacketHandler.hh>
+# include <core/sqlManager/SqlManager.hh>
+# include <core/log/Log.hh>
 
 /*
  * Class which represent the process of tracker
@@ -51,7 +51,8 @@ class Tracker: public PacketHandler
 
     // Array of function of routing
     const handler route_[CT::LENGTH];
-  private:
+  // TODO Check if this part can be public
+  public:
     // Receiver handling //
     /**
      *  Manage packet client->tracker : Connection master
@@ -164,7 +165,8 @@ class Tracker: public PacketHandler
      *  @return RETURN_VALUE_GOOD on success
      */
     int ctUrl(sf::Packet& packet, sf::SocketTCP& sock);
-  private:
+  // TODO Check if this part can be public
+  public:
     /**
      *  Send a packet by sender
      *  @param sender socket where send this packet

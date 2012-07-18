@@ -9,7 +9,7 @@
 # define THREADPOOL_HH_
 
 // Internal include
-# include "Thread.hh"
+# include <core/thread/Thread.hh>
 
 /*
  * Class which manage a pool of thread
@@ -60,6 +60,6 @@ class ThreadPool
     int number_;
 };
 
-# include "ThreadPool.hxx"
+# include <core/thread/ThreadPool.hxx>
 
 #endif /* THREADPOOL_HH_ */

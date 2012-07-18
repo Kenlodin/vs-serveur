@@ -5,7 +5,7 @@
  *      Author: nagriar
  */
 
-#include "WorkList.hh"
+#include <core/thread/WorkList.hh>
 
 template<class T>
 WorkList<T>::WorkList()
