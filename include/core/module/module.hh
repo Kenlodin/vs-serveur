@@ -15,6 +15,7 @@
 # include <stdio.h>
 
 // Librairie Includes
+# include <unistd.h>
 # include <dlfcn.h>
 
 // Core Includes
