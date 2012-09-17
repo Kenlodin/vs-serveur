@@ -11,7 +11,7 @@
 #include <unistd.h>
 #include <stdlib.h>
 
-#include "ChunckCounter.hh"
+#include <core/tools/chunkCounter/ChunckCounter.hh>
 
 void dump_chunk_cont(avifile::s_chunk *chunk)
 {

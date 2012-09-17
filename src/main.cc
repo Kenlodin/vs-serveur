@@ -11,14 +11,14 @@
 # include <SFML/Network.hpp>
 # include <signal.h>
 
-#include "Network/Network.hh"
-#include "Tracker/Tracker.hh"
-#include "Diffusion/Diffusion.hh"
-#include "Thread/Thread.hh"
-#include "Thread/ThreadPool.hh"
-#include "SqlManager/SqlManager.hh"
-#include "Diffusion/HandlingSender.hh"
-#include "AdminServer/AdminServer.hh"
+#include <core/network/Network.hh>
+#include <core/tracker/Tracker.hh>
+#include <core/diffusion/Diffusion.hh>
+#include <core/thread/Thread.hh>
+#include <core/thread/ThreadPool.hh>
+#include <core/sqlManager/SqlManager.hh>
+#include <core/diffusion/HandlingSender.hh>
+#include <core/adminServer/AdminServer.hh>
 
 
 void sig_pipe(int num __attribute__((unused)))

@@ -4,7 +4,7 @@ cmake_minimum_required(VERSION 2.6)
 set(LIBRARIES)
 set(EXTERN_LIBRARIES sfml-system sfml-network boost_thread-mt boost_filesystem-mt boost_system-mt pqxx tinyxml curl)
 set(EXTERN_LINK_DIRECTORIES /usr/lib64/ /usr/lib64/pgsql)
-set(EXTERN_INCLUDE_DIRECTORIES /usr/include/SFML /usr/include/boost /usr/include/pgsql /usr/include)
+set(EXTERN_INCLUDE_DIRECTORIES /usr/include/SFML /usr/include/boost /usr/include/pgsql /usr/include include)
 
 
 
@@ -15,10 +15,10 @@ set(MY_PROJECT_NAME "p2pserver")
 
 project(${MY_PROJECT_NAME} CXX)
 
-set(CMAKE_CXX_FLAGS_RELEASE "-Wall -Wextra -std=c++0x -pedantic -g") #Werror
-set(CMAKE_CXX_FLAGS_DEBUG "-Wall -Wextra -std=c++0x -pedantic -g") #Werror
-set(LINK_FLAGS_RELEASE "-Wall -Wextra -std=c++0x -pedantic -g") #Werror
-set(LINK_FLAGS_DEBUG "-Wall -Wextra -std=c++0x -pedantic -g") # Werror
+set(CMAKE_CXX_FLAGS_RELEASE "-DAPI__ -DCORE__ -ldl -Wall -Wextra -std=c++0x -pedantic -g") #Werror
+set(CMAKE_CXX_FLAGS_DEBUG "-DAPI__ -DCORE__ -ldl -Wall -Wextra -std=c++0x -pedantic -g") #Werror
+set(LINK_FLAGS_RELEASE "-DAPI__ -DCORE__ -ldl -Wall -Wextra -std=c++0x -pedantic -g") #Werror
+set(LINK_FLAGS_DEBUG "-DAPI__ -DCORE__ -ldl -Wall -Wextra -std=c++0x -pedantic -g") # Werror
 
 # Compilation of the lib
 foreach(f ${LIBRARIES})

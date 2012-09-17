@@ -5,8 +5,8 @@
  *      Author: nagriar
  */
 
-#include "PacketHandler.hh"
-#include "fwd.hh"
+#include <core/PacketHandler.hh>
+#include <core/fwd.hh>
 
 PacketHandler::~PacketHandler()
 {

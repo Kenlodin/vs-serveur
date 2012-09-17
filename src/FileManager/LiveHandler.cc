@@ -6,8 +6,8 @@
  */
 
 //Internal include
-#include "LiveHandler.hh"
-#include "../SqlManager/SqlManager.hh"
+#include <core/fileManager/LiveHandler.hh>
+#include <core/sqlManager/SqlManager.hh>
 
 LiveHandler::LiveHandler()
 {

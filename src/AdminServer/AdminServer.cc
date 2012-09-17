@@ -5,7 +5,7 @@
  * Created on 14 mai 2012, 15:13
  */
 
-#include "AdminServer.hh"
+#include <core/adminServer/AdminServer.hh>
 
 AdminServer::AdminServer () :
 route_ ({

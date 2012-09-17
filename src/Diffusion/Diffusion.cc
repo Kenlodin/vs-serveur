@@ -6,9 +6,9 @@
  */
 
 // Internal include
-#include "Diffusion.hh"
-#include "../Network/ClientList.hh"
-#include "../FileManager/LiveHandler.hh"
+#include <core/diffusion/Diffusion.hh>
+#include <core/network/ClientList.hh>
+#include <core/fileManager/LiveHandler.hh>
 
 Diffusion::Diffusion()
     : route_(

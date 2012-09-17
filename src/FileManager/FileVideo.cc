@@ -5,7 +5,7 @@
  *      Author: nagriar
  */
 
-#include "FileVideo.hh"
+#include <core/fileManager/FileVideo.hh>
 
 FileVideo::FileVideo(int videoId)
  : videoId_ (videoId)

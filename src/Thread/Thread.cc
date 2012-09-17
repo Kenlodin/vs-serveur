@@ -5,7 +5,7 @@
  * Created on 18 avril 2012, 01:40
  */
 
-#include "Thread.hh"
+#include <core/thread/Thread.hh>
 namespace tools
 {
   ///

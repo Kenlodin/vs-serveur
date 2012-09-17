@@ -8,8 +8,8 @@
 #include <sys/param.h>
 #include <boost/thread/pthread/mutex.hpp>
 
-#include "SqlManager.hh"
-#include "../Tools/Tools.hh"
+#include <core/sqlManager/SqlManager.hh>
+#include <core/tools/Tools.hh>
 
 SqlManager&
 SqlManager::getInstance ()
