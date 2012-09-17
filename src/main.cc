@@ -19,6 +19,7 @@
 #include <core/sqlManager/SqlManager.hh>
 #include <core/diffusion/HandlingSender.hh>
 #include <core/adminServer/AdminServer.hh>
+#include <core/module/moduleManager.hh>
 
 
 void sig_pipe(int num __attribute__((unused)))
@@ -41,6 +42,7 @@ main ()
   SqlManager::getInstance ().connect ();
   Config::getInstance ().load ("config.xml");
   Config::getInstance ().loadConfig ();
+  ModuleManager::getInstance ()->loadModules();
   sf::IPAddress address (Config::getInstance ().getString ("ip"));
   if (!address.IsValid())
   {

@@ -9,7 +9,7 @@
 class ModuleManager
 {
   public:
-    ModuleManager *getInstance();
+    static ModuleManager *getInstance();
 
     void loadModule(std::string filename);
     void loadModules();
