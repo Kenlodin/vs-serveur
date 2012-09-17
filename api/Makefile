@@ -6,7 +6,7 @@ CPPFLAGS  =-fPIC -shared  -rdynamic -Wl,--export-dynamic
 modules: $(OBJS_)
 	g++ $(CPPFLAGS) $< -o $M/$(TARGET)
 
-%.o: $M/%.c
+%.o: %.cc
 	g++ $(API_INC) -c $^ -o $@
 
 clean:
