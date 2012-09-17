@@ -16,3 +16,6 @@ libtinyXml
 
 ### curl
 libcurl
+
+### Unbutu
+    sudo apt-get install libsfml-dev libpqxx3-dev libboost-dev libtinyxml-dev libcurl4-gnutls-dev libboost-thread-dev libboost-filesystem-dev libboost-system-dev
