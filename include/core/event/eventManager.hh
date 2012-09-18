@@ -10,6 +10,8 @@ typedef enum
   AUTH_MASTER
 } e_event;
 
+class BaseEvent;
+
 class EventManager
 {
   public:
