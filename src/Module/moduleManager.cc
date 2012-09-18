@@ -14,10 +14,13 @@ void ModuleManager::loadModules()
   TiXmlElement  *elt;
 
   std::cout << "Load modules" << std::endl;
-  c_ = TiXmlDocument ("modules/modules.xml");
+  c_ = TiXmlDocument (Config::getInstance().getString("module-conf"));
   if (!c_.LoadFile ())
   {
-    std::cerr << "Warn: can't find `modules.xml`" << std::endl;
+    std::cerr << "Warn: can't find `"
+              << Config::getInstance().getString("module-conf")
+              << "`"
+              << std::endl;
     return;
   }
 

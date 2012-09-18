@@ -5,6 +5,7 @@
 # include <tinyxml.h>
 # include <map>
 # include <core/module/module.hh>
+# include <core/config/Config.hh>
 
 class ModuleManager
 {
