@@ -7,33 +7,28 @@
 
 #include <core/client/Client.hh>
 
-Client::Client(sf::SocketTCP* control, sf::SocketTCP*& data, std::string token)
-    : controlSocket_(control), dataSocket_(data), token_(token)
+Client::Client(boost_socket& socket, std::string& publicIp)
+    : privilegeLevel_(10), publicIp_(publicIp), privateIp_(""), token_("")
+    , isActiv_(true)
 {
-  typeClient_ = nullptr;
+    //sockets_.push_back(socket);
 }
 
 Client::~Client()
 {
-  if (controlSocket_ != nullptr && controlSocket_->IsValid())
-    controlSocket_->Close();
-  delete controlSocket_;
-  if (dataSocket_ != nullptr && dataSocket_->IsValid())
-    dataSocket_->Close();
-  delete dataSocket_;
-  using_.unlock();
+    for (boost_socket& sock : sockets_)
+    {
+        sock.close();
+    }
+    //TODO delete current action
+    using_.unlock();
 }
 
-int Client::sendControl(sf::Packet& packet)
+int Client::send(Packet& packet)
 {
-  if (controlSocket_->Send(packet) != sf::Socket::Status::Done)
+    /*for (boost_socket sock : sockets)
+    {
+        sock.send(boost::asio::const_buffer(packet));
+    }*/
     return RETURN_VALUE_ERROR;
-  return RETURN_VALUE_GOOD;
-}
-
-int Client::sendData(sf::Packet& packet)
-{
-  if (dataSocket_->Send(packet) != sf::Socket::Status::Done)
-    return RETURN_VALUE_ERROR;
-  return RETURN_VALUE_GOOD;
 }

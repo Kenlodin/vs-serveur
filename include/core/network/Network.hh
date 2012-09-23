@@ -9,8 +9,7 @@
 # define NETWORK_HH_
 
 //External include
-# include <SFML/System.hpp>
-# include <SFML/Network.hpp>
+# include <boost/asio/ip/tcp.hpp>
 
 //Internal include
 # include <core/thread/Thread.hh>
@@ -30,7 +29,7 @@ class Network : public tools::Thread
      *  @param control_port of the server
      *  @param data_port of the server
      */
-    Network(int control_port, int data_port);
+    Network(std::list<unsigned short>& ports);
 
     /**
      *  Destructor
@@ -45,79 +44,76 @@ class Network : public tools::Thread
     /**
      *  Function which route packet
      *  @param packet received
-     *  @param sock that send this packet
+     *  @param Client*& who send this packet
      */
-    void routing(sf::Packet& packet, sf::SocketTCP& sock);
+    void routing(Packet& packet, Client*& client);
   private:
     // typedef of fonction handler
-    typedef void (Network::*handler)(unsigned int route, sf::Packet& packet
-        , sf::SocketTCP& sock);
+    typedef void (Network::*handler)(unsigned int route, Packet& packet
+        , Client*& client);
 
     // Constant Array of handler
     const handler route_[ConnexionType::LENGTH];
   private:
     // Fonction handlers //
     /**
-     *  Route a packet from client to tracker
+     *  Route a packet from Client*& to tracker
      *  @param route second part of opcode
      *  @param packet received without opcode
-     *  @param sock that send this message
+     *  @param Client*& who send this message
      */
-    void clientTracker(unsigned int route, sf::Packet& packet
-        , sf::SocketTCP& sock);
+    void clientTracker(unsigned int route, Packet& packet
+        , Client*& client);
 
     /**
      *  Route a packet from tracker to client
      *  @param route second part of opcode
      *  @param packet received without opcode
-     *  @param sock that send this message
+     *  @param Client*& who send this message
      */
-    void trackerClient(unsigned int route, sf::Packet& packet
-        , sf::SocketTCP& sock);
+    void trackerClient(unsigned int route, Packet& packet
+        , Client*& client);
 
     /**
-     *  Route a packet from client to diffusion
+     *  Route a packet from Client*& to diffusion
      *  @param route second part of opcode
      *  @param packet received without opcode
-     *  @param sock that send this message
+     *  @param Client*& who send this message
      */
-    void clientDiffusion(unsigned int route, sf::Packet& packet
-        , sf::SocketTCP& sock);
+    void clientDiffusion(unsigned int route, Packet& packet
+        , Client*& client);
 
     /**
      *  Route a packet from diffusion to client
      *  @param route second part of opcode
      *  @param packet received without opcode
-     *  @param sock that send this message
+     *  @param Client*& who send this message
      */
-    void diffusionClient(unsigned int route, sf::Packet& packet
-        , sf::SocketTCP& sock);
+    void diffusionClient(unsigned int route, Packet& packet
+        , Client*& client);
 
     /**
      *  Route a packet from diffusion to diffusion
      *  @param route second part of opcode
      *  @param packet received without opcode
-     *  @param sock that send this message
+     *  @param Client*& who send this message
      */
-    void diffusionDiffusion(unsigned int route, sf::Packet& packet
-        , sf::SocketTCP& sock);
+    void diffusionDiffusion(unsigned int route, Packet& packet
+        , Client*& client);
     
     /**
      *  Route a packet from administrator to server
      *  @param route second part of opcode
      *  @param packet received without opcode
-     *  @param sock that send this message
+     *  @param Client*& who send this message
      */
-    void adminServer(unsigned int route, sf::Packet& packet
-        , sf::SocketTCP& sock);
+    void adminServer(unsigned int route, Packet& packet
+        , Client*& client);
   private:
-    // Variables of tracker
-    sf::SocketTCP* controlSocket_;
-    unsigned short controlPort_;
+    // Variables of server
+    std::list<boost_socket> serverSockets_;
+    std::list<unsigned short> serverPorts_;
 
-    // Variables of diffusion
-    sf::SocketTCP* dataSocket_;
-    unsigned short dataPort_;
 };
 
 #endif /* NETWORK_HH_ */

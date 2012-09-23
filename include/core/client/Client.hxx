@@ -11,29 +11,21 @@
 # include <core/client/Client.hh>
 
 inline
-sf::SocketTCP* Client::getControlSocket() const
+const std::list<boost_socket>& Client::getSockets() const
 {
-  return controlSocket_;
+  return sockets_;
 }
 
 inline
-void Client::setControlSocket(sf::SocketTCP* controlSocket)
+void Client::addSocket(boost_socket& newSocket)
 {
-  delete controlSocket_;
-  controlSocket_ = controlSocket;
+    //sockets_.push_back(newSocket);
 }
 
 inline
-sf::SocketTCP* Client::getDataSocket() const
+void Client::remSocket(boost_socket& oldSocket)
 {
-  return dataSocket_;
-}
-
-inline
-void Client::setDataSocket(sf::SocketTCP* dataSocket)
-{
-  delete dataSocket_;
-  dataSocket_ = dataSocket;
+    //sockets_.remove(oldSocket); TODO Problem
 }
 
 inline
@@ -43,9 +35,28 @@ std::string& Client::getToken()
 }
 
 inline
-void Client::setToken(std::string token)
+void Client::setToken(std::string token, int privilegeLevel)
 {
   token_ = token;
+  privilegeLevel_ = privilegeLevel;
+}
+
+inline
+std::string& Client::getPublicIp()
+{
+  return publicIp_;
+}
+
+inline
+std::string& Client::getPrivateIp()
+{
+  return privateIp_;
+}
+
+inline
+void Client::setPrivateIp(std::string privateIp)
+{
+    privateIp_ = privateIp;
 }
 
 inline
@@ -58,6 +69,18 @@ inline
 void Client::setTypeClient(FileVideo* typeClient)
 {
   typeClient_ = typeClient;
+}
+
+inline
+bool Client::getIsActiv()
+{
+    return isActiv_;
+}
+
+inline
+void Client::setIsActiv(bool newState)
+{
+    isActiv_ = newState;
 }
 
 inline

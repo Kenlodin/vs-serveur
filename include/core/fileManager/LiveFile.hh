@@ -12,10 +12,10 @@
 # include <boost/thread/mutex.hpp>
 # include <map>
 # include <list>
-# include <SFML/Network.hpp>
 
 // Internal include
 # include <core/fileManager/FileVideo.hh>
+#include <core/client/Client.hh>
 
 /**
  * Virtual file that represent a live
@@ -52,13 +52,13 @@ class LiveFile : public FileVideo
      *  Add linkedServer
      *  @param link server request
      */
-    void addServer(sf::SocketTCP);
+    void addServer(boost_socket);
 
     /**
      *  Remove linkedServer
      *  @param remove linked server
      */
-    void suppServer(sf::SocketTCP);
+    void suppServer(boost_socket);
   private:
     /**
      *  Forward a packet to linked server
@@ -74,7 +74,7 @@ class LiveFile : public FileVideo
     boost::mutex packetsMutex_;
 
     // List of linked server
-    std::list<sf::SocketTCP> linkedServer_;
+    std::list<boost_socket> linkedServer_;
 
     // Mutex for linkedServer_
     boost::mutex linkedServerMutex_;

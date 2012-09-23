@@ -9,13 +9,18 @@
 # define CLIENT_H_
 
 // External include
-# include <SFML/Network.hpp>
+# include <boost/asio/ip/tcp.hpp>
 # include <boost/thread/mutex.hpp>
+# include <list>
 
 // Internal include
 # include <core/fwd.hh>
 # include <core/log/Log.hh>
 # include <core/fileManager/FileVideo.hh>
+# include <core/network/Packet.hh>
+
+
+typedef boost::asio::ip::tcp::socket boost_socket;
 
 /**
  * This class keep information of a connecting client in tracker or diffusion
@@ -29,7 +34,7 @@ class Client
      *  @param data Diffusion socket of client can be null
      *  @param token Connexion token of client
      */
-    Client(sf::SocketTCP* control, sf::SocketTCP*& data, std::string token);
+    Client(boost_socket& socket, std::string& publicIp);
 
     /**
      * Destructor
@@ -38,41 +43,28 @@ class Client
 
     /**
      * Get controlSocket
-     *  @return pointer of SocketTCP can be null
+     *  @return Sockets
      */
-    sf::SocketTCP* getControlSocket() const;
-
-    /**
-     *  Get dataSocket
-     *  @return pointer of SocketTCP can be null
-     */
-    sf::SocketTCP* getDataSocket() const;
+    const std::list<boost_socket>& getSockets() const;
 
     /**
      *  Use controlSocket to send a packet
-     *  @param packet packet to be send
-     *  @return RETURN_VALUE_GOOD on success and RETURN_VALUE_ERROR on error
+     *  @param newSocket socket for this client
      */
-    int sendControl(sf::Packet& packet);
+    void addSocket(boost_socket& socket);
 
     /**
      *  Use dataSocket to send a packet
      *  @param packet packet to be send
      *  @return RETURN_VALUE_GOOD on success and RETURN_VALUE_ERROR on error
      */
-    int sendData(sf::Packet& packet);
+    int send(Packet& packet);
 
     /**
      *  Set control socket
-     *  @param controlSocket new ControlSocket for this client can be null
+     *  @param oldSocket socket remove from client
      */
-    void setControlSocket(sf::SocketTCP* controlSocket);
-
-    /**
-     *  Set data socket
-     *  @param dataSocket new DataSocket for this client can be null
-     */
-    void setDataSocket(sf::SocketTCP* dataSocket);
+    void remSocket(boost_socket& oldSocket);
 
     /**
      *  Get token client
@@ -84,7 +76,25 @@ class Client
      *  Set token client
      *  @param token new token for this client
      */
-    void setToken(std::string token);
+    void setToken(std::string token, int privilegeLevel);
+    
+    /**
+     *  Get token client
+     *  @return public ip of this client
+     */
+    std::string& getPublicIp();
+    
+    /**
+     *  Get token client
+     *  @return private ip of this client
+     */
+    std::string& getPrivateIp();
+    
+    /**
+     *  Set private ip client
+     *  @param private ip for this client
+     */
+    void setPrivateIp(std::string privateIp);
 
     /**
      *  Get client type
@@ -97,6 +107,18 @@ class Client
      *  @param typeClient new typeClient for this client can be null
      */
     void setTypeClient(FileVideo* typeClient);
+    
+    /**
+     * Set isActiv 
+     * @param isActiv
+     */
+    void setIsActiv(bool newState);
+    
+    /**
+     * Get isActiv
+     * @return isActiv of client
+     */
+    bool getIsActiv();
 
     /**
      *  Try to lock this client
@@ -115,24 +137,39 @@ class Client
     void unlock();
 private:
     /**
-     *  Socket for tracker dialog
+     *  Socket for server's dialog
      */
-    sf::SocketTCP* controlSocket_;
-
+    std::list<boost_socket> sockets_;
+    
     /**
-     *  Socket for diffusion data transfert
+     *  Privilege level
      */
-    sf::SocketTCP* dataSocket_;
+    int privilegeLevel_;
 
     /**
      *  Interface which represent a VOD or Live connection
      */
-    FileVideo* typeClient_;
+    FileVideo* typeClient_; //TODO Change it to current action
+    
+    /**
+     *  Public ip of client
+     */
+    std::string publicIp_;
+    
+    /**
+     *  Private ip of client
+     */
+    std::string privateIp_;
 
     /**
      *  Token of connection
      */
     std::string token_;
+    
+    /**
+     *  if it is true client will be remove
+     */
+    bool isActiv_;
 
     /**
      *  Mutex of this instance of client

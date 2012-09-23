@@ -47,13 +47,13 @@ bool WorkList<T>::getOneWork(WorkList<T>::OneWork& oneWork)
 }
 
 template<class T>
-void WorkList<T>::putWorks(Worker worker, unsigned int arg0, sf::Packet& arg1,
-    sf::SocketTCP& arg2)
+void WorkList<T>::putWorks(Worker worker, unsigned int arg0, Packet& arg1,
+    Client*& arg2)
 {
   COUTDEBUG("OneWorkPut : begin");
   mutex_.lock();
-  std::pair<sf::Packet, sf::SocketTCP> second = std::pair<sf::Packet,
-      sf::SocketTCP>(arg1, arg2);
+  std::pair<Packet, Client*> second = std::pair<Packet,
+      Client*>(arg1, arg2);
   ListElt elt = ListElt(arg0, second);
   work_.push_back(worker);
   args_.push_back(elt);

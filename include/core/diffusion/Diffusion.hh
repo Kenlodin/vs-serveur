@@ -44,7 +44,7 @@ class Diffusion: public PacketHandler
      *  @param sock sock of this packet
      *  @return RETURN_VALUE_GOOD on success else RETURN_VALUE_ERROR
      */
-    int routing(unsigned int code, sf::Packet& packet, sf::SocketTCP& sock);
+    int routing(unsigned int code, Packet& packet, Client*& client);
 
     /**
      *  Route packet from diffusion server
@@ -53,13 +53,13 @@ class Diffusion: public PacketHandler
      *  @param sock sock of this packet
      *  @return RETURN_VALUE_GOOD on success else RETURN_VALUE_ERROR
      */
-    int routing_internal(unsigned int code, sf::Packet& packet,
-        sf::SocketTCP& sock);
+    int routing_internal(unsigned int code, Packet& packet,
+        Client*& client);
   private:
     /**
      *  typedef for function packet handler
      */
-    typedef int (Diffusion::*handler)(sf::Packet& packet, sf::SocketTCP& sock);
+    typedef int (Diffusion::*handler)(Packet& packet, Client*& client);
 
     /**
      *  Constant array of fonction for routing
@@ -77,7 +77,7 @@ class Diffusion: public PacketHandler
      *  @param packet packet to send
      *  @return RETURN_VALUE_GOOD on success else RETURN_VALUE_ERROR
      */
-    int send(sf::SocketTCP& sender, sf::Packet& packet);
+    int send(Client*& sender, Packet& packet);
 
     /**
      *  Send message on error
@@ -86,7 +86,7 @@ class Diffusion: public PacketHandler
      *  @param msg string message
      *  @return RETURN_VALUE_GOOD on success else RETURN_VALUE_ERROR
      */
-    int dcMsg(sf::SocketTCP& sender, sf::Int32 numMsg, std::string msg);
+    int dcMsg(Client*& sender, int numMsg, std::string msg);
 
     // Fonction handler //
     /**
@@ -95,7 +95,7 @@ class Diffusion: public PacketHandler
      * @param sock sock which send it
      *  @return RETURN_VALUE_GOOD on success else RETURN_VALUE_ERROR
      */
-    int cdToken(sf::Packet& packet, sf::SocketTCP& sock);
+    int cdToken(Packet& packet, Client*& client);
 
     /**
      *  Fonction which receive demand of video from diffusion server
@@ -103,7 +103,7 @@ class Diffusion: public PacketHandler
      * @param sock sock which send it
      *  @return RETURN_VALUE_GOOD on success else RETURN_VALUE_ERROR
      */
-    int ddVideoDemand(sf::Packet& packet, sf::SocketTCP& sock);
+    int ddVideoDemand(Packet& packet, Client*& client);
 
     /**
      *  Fonction which receive demand of ping from server
@@ -111,7 +111,7 @@ class Diffusion: public PacketHandler
      * @param sock sock which send it
      *  @return RETURN_VALUE_GOOD on success else RETURN_VALUE_ERROR
      */
-    int ddPingPong(sf::Packet& packet, sf::SocketTCP& sock);
+    int ddPingPong(Packet& packet, Client*& client);
 
     /**
      *  Fonction which link server for live
@@ -119,7 +119,7 @@ class Diffusion: public PacketHandler
      * @param sock sock which send it
      *  @return RETURN_VALUE_GOOD on success else RETURN_VALUE_ERROR
      */
-    int ddLiveLink(sf::Packet& packet, sf::SocketTCP& sock);
+    int ddLiveLink(Packet& packet, Client*& client);
 
     /**
      *  Receive fragment of video live
@@ -127,7 +127,7 @@ class Diffusion: public PacketHandler
      *  @param sock sock which send it
      *  @return RETURN_VALUE_GOOD on success else RETURN_VALUE_ERROR
      */
-    int ddLiveData(sf::Packet& packet, sf::SocketTCP& sock);
+    int ddLiveData(Packet& packet, Client*& client);
 
     /**
      *  Receive fragment of video data
@@ -135,7 +135,7 @@ class Diffusion: public PacketHandler
      *  @param sock sock which send it
      *  @return RETURN_VALUE_GOOD on success else RETURN_VALUE_ERROR
      */
-    int ddVodData(sf::Packet& packet, sf::SocketTCP& sock);
+    int ddVodData(Packet& packet, Client*& client);
   public:
     /**
      * Fonction which send data chuck for client
@@ -144,7 +144,7 @@ class Diffusion: public PacketHandler
      * @param chuck chunk to send
      *  @return RETURN_VALUE_GOOD on success else RETURN_VALUE_ERROR
      */
-    int dcData(sf::SocketTCP& sender, int number, Chunk* chuck);
+    int dcData(Client*& sender, int number, Chunk* chuck);
 
     /**
      *  Fonction which send data headers for client
@@ -154,7 +154,7 @@ class Diffusion: public PacketHandler
      *  @param headers content of avi header
      *  @return RETURN_VALUE_GOOD on success else RETURN_VALUE_ERROR
      */
-    int dcData(sf::SocketTCP& sender, int number, int code, avifile::s_chunk* headers);
+    int dcData(Client*& sender, int number, int code, avifile::s_chunk* headers);
 };
 
 #endif /* DIFFUSION_HH_ */

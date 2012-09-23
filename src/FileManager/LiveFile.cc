@@ -36,35 +36,35 @@ void LiveFile::setElement(int number, Chunk* data)
   packetsMutex_.unlock();
 }
 
-void LiveFile::addServer(sf::SocketTCP socketTCP)
+void LiveFile::addServer(boost_socket socketTCP)
 {
   linkedServerMutex_.lock();
-  linkedServer_.insert(linkedServer_.end(), socketTCP);
+  //linkedServer_.insert(linkedServer_.end(), socketTCP); TODO FIXIT
   linkedServerMutex_.unlock();
 }
 
-void LiveFile::suppServer(sf::SocketTCP socketTCP)
+void LiveFile::suppServer(boost_socket socketTCP)
 {
   linkedServerMutex_.lock();
-  linkedServer_.remove(socketTCP);
+  //linkedServer_.remove(socketTCP); TODO FIXIT
   linkedServerMutex_.unlock();
 }
 
 void LiveFile::forwardPacket(int number, Chunk* data)
 {
   linkedServerMutex_.lock();
-  sf::Packet packet;
-  sf::Int16 opcode = DD::LIVE_DATA;
+  Packet packet;
+  int16_t opcode = DD::LIVE_DATA;
 
   packet << opcode;
   packet << getVideoId();
   packet << number;
   packet.Append(data->subChunk_, 8);
   packet.Append(data->subChunk_->data, data->subChunk_->size);
-  for (sf::SocketTCP& sock : linkedServer_) //Todo deco
+  /*for (boost_socket& sock : linkedServer_) //Todo deco
   {
     sock.Send(packet);
-  }
+  }*/
   linkedServerMutex_.unlock();
 }
 

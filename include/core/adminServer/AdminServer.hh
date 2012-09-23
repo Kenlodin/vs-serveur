@@ -41,10 +41,10 @@ public:
    * @param sock
    * @return 
    */
-  int routing(unsigned int code, sf::Packet& packet, sf::SocketTCP& sock);
+  int routing(unsigned int code, Packet& packet, Client*& client);
 
 private:
-  typedef int (AdminServer::*handler)(sf::Packet& packet, sf::SocketTCP& sock);
+  typedef int (AdminServer::*handler)(Packet& packet, Client*& client);
   const handler route_[AS::MAX_VALUE];
 
 private:
@@ -54,7 +54,7 @@ private:
    * @param packet
    * @return 
    */
-  int send(sf::SocketTCP& sender, sf::Packet& packet);
+  int send(Client*& sender, Packet& packet);
 
 private:
   ///
@@ -69,7 +69,7 @@ private:
    * @param sock Le socket
    * @return Si tout c'est passé correctement
    */
-  int asShutdown(sf::Packet& packet, sf::SocketTCP& sock);
+  int asShutdown(Packet& packet, Client*& client);
   
   /**
    * Suppression de tous les clients connectées au serveur.
@@ -78,7 +78,7 @@ private:
    * @param sock Le socket
    * @return 
    */
-  int asClear(sf::Packet& packet, sf::SocketTCP& sock);
+  int asClear(Packet& packet, Client*& client);
   
   /**
    * Le serveur va télécharger via le lien d'origine (HTTP) la vidéo. Cette fonction
@@ -89,7 +89,7 @@ private:
    * @param sock Le socket
    * @return 
    */
-  int asDownloadOrig(sf::Packet& packet, sf::SocketTCP& sock);
+  int asDownloadOrig(Packet& packet, Client*& client);
   
   /**
    * Le serveur va télécharger une vidéo sur un autre serveur.
@@ -98,7 +98,7 @@ private:
    * @param sock Le socket
    * @return 
    */
-  int asDownload(sf::Packet& packet, sf::SocketTCP& sock);
+  int asDownload(Packet& packet, Client*& client);
   
   /**
    * Déconnecte un client du serveur.
@@ -107,7 +107,7 @@ private:
    * @param sock Le socket
    * @return 
    */
-  int asRemove(sf::Packet& packet, sf::SocketTCP& sock);
+  int asRemove(Packet& packet, Client*& client);
 
 
 };

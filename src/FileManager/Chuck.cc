@@ -6,6 +6,7 @@
  */
 
 #include <core/fileManager/Chuck.hh>
+#include <stdlib.h>
 
 Chunk::Chunk()
 {

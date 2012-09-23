@@ -54,12 +54,6 @@ void HandlingSender::Worker::run()
         COUTDEBUG(("No client with token = " + token));
         continue;
       }
-      if (client->getDataSocket() == nullptr)
-      {
-        COUTDEBUG(("No data socket on client : " + token));
-        client->unlock();
-        continue;
-      }
       if (client->getTypeClient() == nullptr)
       {
         COUTDEBUG(("No video type on client : " + token));
@@ -70,14 +64,14 @@ void HandlingSender::Worker::run()
         //COUTDEBUG("Send header no :" << begin << " to " + token);
         FileVideo* video = client->getTypeClient();
         for (int i = avifile::e_opcode::AVI_RIFF_AVI; i < 5; i++)
-          Diffusion::getInstance().dcData(*(client->getDataSocket()),i , i,
+          Diffusion::getInstance().dcData(client,i , i,
               video->getFileHeader()[i]);
       }
       for (int nbPacket = begin; nbPacket <= end; nbPacket++)
       {
         //COUTDEBUG("Send packet no " << nbPacket << " to " << token);
         Chunk* chunk = client->getTypeClient()->getElement(nbPacket);
-        Diffusion::getInstance().dcData(*(client->getDataSocket()), nbPacket + 5, chunk);
+        Diffusion::getInstance().dcData(client, nbPacket + 5, chunk);
 	delete chunk;
       }
       client->unlock();

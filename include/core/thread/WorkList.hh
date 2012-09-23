@@ -12,7 +12,6 @@
 # include <string>
 # include <list>
 # include <boost/thread/mutex.hpp>
-# include <SFML/Network.hpp>
 # include <map>
 
 /*
@@ -41,12 +40,12 @@ class WorkList
     /**
      *  typedef of function of worker
      */
-    typedef int (T::*Worker)(unsigned int, sf::Packet&, sf::SocketTCP&);
+    typedef int (T::*Worker)(unsigned int, Packet&, Client*&);
 
     /**
      *  typedef of arguments
      */
-    typedef std::pair<unsigned int, std::pair<sf::Packet, sf::SocketTCP>> ListElt;
+    typedef std::pair<unsigned int, std::pair<Packet, Client*>> ListElt;
 
     /**
      *  typedef of list of worker
@@ -81,8 +80,8 @@ class WorkList
      *  @param arg1 second parametter
      *  @param arg2 third parametter
      */
-    void putWorks(Worker worker, unsigned int arg0, sf::Packet& arg1,
-        sf::SocketTCP& arg2);
+    void putWorks(Worker worker, unsigned int arg0, Packet& arg1,
+        Client*& arg2);
 
     /**
      *  Put works to list of work

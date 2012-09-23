@@ -2,3 +2,4 @@
 *.so
 p2pserver
 build
+/nbproject/private/

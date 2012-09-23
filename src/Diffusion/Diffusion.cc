@@ -24,18 +24,18 @@ Diffusion::~Diffusion()
 {
 }
 
-int Diffusion::routing(unsigned int code, sf::Packet& packet,
-    sf::SocketTCP& sock)
+int Diffusion::routing(unsigned int code, Packet& packet,
+    Client*& client)
 {
   int retVal = RETURN_VALUE_ERROR;
   COUTDEBUG(code);
   if (code < CD::LENGTH)
   {
-      if ((retVal = (this->*route_[code])(packet, sock)) != RETURN_VALUE_ERROR)
+      if ((retVal = (this->*route_[code])(packet, client)) != RETURN_VALUE_ERROR)
       {
         if (retVal == RETURN_VALUE_ERROR)
           COUTDEBUG("Diffusion : mauvais processing.");
-        ClientList::getInstance().addBadClient(sock, retVal);
+        ClientList::getInstance().addBadClient(client, retVal);
         return retVal;
       }
     return RETURN_VALUE_GOOD;
@@ -43,24 +43,24 @@ int Diffusion::routing(unsigned int code, sf::Packet& packet,
   else
   {
     COUTDEBUG("Diffusion : mauvais routing.");
-    ClientList::getInstance().addBadClient(sock, retVal);
-    dcMsg(sock, retVal
+    ClientList::getInstance().addBadClient(client, retVal);
+    dcMsg(client, retVal
               , std::string("Diffusion : Bad command code."));
     return RETURN_VALUE_ERROR;
   }
 }
 
-int Diffusion::routing_internal(unsigned int code, sf::Packet& packet,
-    sf::SocketTCP& sock)
+int Diffusion::routing_internal(unsigned int code, Packet& packet,
+    Client*& client)
 {
   int retVal = RETURN_VALUE_ERROR;
   COUTDEBUG(code);
   if (code < DD::LENGTH)
   {
-      if ((retVal = (this->*route_[code])(packet, sock)) == RETURN_VALUE_ERROR)
+      if ((retVal = (this->*route_[code])(packet, client)) == RETURN_VALUE_ERROR)
       {
         COUTDEBUG("Diffusion : mauvais processing interne.");
-        ClientList::getInstance().addBadClient(sock, retVal);
+        ClientList::getInstance().addBadClient(client, retVal);
         return retVal;
       }
     return RETURN_VALUE_GOOD;
@@ -68,17 +68,17 @@ int Diffusion::routing_internal(unsigned int code, sf::Packet& packet,
   else
   {
     COUTDEBUG("Diffusion : mauvais routing interne.");
-    ClientList::getInstance().addBadClient(sock, retVal);
-    dcMsg(sock, retVal
+    ClientList::getInstance().addBadClient(client, retVal);
+    dcMsg(client, retVal
           , std::string("Diffusion : Bad command code."));
     return RETURN_VALUE_ERROR;
   }
 }
 
-int Diffusion::ddVideoDemand(sf::Packet& packet, sf::SocketTCP& sock)
+int Diffusion::ddVideoDemand(Packet& packet, Client*& client)
 {
-  sf::Int32 videoId;
-  sf::Int32 serverId;
+  int videoId;
+  int serverId;
   int count = 0;
 
   // Extract content of packet
@@ -90,14 +90,14 @@ int Diffusion::ddVideoDemand(sf::Packet& packet, sf::SocketTCP& sock)
   COUTDEBUG("Diffusion --> Diffusion : Video Demand");
   if (count != 3)
   {
-    dcMsg(sock, RETURN_VALUE_ERROR
+    dcMsg(client, RETURN_VALUE_ERROR
               , std::string("Diffusion : Bad number of attributes."));
     return RETURN_VALUE_ERROR;
   }
   return RETURN_VALUE_SUPPRESS;
 }
 
-int Diffusion::ddPingPong(sf::Packet& packet, sf::SocketTCP& sock)
+int Diffusion::ddPingPong(Packet& packet, Client*& client)
 {
   std::string message;
   int count = 0;
@@ -109,14 +109,14 @@ int Diffusion::ddPingPong(sf::Packet& packet, sf::SocketTCP& sock)
   COUTDEBUG("Diffusion --> Diffusion : Ping Pong");
   if (count != 2)
   {
-    dcMsg(sock, RETURN_VALUE_ERROR
+    dcMsg(client, RETURN_VALUE_ERROR
       , std::string("Diffusion : Bad number of attributes."));
     return RETURN_VALUE_ERROR;
   }
   return RETURN_VALUE_SUPPRESS;
 }
 
-int Diffusion::cdToken(sf::Packet& packet, sf::SocketTCP& sock)
+int Diffusion::cdToken(Packet& packet, Client*& client)
 {
   std::string token;
   int count = 0;
@@ -125,28 +125,20 @@ int Diffusion::cdToken(sf::Packet& packet, sf::SocketTCP& sock)
   INCTEST(!packet.EndOfPacket(), count)
   packet >> token;
   INCTEST(packet.EndOfPacket(), count)
-  sf::SocketTCP* newSocket = new sf::SocketTCP(sock);
   COUTDEBUG("Diffusion --> Diffusion : Token : " << token);
-  if (ClientList::getInstance().addClient(nullptr, newSocket, token) == RETURN_VALUE_ERROR)
-  {
-    delete newSocket;
-    dcMsg(sock, RETURN_VALUE_ERROR
-        , std::string("Diffusion : Unknown client for connection to diffusion"));
-  }
   if (count != 2)
   {
-    delete newSocket;
-    dcMsg(sock, RETURN_VALUE_ERROR
+    dcMsg(client, RETURN_VALUE_ERROR
           , std::string("Diffusion : Bad number of attributes."));
     return RETURN_VALUE_ERROR;
   }
   return RETURN_VALUE_SUPPRESS;
 }
 
-int Diffusion::ddLiveLink(sf::Packet& packet, sf::SocketTCP& sock)
+int Diffusion::ddLiveLink(Packet& packet, Client*& client)
 {
-  sf::Int32 videoId;
-  sf::Int32 serverId;
+  int videoId;
+  int serverId;
   int count = 0;
 
   // Extract content of packet
@@ -158,11 +150,11 @@ int Diffusion::ddLiveLink(sf::Packet& packet, sf::SocketTCP& sock)
   COUTDEBUG("Diffusion --> Diffusion : Live Link");
   if (count != 3)
   {
-    dcMsg(sock, RETURN_VALUE_ERROR
+    dcMsg(client, RETURN_VALUE_ERROR
           , std::string("Diffusion : Bad number of attributes."));
     return RETURN_VALUE_ERROR;
   }
-  LiveHandler::getInstance().getLive(videoId)->addServer(sock);
+  //LiveHandler::getInstance().getLive(videoId)->addServer(client->getSockets().front()); TODO
   return RETURN_VALUE_SUPPRESS;
 }
 
@@ -173,11 +165,11 @@ Diffusion& Diffusion::getInstance()
   return instance_;
 }
 
-int Diffusion::dcData(sf::SocketTCP& sender, int number, Chunk* chuck)
+int Diffusion::dcData(Client*& sender, int number, Chunk* chuck)
 {
-  sf::Packet packet;
-  sf::Int16 opcode = MERGE_OPCODE(ConnexionType::DIFFUSION_CLIENT, DC::DATA);
-  sf::Int32 type = avifile::e_opcode::AVI_CHUNK;
+  Packet packet;
+  int16_t opcode = MERGE_OPCODE(ConnexionType::DIFFUSION_CLIENT, DC::DATA);
+  int type = avifile::e_opcode::AVI_CHUNK;
 
   packet << opcode;
   packet << type;
@@ -189,10 +181,10 @@ int Diffusion::dcData(sf::SocketTCP& sender, int number, Chunk* chuck)
   return send(sender, packet);
 }
 
-int Diffusion::dcMsg(sf::SocketTCP& sender, sf::Int32 numMsg, std::string msg)
+int Diffusion::dcMsg(Client*& sender, int numMsg, std::string msg)
 {
-  sf::Packet packet;
-  sf::Uint16 opcode = MERGE_OPCODE(ConnexionType::DIFFUSION_CLIENT, DC::MSG);
+  Packet packet;
+  uint16_t opcode = MERGE_OPCODE(ConnexionType::DIFFUSION_CLIENT, DC::MSG);
 
   // Create packet
   packet << opcode;
@@ -202,10 +194,10 @@ int Diffusion::dcMsg(sf::SocketTCP& sender, sf::Int32 numMsg, std::string msg)
   return send(sender, packet);
 }
 
-int Diffusion::ddLiveData(sf::Packet& packet, sf::SocketTCP& sock)
+int Diffusion::ddLiveData(Packet& packet, Client*& client)
 {
-  sf::Int32 videoId;
-  sf::Int32 number;
+  int videoId;
+  int number;
   Chunk* data = new Chunk();
   int count = 0;
 
@@ -222,7 +214,7 @@ int Diffusion::ddLiveData(sf::Packet& packet, sf::SocketTCP& sock)
   memcpy(data->subChunk_->data, packet.GetData() + 8, data->subChunk_->size);
   if (count != 5)
   {
-    dcMsg(sock, RETURN_VALUE_ERROR
+    dcMsg(client, RETURN_VALUE_ERROR
           , std::string("Diffusion : Bad number of attributes."));
     return RETURN_VALUE_ERROR;
   }
@@ -230,10 +222,10 @@ int Diffusion::ddLiveData(sf::Packet& packet, sf::SocketTCP& sock)
   return RETURN_VALUE_GOOD;
 }
 
-int Diffusion::ddVodData(sf::Packet& packet, sf::SocketTCP& sock)
+int Diffusion::ddVodData(Packet& packet, Client*& client)
 {
-  sf::Int32 videoId;
-    sf::Int32 number;
+  int videoId;
+    int number;
     Chunk* data = new Chunk();
     int count = 0;
 
@@ -250,7 +242,7 @@ int Diffusion::ddVodData(sf::Packet& packet, sf::SocketTCP& sock)
     memcpy(data->subChunk_->data, packet.GetData() + 8, data->subChunk_->size);
     if (count != 5)
     {
-      dcMsg(sock, RETURN_VALUE_ERROR
+      dcMsg(client, RETURN_VALUE_ERROR
             , std::string("Diffusion : Bad number of attributes."));
       return RETURN_VALUE_ERROR;
     }
@@ -259,12 +251,12 @@ int Diffusion::ddVodData(sf::Packet& packet, sf::SocketTCP& sock)
     return RETURN_VALUE_GOOD;
 }
 
-int Diffusion::dcData(sf::SocketTCP& sender,int number, int code,
+int Diffusion::dcData(Client*& sender,int number, int code,
     avifile::s_chunk* headers)
 {
-  sf::Packet packet;
-  sf::Int16 opcode = MERGE_OPCODE(ConnexionType::DIFFUSION_CLIENT, DC::DATA);
-  sf::Int32 type = code;
+  Packet packet;
+  int16_t opcode = MERGE_OPCODE(ConnexionType::DIFFUSION_CLIENT, DC::DATA);
+  int type = code;
 
   packet << opcode;
   packet << type;
@@ -276,16 +268,8 @@ int Diffusion::dcData(sf::SocketTCP& sender,int number, int code,
   return send(sender, packet);
 }
 
-int Diffusion::send(sf::SocketTCP& sender, sf::Packet& packet)
+int Diffusion::send(Client*& sender, Packet& packet)
 {
-  try
-  {
-    if (sender.IsValid() && sender.Send(packet) == sf::Socket::Done)
-      return RETURN_VALUE_GOOD;
-  }
-  catch (...)
-  {
-    return RETURN_VALUE_ERROR;
-  }
+  //TODO FIXME
   return RETURN_VALUE_ERROR;
 }

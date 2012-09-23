@@ -28,14 +28,13 @@ AdminServer::getInstance ()
 }
 
 int
-AdminServer::routing (unsigned int code, sf::Packet& packet, sf::SocketTCP& sock)
+AdminServer::routing (unsigned int code, Packet& packet, Client*& client)
 {
   int retVal = RETURN_VALUE_ERROR;
   COUTDEBUG ("[AdminServer] routing() code : " + tools::toString<unsigned int> (code));
-  sock = sock;
   if (code < AS::MAX_VALUE)
   {
-    if ((retVal = (this->*route_[code])(packet, sock)) != RETURN_VALUE_GOOD)
+    if ((retVal = (this->*route_[code])(packet, client)) != RETURN_VALUE_GOOD)
     {
       COUTDEBUG ("[AdminServer] routing () : Error sur la fonction callback");
       if (retVal == RETURN_VALUE_ERROR)
@@ -48,39 +47,39 @@ AdminServer::routing (unsigned int code, sf::Packet& packet, sf::SocketTCP& sock
   else
   {
     COUTDEBUG ("[AdminServer] routing() : Mauvais OpCode (> à AS::AS_MAX_VALUE");
-    ClientList::getInstance ().addBadClient (sock, retVal);
+    ClientList::getInstance ().addBadClient (client, retVal);
     // Fixme : Envoyer un message au client ?
     return retVal;
   }
 }
 
 int
-AdminServer::asShutdown (sf::Packet& packet, sf::SocketTCP& sock)
+AdminServer::asShutdown (Packet& packet, Client*& client)
 {
   packet = packet;
-  sock = sock;
+  client = client;
   Config::getInstance ().setIsOnline (false);
   ClientList::getInstance ().disconnectAllClient ();
   return RETURN_VALUE_GOOD;
 }
 
 int
-AdminServer::asClear (sf::Packet& packet, sf::SocketTCP& sock)
+AdminServer::asClear (Packet& packet, Client*& client)
 {
   packet = packet;
-  sock = sock;
+  client = client;
   ClientList::getInstance ().disconnectAllClient ();
   return RETURN_VALUE_GOOD;
 }
 
 int
-AdminServer::asDownload (sf::Packet& packet, sf::SocketTCP& sock)
+AdminServer::asDownload (Packet& packet, Client*& client)
 {
   packet = packet;
-  sock = sock;
+  client = client;
   return 1;
   std::string token;
-  sf::Int32 video_id, server_id;
+  int video_id, server_id;
   packet >> token >> video_id >> server_id;
   COUTDEBUG("[AdminServer] asDownload ()");
   COUTDEBUG("\t Video_id : " + tools::toString<int> (video_id));
@@ -90,11 +89,11 @@ AdminServer::asDownload (sf::Packet& packet, sf::SocketTCP& sock)
 }
 
 int
-AdminServer::asDownloadOrig (sf::Packet& packet, sf::SocketTCP& sock)
+AdminServer::asDownloadOrig (Packet& packet, Client*& client)
 {
-  sock = sock;
+    client = client;
   std::string token;
-  sf::Int32 video_id;
+  int video_id;
   std::string url;
   std::string file;
   
@@ -102,7 +101,7 @@ AdminServer::asDownloadOrig (sf::Packet& packet, sf::SocketTCP& sock)
   file =  "movie/" + tools::toString<int> (video_id) + ".avi";
   
   COUTDEBUG("[AdminServer] asDownloadOrig : ");
-  COUTDEBUG("\t video_id : " + tools::toString<sf::Int32> (video_id));
+  COUTDEBUG("\t video_id : " + tools::toString<int> (video_id));
   COUTDEBUG("\t url : " + url);
   
   if (tools::Http::download (url, file) == 0)
@@ -121,17 +120,17 @@ AdminServer::asDownloadOrig (sf::Packet& packet, sf::SocketTCP& sock)
 }
 
 int
-AdminServer::asRemove (sf::Packet& packet, sf::SocketTCP& sock)
+AdminServer::asRemove (Packet& packet, Client*& client)
 {
   packet = packet;
-  sock = sock;
+  client = client;
   return RETURN_VALUE_ERROR;
 }
 
 int 
-AdminServer::send(sf::SocketTCP& sender, sf::Packet& packet)
+AdminServer::send(Client*& sender, Packet& packet)
 {
-  if (sender.Send(packet) == sf::Socket::Done)
-    return RETURN_VALUE_GOOD;
+  /*if (sender.Send(packet) == sf::Socket::Done) TODO FIXME
+    return RETURN_VALUE_GOOD;*/
   return RETURN_VALUE_ERROR;
 }

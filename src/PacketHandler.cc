@@ -13,7 +13,7 @@ PacketHandler::~PacketHandler()
 }
 
 int PacketHandler::routing_internal(unsigned int code __attribute__((unused))
-  , sf::Packet* packet __attribute__((unused)))
+  , Packet& packet __attribute__((unused)))
 {
   return RETURN_VALUE_ERROR;
 }

@@ -7,8 +7,6 @@
 
 #include <iostream>
 
-# include <SFML/System.hpp>
-# include <SFML/Network.hpp>
 # include <signal.h>
 
 #include <core/network/Network.hh>
@@ -43,12 +41,13 @@ main ()
   Config::getInstance ().load ("config.xml");
   Config::getInstance ().loadConfig ();
   ModuleManager::getInstance ()->loadModules();
-  sf::IPAddress address (Config::getInstance ().getString ("ip"));
-  if (!address.IsValid())
+  //boost::asio::ip::address
+  std::string address (Config::getInstance ().getString ("ip"));
+  /*if (!address.IsValid()) TODO 
   {
     std::cerr << "L'adresse ip indiquée dans config.xml n'est pas bonne" << std::endl;
     exit(2);
-  }
+  }*/
   SqlManager::getInstance ().addServer (Config::getInstance ().getString ("ip"),
                                         36001); //TODO port
   Config::getInstance ().loadFiles ();
@@ -56,7 +55,10 @@ main ()
   ThreadPool<Tracker> trackerWorker (1);
   ThreadPool<AdminServer> adminWorker (1);
   HandlingSender handlingSender (1);
-  Network networkManager (36000, 36001); // TODO Port
+  std::list<unsigned short> ports;
+  ports.push_back(36000);
+  ports.push_back(36001);
+  Network networkManager (ports); // TODO Port
   diffusionWorker.start ();
   trackerWorker.start ();
   adminWorker.start ();

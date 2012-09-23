@@ -42,12 +42,12 @@ class Tracker: public PacketHandler
      *  @param packet received
      *  @param sock that send this packet
      */
-    int routing(unsigned int code, sf::Packet& packet, sf::SocketTCP& sock);
+    int routing(unsigned int code, Packet& packet, Client*& client);
   private:
     /**
      *  typedef of funtion handler
      */
-    typedef int (Tracker::*handler)(sf::Packet& packet, sf::SocketTCP& sock);
+    typedef int (Tracker::*handler)(Packet& packet, Client*& client);
 
     // Array of function of routing
     const handler route_[CT::LENGTH];
@@ -60,7 +60,7 @@ class Tracker: public PacketHandler
      *  @param sock that send this message
      *  @return RETURN_VALUE_GOOD on success
      */
-    int ctConnMaster(sf::Packet& packet, sf::SocketTCP& sock);
+    int ctConnMaster(Packet& packet, Client*& client);
 
     /**
      *  Manage packet client->tracker : Connection slave
@@ -68,7 +68,7 @@ class Tracker: public PacketHandler
      *  @param sock that send this message
      *  @return RETURN_VALUE_GOOD on success
      */
-    int ctConnSlave(sf::Packet& packet, sf::SocketTCP& sock);
+    int ctConnSlave(Packet& packet, Client*& client);
 
     /**
      *  Manage packet client->tracker : Ask list
@@ -76,7 +76,7 @@ class Tracker: public PacketHandler
      *  @param sock that send this message
      *  @return RETURN_VALUE_GOOD on success
      */
-    int ctAskList(sf::Packet& packet, sf::SocketTCP& sock);
+    int ctAskList(Packet& packet, Client*& client);
 
     /**
      *  Manage packet client->tracker : Ask flux
@@ -84,7 +84,7 @@ class Tracker: public PacketHandler
      *  @param sock that send this message
      *  @return RETURN_VALUE_GOOD on success
      */
-    int ctAskFlux(sf::Packet& packet, sf::SocketTCP& sock);
+    int ctAskFlux(Packet& packet, Client*& client);
 
     /**
      *  Manage packet client->tracker : Ask Check
@@ -92,7 +92,7 @@ class Tracker: public PacketHandler
      *  @param sock that send this message
      *  @return RETURN_VALUE_GOOD on success
      */
-    int ctAskCheck(sf::Packet& packet, sf::SocketTCP& sock);
+    int ctAskCheck(Packet& packet, Client*& client);
 
     /**
      *  Manage packet client->tracker : Ask Packet
@@ -100,7 +100,7 @@ class Tracker: public PacketHandler
      *  @param sock that send this message
      *  @return RETURN_VALUE_GOOD on success
      */
-    int ctAskPacket(sf::Packet& packet, sf::SocketTCP& sock);
+    int ctAskPacket(Packet& packet, Client*& client);
 
     /**
      *  Manage packet client->tracker : Ask Range Packer
@@ -108,7 +108,7 @@ class Tracker: public PacketHandler
      *  @param sock that send this message
      *  @return RETURN_VALUE_GOOD on success
      */
-    int ctAskRpacket(sf::Packet& packet, sf::SocketTCP& sock);
+    int ctAskRpacket(Packet& packet, Client*& client);
 
     /**
      *  Manage packet client->tracker : Ask Move
@@ -116,7 +116,7 @@ class Tracker: public PacketHandler
      *  @param sock that send this message
      *  @return RETURN_VALUE_GOOD on success
      */
-    int ctAskMove(sf::Packet& packet, sf::SocketTCP& sock);
+    int ctAskMove(Packet& packet, Client*& client);
 
     /**
      *  Manage packet client->tracker : Ask deficient
@@ -124,7 +124,7 @@ class Tracker: public PacketHandler
      *  @param sock that send this message
      *  @return RETURN_VALUE_GOOD on success
      */
-    int ctAskDeficient(sf::Packet& packet, sf::SocketTCP& sock);
+    int ctAskDeficient(Packet& packet, Client*& client);
 
     /**
      *  Manage packet client->tracker : Ask remove frame of video
@@ -132,7 +132,7 @@ class Tracker: public PacketHandler
      *  @param sock that send this message
      *  @return RETURN_VALUE_GOOD on success
      */
-    int ctAskRem(sf::Packet& packet, sf::SocketTCP& sock);
+    int ctAskRem(Packet& packet, Client*& client);
 
     /**
      *  Manage packet client->tracker : Ask stop video
@@ -140,7 +140,7 @@ class Tracker: public PacketHandler
      *  @param sock that send this message
      *  @return RETURN_VALUE_GOOD on success
      */
-    int ctAskStop(sf::Packet& packet, sf::SocketTCP& sock);
+    int ctAskStop(Packet& packet, Client*& client);
 
     /**
      *  Manage packet client->tracker : Deconnection
@@ -148,7 +148,7 @@ class Tracker: public PacketHandler
      *  @param sock that send this message
      *  @return RETURN_VALUE_GOOD on success
      */
-    int ctDec(sf::Packet& packet, sf::SocketTCP& sock);
+    int ctDec(Packet& packet, Client*& client);
 
     /**
      *  Send ping respond
@@ -156,7 +156,7 @@ class Tracker: public PacketHandler
      *  @param sock that send this message
      *  @return RETURN_VALUE_GOOD on success
      */
-    int ctPing(sf::Packet& packet, sf::SocketTCP& sock);
+    int ctPing(Packet& packet, Client*& client);
 
     /**
      *  Send url of video
@@ -164,7 +164,7 @@ class Tracker: public PacketHandler
      *  @param sock that send this message
      *  @return RETURN_VALUE_GOOD on success
      */
-    int ctUrl(sf::Packet& packet, sf::SocketTCP& sock);
+    int ctUrl(Packet& packet, Client*& client);
   // TODO Check if this part can be public
   public:
     /**
@@ -173,7 +173,7 @@ class Tracker: public PacketHandler
      *  @param packet to send
      *  @return RETURN_VALUE_GOOD on success
      */
-    int send(sf::SocketTCP& sender, sf::Packet& packet);
+    int send(Client*& sender, Packet& packet);
     // Sender handling //
     /**
      *  Manage packet tracker->client : Token
@@ -181,7 +181,7 @@ class Tracker: public PacketHandler
      *  @param token of new client
      *  @return RETURN_VALUE_GOOD on success
      */
-    int tcToken(sf::SocketTCP& sender, std::string token);
+    int tcToken(Client*& sender, std::string token);
 
     /**
      *  Manage packet tracker->client : List
@@ -189,7 +189,7 @@ class Tracker: public PacketHandler
      *  @param sqlResult sqlMap that contain list of file
      *  @return RETURN_VALUE_GOOD on success
      */
-    int tcList(sf::SocketTCP& sender, sql_result sqlResult);
+    int tcList(Client*& sender, sql_result sqlResult);
 
     /**
      *  Manage packet tracker->client : list diffusion
@@ -197,7 +197,7 @@ class Tracker: public PacketHandler
      *  @param sqlResult that contain list of server
      *  @return RETURN_VALUE_GOOD on success
      */
-    int tcListDiff(sf::SocketTCP& sender, sql_result sqlResult);
+    int tcListDiff(Client*& sender, sql_result sqlResult);
 
     /**
      *  Manage packet tracker->client : list new diffusion
@@ -205,7 +205,7 @@ class Tracker: public PacketHandler
      *  @param sqlResult that contain list of server
      *  @return RETURN_VALUE_GOOD on success
      */
-    int tcListNDiff(sf::SocketTCP& sender, sql_result sqlResult);
+    int tcListNDiff(Client*& sender, sql_result sqlResult);
 
     /**
      *  Manage packet tracker->client : message
@@ -214,14 +214,14 @@ class Tracker: public PacketHandler
      *  @param msg text message
      *  @return RETURN_VALUE_GOOD on success
      */
-    int tcMsg(sf::SocketTCP& sender, sf::Int32 numMsg, std::string msg);
+    int tcMsg(Client*& sender, int numMsg, std::string msg);
 
     /**
      *  Send ping respond
      *  @param sender socket where send this packet
      *  @return RETURN_VALUE_GOOD on success
      */
-    int tcPing(sf::SocketTCP& sender);
+    int tcPing(Client*& sender);
 
     /**
      *  Send url of video
@@ -230,7 +230,7 @@ class Tracker: public PacketHandler
      *  @param url of video
      *  @return RETURN_VALUE_GOOD on success
      */
-    int tcUrl(sf::SocketTCP& sender, std::string& ip, std::string& url);
+    int tcUrl(Client*& sender, std::string& ip, std::string& url);
 };
 
 #endif /* TRACKER_HH_ */

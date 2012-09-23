@@ -9,7 +9,6 @@
 # define CHUNCK_HH_
 
 //External include
-# include <SFML/System.hpp>
 # include <string.h>
 
 // Internal include
