@@ -6,8 +6,18 @@
 inline
 uint Packet::GetDataSize() const
 {
-  return data_.size();
+  return data_.size() - 4;
 }
+
+inline
+void Packet::UpdateSize()
+{
+  uint size = GetDataSize();
+  data_[0] = size >> 12;
+  data_[1] = (size >> 8) & 0xff;
+  data_[2] = (size >> 4) & 0xff;
+  data_[3] = size & 0xff;
+} 
 
 inline
 uint Packet::GetCurrentPos() const

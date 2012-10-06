@@ -8,23 +8,28 @@ Packet::Packet()
 Packet::Packet(const Packet& orig)
 : currentPos_(orig.GetCurrentPos())
 {
-  //std::copy(orig.data_.begin(), orig.data_.end(), data_.begin()); 
+  std::copy(orig.data_.begin(), orig.data_.end(), data_.begin()); 
+  UpdateSize();
 }
 
 Packet::~Packet()
 {
+  UpdateSize();
 }
 
 void Packet::Append (const char* data, int size)
 {
-  //std::copy(data, &(data[size]), data_.begin() + currentPos_);
+  std::copy(data, &(data[size]), data_.begin() + currentPos_);
   currentPos_ += size;
+  UpdateSize();
 }
 
 void Packet::Extract (const char* data, int size)
 {
-  //std::copy(data_.begin()+currentPos_, data_.begin() + currentPos_ + size, data);
+  char* ptr = const_cast<char*>(data);
+  std::copy(data_.begin()+currentPos_, data_.begin() + currentPos_ + size, ptr);
   currentPos_ += size;
+  UpdateSize();
 }
 
 Packet Packet::operator= (const Packet& packet)

@@ -17,9 +17,12 @@ std::list<boost_socket>& Client::getSockets()
 }
 
 inline
-void Client::addSocket(boost_socket& newSocket)
+void Client::addSocket(std::list<boost_socket>& newSocket)
 {
-    //sockets_.push_back(newSocket);
+  while (!newSocket.empty())
+  {
+    sockets_.splice(sockets_.end(), newSocket, newSocket.begin(), newSocket.end());
+  }
 }
 
 inline

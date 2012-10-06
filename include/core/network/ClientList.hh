@@ -11,6 +11,7 @@
 // External include
 # include <boost/asio/ip/tcp.hpp>
 # include <list>
+# include <set>
 # include <boost/thread/mutex.hpp>
 
 // Internal include
@@ -60,38 +61,25 @@ class ClientList
      *  Remove client if possible
      *  @param sock that represent one client
      */
-    void removeClient(boost_socket& sock);
+    int removeClient(Client*& client);
     
-    /**
-     *  Remove client if possible
-     *  @param client that represent one client
-     */
-    void removeClient(Client*& client);
-
     /**
      *  Purge temporary client if possible
      */
     void purgeClient();
 
     /**
-     *  Get client from a socket !!! Take care of lock
-     *  @param sock that represent one client
-     *  @return client represented by this socket
-     */
-    Client*& getClient(boost_socket& sock);
-
-    /**
      *  Get client from token !!! Take care of lock
      *  @param token that represent one client
      *  @return client represented by this token
      */
-    Client*& getClient(std::string& token);
+    Client* getClient(std::string& token);
 
     /**
      *  Get list of client
      *  @return the list of client list
      */
-    const std::map<boost_socket, Client*>& getClientList() const;
+    const std::set<Client*>& getClientList() const;
 
     /**
      *  Add sock which create a problem
@@ -127,7 +115,7 @@ class ClientList
     boost::mutex temporaryMutex_;
 
     // List of every client
-    std::map<boost_socket, Client*> clientList_;
+    std::set<Client*> clientList_;
 
     // Temporary list of bad client
     std::list<Client*> temporaryClient_;

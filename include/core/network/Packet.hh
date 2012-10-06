@@ -30,6 +30,7 @@ public:
     const int headerSize = 4; //size of int
     Packet operator= (const Packet& packet);
 private:
+    void UpdateSize();
     std::vector<char> data_;
     uint currentPos_;
     

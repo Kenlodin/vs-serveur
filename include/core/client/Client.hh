@@ -50,7 +50,7 @@ class Client
      *  Use controlSocket to send a packet
      *  @param newSocket socket for this client
      */
-    void addSocket(boost_socket& socket);
+    void addSocket(std::list<boost_socket>& socket);
 
     /**
      *  Use dataSocket to send a packet
