@@ -4,27 +4,33 @@
 #include <core/network/Packet.hh>
 
 inline
-uint Packet::GetDataSize()
+uint Packet::GetDataSize() const
 {
-  return data.size();
+  return data_.size();
 }
 
 inline
-void Packet::SetDataSize(uint dataSize)
+uint Packet::GetCurrentPos() const
 {
-  data.resize(dataSize);  
+  return currentPos_;
 }
 
 inline
-bool Packet::EndOfPacket()
+void Packet::SetCurrentPos(uint dataPos)
 {
-  return currentPos_ == data.size();    
+  currentPos_ = dataPos;
+}
+
+inline
+bool Packet::EndOfPacket() const
+{
+  return currentPos_ == data_.size();    
 }
 
 inline
 std::vector<char>& Packet::GetData()
 {
-    return data;
+    return data_;
 }
 
 #endif /* PACKET_HXX */

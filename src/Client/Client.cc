@@ -26,9 +26,12 @@ Client::~Client()
 
 int Client::send(Packet& packet)
 {
-    /*for (boost_socket sock : sockets)
+    for (boost_socket& sock : sockets_)
     {
-        sock.send(boost::asio::const_buffer(packet));
-    }*/
+	boost::system::error_code error;
+        boost::asio::write(sock, boost::asio::buffer(packet.GetData()), error);
+	if (!error)
+	  return RETURN_VALUE_GOOD;
+    }
     return RETURN_VALUE_ERROR;
 }

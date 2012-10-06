@@ -59,8 +59,8 @@ void LiveFile::forwardPacket(int number, Chunk* data)
   packet << opcode;
   packet << getVideoId();
   packet << number;
-  packet.Append(data->subChunk_, 8);
-  packet.Append(data->subChunk_->data, data->subChunk_->size);
+  //packet.Append(data->subChunk_, 8);
+  //packet.Append(data->subChunk_->data, data->subChunk_->size);
   /*for (boost_socket& sock : linkedServer_) //Todo deco
   {
     sock.Send(packet);
