@@ -270,6 +270,5 @@ int Diffusion::dcData(Client*& sender,int number, int code,
 
 int Diffusion::send(Client*& sender, Packet& packet)
 {
-  //TODO FIXME
-  return RETURN_VALUE_ERROR;
+  return client->send(packet);
 }

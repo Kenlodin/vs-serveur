@@ -18,6 +18,7 @@ Client::~Client()
 {
     for (boost_socket& sock : sockets_)
     {
+        sock.cancel();
         sock.close();
     }
     //TODO delete current action

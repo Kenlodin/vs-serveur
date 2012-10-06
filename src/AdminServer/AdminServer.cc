@@ -130,7 +130,5 @@ AdminServer::asRemove (Packet& packet, Client*& client)
 int 
 AdminServer::send(Client*& sender, Packet& packet)
 {
-  /*if (sender.Send(packet) == sf::Socket::Done) TODO FIXME
-    return RETURN_VALUE_GOOD;*/
-  return RETURN_VALUE_ERROR;
+  return sender->send(packet);
 }

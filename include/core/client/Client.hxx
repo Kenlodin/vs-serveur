@@ -28,7 +28,7 @@ void Client::addSocket(std::list<boost_socket>& newSocket)
 inline
 void Client::remSocket(boost_socket& oldSocket)
 {
-    //sockets_.remove(oldSocket); TODO Problem
+    //sockets_.remove(oldSocket);TODO
 }
 
 inline
