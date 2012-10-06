@@ -11,7 +11,6 @@ Packet::Packet(const Packet& orig)
 
 Packet::~Packet()
 {
-    
 }
 
 void Packet::Append (void* data, int size)
@@ -19,19 +18,9 @@ void Packet::Append (void* data, int size)
     
 }
 
-bool Packet::EndOfPacket()
+Packet& Packet::operator= (const Packet& packet)
 {
-    
-}
 
-uint Packet::GetDataSize()
-{
-    
-}
-
-void* Packet::GetData()
-{
-    
 }
 
 Packet& operator<<(Packet& packet, int val)

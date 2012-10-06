@@ -7,11 +7,11 @@
 
 #include <core/client/Client.hh>
 
-Client::Client(boost_socket& socket, std::string& publicIp)
-    : privilegeLevel_(10), publicIp_(publicIp), privateIp_(""), token_("")
+Client::Client( boost::asio::io_service& ioService)
+    : privilegeLevel_(10), publicIp_(""), privateIp_(""), token_("")
     , isActiv_(true)
 {
-    //sockets_.push_back(socket);
+    sockets_.push_back(boostIp::tcp::socket(ioService));
 }
 
 Client::~Client()

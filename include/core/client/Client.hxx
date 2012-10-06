@@ -11,7 +11,7 @@
 # include <core/client/Client.hh>
 
 inline
-const std::list<boost_socket>& Client::getSockets() const
+std::list<boost_socket>& Client::getSockets()
 {
   return sockets_;
 }
@@ -100,5 +100,6 @@ void Client::unlock()
 {
   using_.unlock();
 }
+
 
 #endif /* CLIENT_HXX_ */

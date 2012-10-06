@@ -17,6 +17,14 @@
 # define RETURN_VALUE_ERROR 1
 # define RETURN_VALUE_SUPPRESS 2
 
+
+# include <boost/asio/ip/tcp.hpp>
+# include <boost/asio.hpp>
+# include <boost/bind.hpp>
+typedef boost::asio::ip::tcp::socket boost_socket;
+namespace boostIp = boost::asio::ip;
+class Network;
+
 namespace avifile
 {
 # define SIZE_CHUNK_HEADER (sizeof(avifile::s_chunk) - sizeof(void*))

@@ -20,7 +20,6 @@
 # include <core/network/Packet.hh>
 
 
-typedef boost::asio::ip::tcp::socket boost_socket;
 
 /**
  * This class keep information of a connecting client in tracker or diffusion
@@ -34,7 +33,7 @@ class Client
      *  @param data Diffusion socket of client can be null
      *  @param token Connexion token of client
      */
-    Client(boost_socket& socket, std::string& publicIp);
+     Client( boost::asio::io_service& ioService);
 
     /**
      * Destructor
@@ -45,7 +44,7 @@ class Client
      * Get controlSocket
      *  @return Sockets
      */
-    const std::list<boost_socket>& getSockets() const;
+    std::list<boost_socket>& getSockets();
 
     /**
      *  Use controlSocket to send a packet

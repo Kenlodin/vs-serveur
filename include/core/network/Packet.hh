@@ -8,6 +8,9 @@
 #ifndef PACKET_HH
 #define	PACKET_HH
 
+//intenal include
+# include <core/fwd.hh>
+
 //external include
 # include <string>
 #include <stdint.h>
@@ -20,12 +23,17 @@ public:
     void Append (void* data, int size);
     bool EndOfPacket();
     uint GetDataSize();
-    void* GetData();
-    
-    void* data;
+    void SetDataSize(uint dataSize);
+    std::vector<char>& GetData();
+    const int headerSize = 4; //size of int
+    Packet& operator= (const Packet& packet);
 private:
-
+    std::vector<char> data;
+    uint currentPos_;
+    
 };
+
+#include <core/network/Packet.hxx>
 
 Packet& operator<<(Packet& packet, int val);
 Packet& operator<<(Packet& packet, uint16_t val);

@@ -9,7 +9,7 @@
 # define NETWORK_HH_
 
 //External include
-# include <boost/asio/ip/tcp.hpp>
+#include <boost/bind.hpp>
 
 //Internal include
 # include <core/thread/Thread.hh>
@@ -41,6 +41,37 @@ class Network : public tools::Thread
      */
     void run ();
 
+    /**
+     *  Add client in list if aceptation succeed
+     */
+    void handleAccept(Client* newClient, int index
+        , const boost::system::error_code& error);
+
+    /**
+     *  Read header of packet
+     */
+    void readHeaderHandler(Packet& paquet, Client* client, boost_socket* sock, const boost::system::error_code& error);
+
+
+    /**
+     *  Read body of packet
+     */
+    void readBodyHandler(Packet& paquet, Client* client, boost_socket* sock, const boost::system::error_code& error);
+
+    /**
+     *  Load async read
+     */ 
+    void launchAsyncRead(Client* client);
+
+    /**
+     *  Start accept on every socket of server
+     */
+    void startAccepts();
+
+    /**
+     *  Start accept on socket of server with this index
+     */
+    void startAccept(int index);
     /**
      *  Function which route packet
      *  @param packet received
@@ -111,9 +142,13 @@ class Network : public tools::Thread
         , Client*& client);
   private:
     // Variables of server
-    std::list<boost_socket> serverSockets_;
     std::list<unsigned short> serverPorts_;
 
+    boost::asio::io_service ioService_;
+
+    std::vector<boost::asio::ip::tcp::acceptor> acceptors_;
 };
+
+# include <core/network/Network.hxx>
 
 #endif /* NETWORK_HH_ */

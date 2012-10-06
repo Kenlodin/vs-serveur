@@ -208,17 +208,17 @@ int Diffusion::ddLiveData(Packet& packet, Client*& client)
   INCTEST(!packet.EndOfPacket(), count)
   data->subChunk_ = reinterpret_cast<avifile::s_sub_chunk*>(malloc(8));
   INCTEST(packet.GetDataSize() > 8, count)
-  memcpy(data->subChunk_, packet.GetData(), 8);
+  //memcpy(data->subChunk_, packet.GetData(), 8);
   data->subChunk_->data = malloc(data->subChunk_->size);
   INCTEST(packet.GetDataSize() == data->subChunk_->size + 8, count)
-  memcpy(data->subChunk_->data, packet.GetData() + 8, data->subChunk_->size);
+  //memcpy(data->subChunk_->data, packet.GetData() + 8, data->subChunk_->size);
   if (count != 5)
   {
     dcMsg(client, RETURN_VALUE_ERROR
           , std::string("Diffusion : Bad number of attributes."));
     return RETURN_VALUE_ERROR;
   }
-  LiveHandler::getInstance().getLive(videoId)->setElement(number, data);
+  //LiveHandler::getInstance().getLive(videoId)->setElement(number, data);
   return RETURN_VALUE_GOOD;
 }
 
@@ -236,10 +236,10 @@ int Diffusion::ddVodData(Packet& packet, Client*& client)
     INCTEST(!packet.EndOfPacket(), count)
     data->subChunk_ = reinterpret_cast<avifile::s_sub_chunk*>(malloc(8));
     INCTEST(packet.GetDataSize() > 8, count)
-    memcpy(data->subChunk_, packet.GetData(), 8);
+    //memcpy(data->subChunk_, packet.GetData(), 8);
     data->subChunk_->data = malloc(data->subChunk_->size);
     INCTEST(packet.GetDataSize() == data->subChunk_->size + 8, count)
-    memcpy(data->subChunk_->data, packet.GetData() + 8, data->subChunk_->size);
+    //memcpy(data->subChunk_->data, packet.GetData() + 8, data->subChunk_->size);
     if (count != 5)
     {
       dcMsg(client, RETURN_VALUE_ERROR
