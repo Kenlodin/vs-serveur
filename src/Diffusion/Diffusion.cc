@@ -174,9 +174,9 @@ int Diffusion::dcData(Client*& sender, int number, Chunk* chuck)
   packet << opcode;
   packet << type;
   packet << number;
-  //packet.Append(chuck->subChunk_, sizeof(avifile::s_sub_chunk) - sizeof(void*));
-  //if (chuck->subChunk_->data)
-  //  packet.Append(chuck->subChunk_->data, MOD2(chuck->subChunk_->size));
+  packet.Append((char*)(chuck->subChunk_), sizeof(avifile::s_sub_chunk) - sizeof(void*));
+  if (chuck->subChunk_->data)
+    packet.Append(static_cast<char*>(chuck->subChunk_->data), MOD2(chuck->subChunk_->size));
   //COUTDEBUG("Diffusion --> Client : Data");
   return send(sender, packet);
 }
@@ -208,10 +208,10 @@ int Diffusion::ddLiveData(Packet& packet, Client*& client)
   INCTEST(!packet.EndOfPacket(), count)
   data->subChunk_ = reinterpret_cast<avifile::s_sub_chunk*>(malloc(8));
   INCTEST(packet.GetDataSize() > 8, count)
-  //memcpy(data->subChunk_, packet.GetData(), 8);
+  packet.Extract((char*)(data->subChunk_), 8);
   data->subChunk_->data = malloc(data->subChunk_->size);
   INCTEST(packet.GetDataSize() == data->subChunk_->size + 8, count)
-  //memcpy(data->subChunk_->data, packet.GetData() + 8, data->subChunk_->size);
+  packet.Extract(static_cast<char*>(data->subChunk_->data), data->subChunk_->size);
   if (count != 5)
   {
     dcMsg(client, RETURN_VALUE_ERROR
@@ -236,10 +236,10 @@ int Diffusion::ddVodData(Packet& packet, Client*& client)
     INCTEST(!packet.EndOfPacket(), count)
     data->subChunk_ = reinterpret_cast<avifile::s_sub_chunk*>(malloc(8));
     INCTEST(packet.GetDataSize() > 8, count)
-    //memcpy(data->subChunk_, packet.GetData(), 8);
+    packet.Extract((char*)(data->subChunk_), 8);
     data->subChunk_->data = malloc(data->subChunk_->size);
     INCTEST(packet.GetDataSize() == data->subChunk_->size + 8, count)
-    //memcpy(data->subChunk_->data, packet.GetData() + 8, data->subChunk_->size);
+    packet.Extract(static_cast<char*>(data->subChunk_->data), data->subChunk_->size);
     if (count != 5)
     {
       dcMsg(client, RETURN_VALUE_ERROR
@@ -261,14 +261,14 @@ int Diffusion::dcData(Client*& sender,int number, int code,
   packet << opcode;
   packet << type;
   packet << number;
-  //packet.Append(headers, SIZE_CHUNK_HEADER);
-  //if (headers->data)
-  //  packet.Append(headers->data, headers->size - sizeof(avifile::u32));
+  packet.Append((char*)(headers), SIZE_CHUNK_HEADER);
+  if (headers->data)
+    packet.Append(static_cast<char*>(headers->data), headers->size - sizeof(avifile::u32));
   COUTDEBUG("Diffusion --> Client : Data");
   return send(sender, packet);
 }
 
 int Diffusion::send(Client*& sender, Packet& packet)
 {
-  return client->send(packet);
+  return sender->send(packet);
 }

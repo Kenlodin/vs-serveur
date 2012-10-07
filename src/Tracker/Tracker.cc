@@ -522,7 +522,7 @@ int Tracker::tcUrl(Client*& sender, std::string& ip, std::string& url)
 
 int Tracker::send(Client*& sender, Packet& packet)
 {
-  return sender.send(packet);
+  return sender->send(packet);
 }
 
 
