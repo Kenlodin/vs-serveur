@@ -23,7 +23,6 @@ const std::set<Client*>& ClientList::getClientList() const
 int ClientList::link(Client*& client, std::string& token)
 {
   std::map<std::string, Client*>::iterator it;
-  Client* c = nullptr;
 
   generalMutex_.lock();
   it = clientLink_.find(token);
@@ -33,10 +32,10 @@ int ClientList::link(Client*& client, std::string& token)
   }
   else
   {
-    c = it->second;
     for (auto& sock : client->getSockets())
     {
       sock.cancel();
+      Dispatcher::getInstance().launchAsyncRead(client, sock);
     }
     Packet packet = Packet();
     //Activ handling
@@ -98,16 +97,8 @@ int ClientList::removeClient(Client*& client)
 
 void ClientList::addBadClient(Client*& client, int errorNumber)
 {
-  badClientMutex_.lock();
-  badClient_.insert(badClient_.begin(),
-      std::pair<Client*, int>(client, errorNumber));
-  badClientMutex_.unlock();
-}
-
-std::list<std::pair<Client*, int>>& ClientList::getBadClient()
-{
-  badClientMutex_.lock();
-  return badClient_;
+  COUTDEBUG("Remove Client : " << client->getToken() << "with error : " << errorNumber);
+  removeClient(client);
 }
 
 Client* ClientList::getClient(std::string& token)
@@ -143,11 +134,6 @@ void ClientList::purgeClient()
   temporaryMutex_.unlock();
 }
 
-void ClientList::getBadClientRelease()
-{
-  badClientMutex_.unlock();
-}
-
 void ClientList::disconnectAllClient ()
 {
   generalMutex_.lock ();
@@ -166,8 +152,4 @@ void ClientList::disconnectAllClient ()
   clientList_.clear ();
   generalMutex_.unlock ();
   purgeClient();
-  badClientMutex_.lock();
-  badClient_.clear ();
-  badClientMutex_.unlock();
-  
 }

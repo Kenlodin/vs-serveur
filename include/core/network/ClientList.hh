@@ -18,6 +18,7 @@
 # include <core/client/Client.hh>
 # include <core/log/Log.hh>
 # include <core/sqlManager/SqlManager.hh>
+# include <core/network/Dispatcher.hh>
 
 /*
  * Manage client of this server
@@ -89,17 +90,6 @@ class ClientList
     void addBadClient(Client*& client, int errorNumber);
 
     /**
-     *  get list of bad client and lock it
-     *  @return list of bad client
-     */
-    std::list<std::pair<Client*, int>>& getBadClient();
-
-    /**
-     *  unlock bad client list
-     */
-    void getBadClientRelease();
-
-    /**
      *  Disconnect All client
      */
     void disconnectAllClient ();
@@ -108,23 +98,18 @@ class ClientList
     // Mutex of clientList_
     boost::mutex generalMutex_;
 
-    // Mutex of badClient
-    boost::mutex badClientMutex_;
-
     // Mutex of remove temporary
     boost::mutex temporaryMutex_;
 
     // List of every client
     std::set<Client*> clientList_;
 
-    // Temporary list of bad client
+    // Temporary list of temporary client
     std::list<Client*> temporaryClient_;
 
     // List of link between token and client
     std::map<std::string, Client*> clientLink_;
 
-    // List of badClient
-    std::list<std::pair<Client*, int>> badClient_;
 };
 
 #endif /* CLIENTLIST_HH_ */
